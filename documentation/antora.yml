@@ -1,5 +1,5 @@
 name: template-tutorial
-title: Template Tutorial
+title: Gramola GitOps Guide
 version: master
 nav:
   - modules/ROOT/nav.adoc
