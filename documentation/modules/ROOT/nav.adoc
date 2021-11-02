@@ -1,7 +1,30 @@
 * xref:01-setup.adoc[1. Setup]
 ** xref:01-setup.adoc#prerequisite[Prerequisites]
-** xref:01-setup.adoc#minikube[Setup Minikube]
+** xref:01-setup.adoc#openshift[Setup OpenShift 4]
+** xref:01-setup.adoc#container-registry-account[Container Registry Account]
+** xref:01-setup.adoc#download-tutorial[Get tutorial sources]
 
-* xref:02-deploy.adoc[2. Deploy Service]
-** xref:02-deploy.adoc#package[Build Service]
-** xref:02-deploy.adoc#deploy[Deploy Dervice]
+* xref:02-prepare-cluster.adoc[2. Prepare Cluster]
+** xref:02-prepare-cluster.adoc#install-operators[Install Operators]
+
+* xref:03-prepare-repositories.adoc[3. Prepare Repositories]
+** xref:03-prepare-repositories.adoc#deploying-gitea[Deploying Gitea]
+** xref:03-prepare-repositories.adoc#create-git-user[Create Git User]
+** xref:03-prepare-repositories.adoc#migrate-gramola-repositories[Migrate Repositories]
+** xref:03-prepare-repositories.adoc#create-git-pat[Create Git PAT]
+
+* xref:04-prepare-argocd.adoc[4. Prepare ArgoCD]
+** xref:04-prepare-argocd.adoc#checking-argocd[Checking ArgoCD]
+** xref:04-prepare-argocd.adoc#log-in-argocd[Log in ArgoCD]
+** xref:04-prepare-argocd.adoc#register-repositories[Register Repositories]
+** xref:04-prepare-argocd.adoc#register-additional-clusters[Register Additional Clusters]
+** xref:04-prepare-argocd.adoc#add-project-definitions[Add Project definitions]
+
+* xref:05-deploy-gramola-with-gitops.adoc[5. Deploy Gramola]
+** xref:05-deploy-gramola-with-gitops.adoc#create-root-apps[Create Root Apps]
+
+* xref:06-deploy-cicd-pipelines-with-gitops.adoc[6. Deploy CICD Pipelines]
+** xref:06-deploy-cicd-pipelines-with-gitops.adoc#create-pipelines-root-app[Create Pipelines Root App]
+** xref:06-deploy-cicd-pipelines-with-gitops.adoc#create-git-secret-for-pipelines[Create Git Secret]
+** xref:06-deploy-cicd-pipelines-with-gitops.adoc#create-registry-secret-for-pipelines[Create Registry Secret]
+
