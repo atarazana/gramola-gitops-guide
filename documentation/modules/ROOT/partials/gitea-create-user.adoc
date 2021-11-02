@@ -1,0 +1,28 @@
+NOTE: Ignore error "Internal Server Error" user {username} should have been created.
+
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+GITEA_HOST=$(kubectl get route/repository -n {gitea-namespace} -o jsonpath={'.status.ingress[0].host'})
+echo "GITEA_HOST=${GITEA_HOST}"
+
+GITEA_INSTALL_TOKEN=$(curl -s -XPOST -H "Content-Type: application/json"  -k -d '{"name":"install"}' -u opentlc-mgr:r3dh4t1\! https://${GITEA_HOST}/api/v1/users/opentlc-mgr/tokens | jq -r .sha1)
+echo "GITEA_INSTALL_TOKEN=${GITEA_INSTALL_TOKEN}"
+
+curl -X 'POST' \
+    "https://${GITEA_HOST}/api/v1/admin/users?access_token=${GITEA_INSTALL_TOKEN}" \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d "{
+          \"email\": \"{username}@example.com\",
+          \"full_name\": \"User {username}\",
+          \"login_name\": \"{username}\",
+          \"must_change_password\": false,
+          \"password\": \"{password}\",
+          \"send_notify\": true,
+          \"source_id\": 0,
+          \"username\": \"{username}\",
+          \"visibility\" : \"public\"
+    }"
+----
+

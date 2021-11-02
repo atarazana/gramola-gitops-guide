@@ -1,0 +1,67 @@
+= Prepare Repositories
+include::_attributes.adoc[]
+:username: user1
+:password: openshift
+
+[#source-of-truth]
+== Source Of Truth
+
+As we have already exposed in GitOps Git is the source of truth so we need one to start with... you may have your own but for the sake of homogeneity in this guide we're going to use a git server deployed in OpenShift.
+
+Why not relying on a preexisting git server somewhere you may ask? This is so, because in order to execute the pipelines section of this guide you have to fork some git repositories.
+
+[NOTE]
+====
+This is necessary because:
+
+- webhooks need to be created and obviously you need permissions on them
+- you want to make changes to the code and promote those changes across environments
+====
+
+These are the repositories you need to fork:
+
+- *Configuration Repo:* https://github.com/atarazana/gramola.git
+- *Events Microservice:* https://github.com/atarazana/gramola-events.git
+- *Gateway Microservice:* https://github.com/atarazana/gramola-gateway.git
+
+You could fork them in your preferred git server, but for the sake of simplicity we're going to give you instructions to deploy a git server in OpenShift and for them there.
+
+[#deploying-gitea]
+== Deploying Gitea
+
+Run this command to deploy the Gitea operator and Gitea itself in your OpenShift cluster.
+
+NOTE: Gitea will be installed in `gitea-system` namespace
+
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+until kubectl apply -k util/gitea/; do sleep 2; done
+----
+
+The previous command will retry until it's all installed but we still need to check if it all works properly.
+
+include::partial$gitea-tests.adoc[]
+
+[#create-git-user]
+== Create Git User
+
+Let's create a user in Gitea and migrate (it's not really a fork because it's cross git server operation) our repositories.
+
+include::partial$gitea-create-user.adoc[]
+
+[#migrate-gramola-repositories]
+== Migrate Gramola Repositories
+
+Now that user {username} has been created let's migrate `gramola` repositories into Gitea.
+
+CAUTION: TODO move this to scripts in gramola.git 
+
+include::partial$gitea-migrate-repos.adoc[]
+
+[#create-git-pat]
+== Create Git Personal Access Token
+
+Let's create a *Personal Access Token* (PAT) in Gitea for user "{username}".
+
+include::partial$gitea-create-pat.adoc[]

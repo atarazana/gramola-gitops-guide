@@ -1,0 +1,103 @@
+NOTE: https://github.com/drone/go-scm/blob/master/scm/driver/gitea/testdata/webhooks/push.json
+
+*Events CI Webhook*
+
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+EVENTS_CI_EL_LISTENER_HOST=$(oc get route/el-events-ci-pl-push-{git-provider}-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}')
+
+curl -X 'POST' "https://${GITEA_HOST}/api/v1/repos/{username}/gramola-events/hooks" \
+  -H "accept: application/json" \
+  -H "Authorization: token ${GIT_PAT}" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "active": true,
+  "branch_filter": "*",
+  "config": {
+     "content_type": "json",
+     "url": "http://'"${EVENTS_CI_EL_LISTENER_HOST}"'"
+  },
+  "events": [
+    "push"
+  ],
+  "type": "gitea"
+}'
+----
+
+*Gateway CI Webhook*
+
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+GATEWAY_CI_EL_LISTENER_HOST=$(oc get route/el-gateway-ci-pl-push-{git-provider}-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}')
+
+curl -X 'POST' "https://${GITEA_HOST}/api/v1/repos/{username}/gramola-gateway/hooks" \
+  -H "accept: application/json" \
+  -H "Authorization: token ${GIT_PAT}" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "active": true,
+  "branch_filter": "*",
+  "config": {
+     "content_type": "json",
+     "url": "http://'"${GATEWAY_CI_EL_LISTENER_HOST}"'"
+  },
+  "events": [
+    "push"
+  ],
+  "type": "gitea"
+}'
+----
+
+*Events CD Webhook*
+
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+EVENTS_CD_EL_LISTENER_HOST=$(oc get route/el-events-cd-pl-pr-{git-provider}-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}')
+
+curl -X 'POST' "https://${GITEA_HOST}/api/v1/repos/{username}/gramola/hooks" \
+  -H "accept: application/json" \
+  -H "Authorization: token ${GIT_PAT}" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "active": true,
+  "branch_filter": "*",
+  "config": {
+     "content_type": "json",
+     "url": "http://'"${EVENTS_CD_EL_LISTENER_HOST}"'"
+  },
+  "events": [
+    "pull_request"
+  ],
+  "type": "gitea"
+}'
+----
+
+*Gateway CD Webhook*
+
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+GATEWAY_CD_EL_LISTENER_HOST=$(oc get route/el-gateway-cd-pl-pr-{git-provider}-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}')
+
+curl -X 'POST' "https://${GITEA_HOST}/api/v1/repos/{username}/gramola/hooks" \
+  -H "accept: application/json" \
+  -H "Authorization: token ${GIT_PAT}" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "active": true,
+  "branch_filter": "*",
+  "config": {
+     "content_type": "json",
+     "url": "http://'"${GATEWAY_CD_EL_LISTENER_HOST}"'"
+  },
+  "events": [
+    "pull_request"
+  ],
+  "type": "gitea"
+}'
+----
+
+

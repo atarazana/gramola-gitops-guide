@@ -1,0 +1,135 @@
+= Prepare ArgoCD
+include::_attributes.adoc[]
+:username: user1
+:password: openshift
+
+*ArgoCD* is the *GitOps* engine *OpenShift GitOps* rely on it should have been installed previously in xref:02-prepare-cluster.adoc#install-operators[Install Operators].
+
+
+[#checking-argocd]
+== Checking ArgoCD
+
+Checking the status of an operators is a bit counterintuitive because we that something bad is false. As you can see below `Type` of condition is `CatalogSourcesUnhealthy`, which is a bad thing, but the `Status` is `False` so it's a good thing ;-)
+
+[source,bash, subs="+macros,+attributes"]
+----
+Conditions:
+   Last Transition Time:  2019-07-29T13:42:57Z
+   Message:               all available catalogsources are healthy
+   Reason:                AllCatalogSourcesHealthy
+   Status:                False
+   Type:                  CatalogSourcesUnhealthy
+----
+
+Because the message is less counterintuitive  let's check that instead. Please run this command to check the status of the operator.
+
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+echo $(kubectl get subs/openshift-gitops-operator -n openshift-operators -o jsonpath='{.status.conditions[0].message}')
+----
+
+If the operator is fine you should get this response.
+
+[.console-output]
+[source,bash, subs="+macros,+attributes"]
+----
+all available catalogsources are healthy
+----
+
+[#log-in-argocd]
+== Log in ArgoCD with CLI
+
+Well *ArgoCD* operator is healthy but we still need to check if *ArgoCD* itself is also healthy, one way to do this is trying to log in using the *CLI* you should have installed as stated in xref:01-setup.adoc#prerequisite[Prerequisites] section.
+
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+./util/argocd-login.sh
+----
+
+The output should be similar to this one.
+
+[.console-output]
+[source,bash, subs="+macros,+attributes"]
+----
+'admin:login' logged in successfully
+Context 'openshift-gitops-server-openshift-gitops.apps.cluster-1028.1028.sandbox65.opentlc.com' updated
+----
+
+[#register-repositories]
+== Register Repositories
+
+In this guide we cover the case of a protected git repository that needs to be interacted with from a system and you don't want your personal password to be exposed that’s why you have created a *Personal Access Token*.
+
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+GITEA_HOST=$(kubectl get route/repository -n {gitea-namespace} -o jsonpath={'.status.ingress[0].host'})
+echo "GITEA_HOST=${GITEA_HOST}"
+
+argocd repo add https://${GITEA_HOST}/{username}/gramola.git --username {username} --password ${GIT_TOKEN} --upsert
+----
+
+Run this command to list the registered repositories.
+
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+argocd repo list
+----
+
+This is a typical response.
+
+[.console-output]
+[source,bash, subs="+macros,+attributes"]
+----
+TYPE  NAME  REPO                                                                                                           INSECURE  OCI    LFS    CREDS  STATUS      MESSAGE
+git         https://repository-gitea-system.apps.example.com/user1/gramola.git          false     false  false  true   Successful  
+----
+
+[#register-additional-clusters]
+== Register Additional Clusters
+
+First make sure there is a context with proper credentials, in order to achieve this please log in the additional cluster.
+
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+export API_SERVER=localhost:8443
+oc login ${API_SERVER} --username=myuser --password=mypass
+----
+
+CAUTION: *CLUSTER_NAME* is a name you choose for your cluster, *API_SERVER* is the *host and port* of the cluster API server *BUT without http(s)*.
+
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+export CLUSTER_NAME=aws-managed1
+./util/argocd-register-cluster.sh ${CLUSTER_NAME} ${API_SERVER}
+----
+
+Check if your cluster has been added correctly.
+
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+argocd cluster list
+----
+
+[#add-project-definitions]
+== Add Project definitions
+
+In ArgoCD you can constrain which repositories and destinations can be linked with the definition of an application, in our case we are not constraining but we still create project definition to be prepared for future needs. 
+
+IMPORTANT: Now you *HAVE* to log back in the cluster where ArgoCD is running. This makes more sense if you just registered an additional cluster.
+
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+kubectl apply -f argocd/projects/project-dev.yml
+kubectl apply -f argocd/projects/project-test.yml
+
+argocd proj list
+----
+

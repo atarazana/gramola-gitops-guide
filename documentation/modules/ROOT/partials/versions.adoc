@@ -1,0 +1,3 @@
+:kubernetes-version: v1.18.6
+:oc-version: 4.8
+:argocd-version: v2.1.3
