@@ -13,7 +13,7 @@ content:
 
 asciidoc:
   attributes:
-    release-version: master
+    release-version: main
     page-pagination: true
   extensions:
     - ./lib/tab-block.js
@@ -21,7 +21,8 @@ asciidoc:
 
 ui:
   bundle:
-    url: https://github.com/redhat-developer-demos/rhd-tutorial-ui/releases/download/v0.1.9/ui-bundle.zip
+    #url: https://github.com/redhat-developer-demos/rhd-tutorial-ui/releases/download/v0.1.8/ui-bundle.zip
+    url: https://github.com/redhat-scholars/course-ui/releases/download/v0.1.12/ui-bundle.zip
     snapshot: true
   supplemental_files:
     - path: ./supplemental-ui

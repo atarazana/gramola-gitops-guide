@@ -1,7 +1,5 @@
 = Prepare Repositories
 include::_attributes.adoc[]
-:username: user1
-:password: openshift
 
 [#source-of-truth]
 == Source Of Truth
@@ -39,29 +37,51 @@ NOTE: Gitea will be installed in `gitea-system` namespace
 until kubectl apply -k util/gitea/; do sleep 2; done
 ----
 
-The previous command will retry until it's all installed but we still need to check if it all works properly.
+The previous command will retry until it's all installed but *we still need to check if it all works properly*.
 
 include::partial$gitea-tests.adoc[]
 
-[#create-git-user]
-== Create Git User
+[#create-git-users]
+== Create Git Users
 
-Let's create a user in Gitea and migrate (it's not really a fork because it's cross git server operation) our repositories.
+Now that Gitea is installed and up and running, it's time to some users in the cluster, to do so we're going to create a `Job` that will in it's turn create 20 users.
+
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+kustomize build util/setup/ | sed -e 's/^  name\:.*$//g' | kubectl create -f -
+----
+
+If you just want to create one use do this.
 
 include::partial$gitea-create-user.adoc[]
 
-[#migrate-gramola-repositories]
-== Migrate Gramola Repositories
+[#explore-gitea-console]
+== Explore Gitea Console
 
-Now that user {username} has been created let's migrate `gramola` repositories into Gitea.
+Before we continue with the migration of the git repositories of our application open the console and check that your credentials are valid and all looks good. Open https://{gitea-host}[^] and use these credentials: 
 
-CAUTION: TODO move this to scripts in gramola.git 
+- *USERNAME:* {username}
+- *PASSWORD:* {password}
+
+You should see something like this. Please enter your credentials and hit the green button.
+
+image::gitea-login.png[Gitea Login]
+
+[#create-git-pat]
+== Create Git PAT
+
+Let's create a *Personal Access Token* (PAT) in Gitea for user *{username}*.
+
+include::partial$gitea-create-pat.adoc[]
+
+[#migrate-repositories]
+== Migrate Repositories
+
+Now that user *{username}* has been created let's migrate `gramola` repositories into Gitea.
 
 include::partial$gitea-migrate-repos.adoc[]
 
-[#create-git-pat]
-== Create Git Personal Access Token
+After successfully migrating all the repos you should see this in the Gitea console.
 
-Let's create a *Personal Access Token* (PAT) in Gitea for user "{username}".
-
-include::partial$gitea-create-pat.adoc[]
+image::gitea-migrated-repos.png[Gitea Migrated Repos]

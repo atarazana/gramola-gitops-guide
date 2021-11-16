@@ -8,19 +8,3 @@
 The aim of this guide is take you through the complete process of deploying and promoting an example application using GitOps and CICD pipelines in OpenShift.
 
 Everything we do in this guide revolves around an example application called `Gramola`. This example (and microservices based) application is just a simplistic Musical Events system made of a database and a couple of java microservices.
-
-[.tiles.browse]
-== Browse modules
-
-[.tile]
-.xref:01-setup.adoc[Get Started]
-* xref:01-setup.adoc#openshift[OpenShift 4]
-
-[.tile]
-.xref:02-prepare-cluster.adoc[Prepare Cluster]
-* xref:02-prepare-cluster.adoc#install-operators[Install Operators]
-
-[.tile]
-.xref:02-deploy.adoc[Deploying]
-* xref:02-deploy.adoc#package[Package the Application]
-* xref:02-deploy.adoc#deploy[Deploy the Application]

@@ -1,23 +1,33 @@
 = Deploy CICD Pipelines With GitOps
 include::_attributes.adoc[]
-:username: user1
-:password: openshift
-:namespace-suffix: -{username}
-:root-apps-namespace: openshift-gitops
-// :registry-server: image-registry.openshift-image-registry.svc:5000
-//:registry-server: default-route-openshift-image-registry.apps.cluster-645f.645f.sandbox664.opentlc.com
-:registry-server: quay.io
-// :registry-org: gramola-cicd{namespace-suffix}
-:registry-org: cvicens
-:registry-username: {username}
-:git-provider: github
+
+// // :registry-server: image-registry.openshift-image-registry.svc:5000
+// //:registry-server: default-route-openshift-image-registry.apps.cluster-645f.645f.sandbox664.opentlc.com
+// :registry-server: quay.io
+// // :registry-org: gramola-cicd{namespace-suffix}
+// :registry-org: cvicens
+// :registry-username: {username}
+// :git-provider: github
+
+In this section you're going to deploy CI and CD pipelines that will help automatizing the processes of continuos integration and delivery.
 
 [#create-pipelines-root-app]
 == Create Pipelines Root App
 
-We are going to deploy another ArgoCD application, this time to deploy pipelines. But before we do we need to store some information in environment variables, namely: CONTAINER_REGISTRY_SERVER and CONTAINER_REGISTRY_ORG.
+We are going to deploy another ArgoCD application, this time to deploy pipelines. But before we do we need to store some information in environment variables, namely:
 
-NOTE: I you have your container registry account in *quay.io* then that's the value you have to type for *CONTAINER_REGISTRY_SERVER*.
+- *CONTAINER_REGISTRY_SERVER*
+- *CONTAINER_REGISTRY_ORG*
+
+Just as a refresh if you followed the instructions to create a quay.io account here is how you get the robot account credentials.
+
+image::container-registry-credentials-1.png[Quay Robot Account Credentials 1]
+
+Then copy *username* and *token* and paste them as required in the next steps. 
+
+image::container-registry-credentials-2.png[Quay Robot Account Credentials 2]
+
+NOTE: If you have your container registry account in *quay.io* then that's the value you have to type for *CONTAINER_REGISTRY_SERVER*.
 
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
@@ -38,7 +48,8 @@ Now we can create the root app in charge of deploying all the CICD related eleme
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-CICD_NAMESPACE="$(yq r ./apps/cicd/values.yaml cicdNamespace){namespace-suffix}"
+export USERNAME="{namespace-suffix}"
+export CICD_NAMESPACE="{cicd-namespace}-$\{USERNAME}"
 
 if [ -z "${CONTAINER_REGISTRY_SERVER}" ] && [ -z "${CONTAINER_REGISTRY_ORG}" ]; then
     echo "You should provide a value for CONTAINER_REGISTRY_SERVER and CONTAINER_REGISTRY_ORG"
@@ -47,7 +58,7 @@ cat <<EOF | kubectl apply -n openshift-gitops -f -
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: gramola-root-app-cicd-{namespace-suffix}
+  name: gramola-root-app-cicd-$\{USERNAME}
   namespace: openshift-gitops
   labels:
     argocd-cicd-app: "true"
@@ -64,22 +75,24 @@ spec:
     helm:
       parameters:
         - name: baseRepoUrl
-          value: ${BASE_REPO_URL}
+          value: https://{gitea-host}/{username}/gramola
         - name: namespaceSuffix
-          value: "{namespace-suffix}"
+          value: "-$\{USERNAME}"
+        - name: username
+          value: "{username}"
         - name: containerRegistryServer
           value: ${CONTAINER_REGISTRY_SERVER}
         - name: containerRegistryOrg
           value: ${CONTAINER_REGISTRY_ORG}
     path: argocd/cicd
-    repoURL: ${BASE_REPO_URL}.git
+    repoURL: https://{gitea-host}/{username}/gramola.git
     targetRevision: HEAD
 EOF
 fi
 ----
 
-[#create-git-secret-for-pipelines]
-== Create Git Secret For Pipelines
+[#create-git-secret]
+== Create Git Secret
 
 We are going to create secrets instead of storing them in the git repo, but before we do that let’s check that ArgoCD has created the namespace for us.
 
@@ -90,7 +103,7 @@ If the namespace is not there yet, you can check the sync status of the ArgoCD a
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-argocd app sync gramola-cicd-app{namespace-suffix}
+argocd app list | grep gramola-root-app-cicd
 ----
 
 ====
@@ -115,7 +128,7 @@ Fine, the namespace is in place, it's time to create the git secret our pipeline
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-export GIT_URL="https://#${GITEA_HOST}#/{username}/gramola"
+export GIT_URL="https://{gitea-host}/{username}/gramola"
 export GIT_USERNAME={username}
 export GIT_PAT_SECRET_NAME=$(yq r ./apps/cicd/values.yaml gitPatSecretName)
 
@@ -133,11 +146,13 @@ We need to annotate the secret so that it can actually be used by the pipeline.
 [source,bash, subs="+macros,+attributes"]
 ----
 kubectl annotate -n ${CICD_NAMESPACE} secret ${GIT_PAT_SECRET_NAME} \
-  "tekton.dev/git-0=https://${GITEA_HOST}"
+  "tekton.dev/git-0=https://{gitea-host}"
 ----
 
-[#create-registry-secret-for-pipelines]
-== Create Registry Secret For Pipelines
+[#create-registry-secret]
+== Create Registry Secret
+
+As we have explained before, in this section we will deploy both CI and CD pipelines for the microservices that compose Gramola. If you have just created a secret so that the CI and CD pipelines can create Pull Requests, this time you are going to create a secret with the credentials needed to push images to the container images registry.
 
 The next set of commands will ask you for the *usernane* and *password* of the container registry account you already had or created in  xref:01-setup.adoc#container-registry-account[this] section.
 
@@ -148,7 +163,7 @@ The next set of commands will ask you for the *usernane* and *password* of the c
 echo "CONTAINER_REGISTRY_USERNAME: " && read CONTAINER_REGISTRY_USERNAME
 ----
 
-*PASSWORD*
+*TOKEN*
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
@@ -176,257 +191,3 @@ kubectl annotate -n ${CICD_NAMESPACE} secret ${CONTAINER_REGISTRY_SECRET_NAME} \
 fi
 ----
 
-[#checking-cicd-assets]
-== Check pipelines, etc.
-
-… triggers are in place but we need web hooks
-
-Check routes are fine
-
-== Create Web Hooks for the CI Pipelines
-
-include::partial$gitea-create-webhooks.adoc[]
-
-First we want to create a webhook to trigger the CI pipeline for each of
-the services in this application:
-
-Go to github to the gramola-events repo:
-
-Go to Settings
-
-Go to Web Hooks
-
-Annotate route to the CI pipeline the one triggered with Push to the
-source code
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-oc get route/el-events-ci-pl-push-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}' && echo ""
-----
-
-Expect something like:
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-el-events-ci-pl-push-listener-gramola-cicd.apps.acme.com
-----
-
-Create Web Hook (click on Add Webhook) - Payload URL, the URL of the
-route of the trigger listener you just got (don’t forget the `http://`
-part, it’s NOT `https://`) - Type a secret… any thing should work - Just
-the push event
-
-Click on `Add webhook`
-
-Let’s check the webhook is working:
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-oc logs -f deployment/el-events-ci-pl-push-listener -n ${CICD_NAMESPACE}
-----
-
-You should get something like this, pay attention to one of the last
-lines saying *``event type ping is not allowed''*.
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-...
-{"level":"info","ts":"2021-08-26T15:31:19.005Z","logger":"eventlistener","caller":"sink/sink.go:213","msg":"interceptor stopped trigger processing: rpc error: code = FailedPrecondition desc = event type ping is not allowed","knative.dev/controller":"eventlistener","/triggers-eventid":"c5b06856-471d-43e5-9892-2d812b23e1ac","/trigger":"github-listener"}
-----
-
-Now if you push a change in the code the CI pipeline for `events` should
-we kicked off.
-
-If you haven’t stopped the log output you should see something like:
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-...
-{"level":"info","ts":"2021-08-26T15:37:54.796Z","logger":"eventlistener","caller":"resources/create.go:95","msg":"Generating resource: kind: &APIResource{Name:pipelineruns,Namespaced:true,Kind:PipelineRun,Verbs:[delete deletecollection get list patch create update watch],ShortNames:[pr prs],SingularName:pipelinerun,Categories:[tekton tekton-pipelines],Group:tekton.dev,Version:v1beta1,StorageVersionHash:RcAKAgPYYoo=,}, name: events-ci-pl-push-plr-","knative.dev/controller":"eventlistener"}
-{"level":"info","ts":"2021-08-26T15:37:54.796Z","logger":"eventlistener","caller":"resources/create.go:103","msg":"For event ID \"57d7515c-f954-43ee-b99b-bf53a1578058\" creating resource tekton.dev/v1beta1, Resource=pipelineruns","knative.dev/controller":"eventlistener"}
-----
-
-Stop the log output with `Ctrl+C`.
-
-We have to do the same for the `gateway` service, you now the drill,
-let’s get the route host got the listener.
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-oc get route/el-gateway-ci-pl-push-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}' && echo ""
-----
-
-This time go to the `gramola-gateway` repo and create a webhook like we
-did before but using the host you just got.
-
-Again as we did for `gramola-events` let’s have a look to the logs of
-the listener:
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-oc logs -f deployment/el-gateway-ci-pl-push-listener -n ${CICD_NAMESPACE}
-----
-
-If it all went well you should see this:
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-...
-{"level":"info","ts":"2021-08-26T15:58:30.986Z","logger":"eventlistener","caller":"sink/sink.go:213","msg":"interceptor stopped trigger processing: rpc error: code = FailedPrecondition desc = event type ping is not allowed","knative.dev/controller":"eventlistener","/triggers-eventid":"bf2144ab-d3ca-471c-a340-9d9ae9e150e4","/trigger":"github-listener"}
-----
-
-Now make a change to the code of `gramola-gateway` and let’s see if the
-pipeline is triggered or not.
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-...
-{"level":"info","ts":"2021-08-26T16:03:26.383Z","logger":"eventlistener","caller":"resources/create.go:95","msg":"Generating resource: kind: &APIResource{Name:pipelineruns,Namespaced:true,Kind:PipelineRun,Verbs:[delete deletecollection get list patch create update watch],ShortNames:[pr prs],SingularName:pipelinerun,Categories:[tekton tekton-pipelines],Group:tekton.dev,Version:v1beta1,StorageVersionHash:RcAKAgPYYoo=,}, name: gateway-ci-pl-push-plr-","knative.dev/controller":"eventlistener"}
-{"level":"info","ts":"2021-08-26T16:03:26.383Z","logger":"eventlistener","caller":"resources/create.go:103","msg":"For event ID \"de0712e7-9d0e-4896-87a2-1058047fe7ce\" creating resource tekton.dev/v1beta1, Resource=pipelineruns","knative.dev/controller":"eventlistener"}
-----
-
-== Creating Web Hooks for the Cd Pipelines
-
-Continuos Delivery pipelines are triggered once a PR to the
-configuration repository `gramola` changing the image of a deployment
-has been merged. This means we have to create webhooks for this type of
-event for all the services that comprises `gramola`, our application:
-
-Go to github to the gramola repo:
-
-Go to Settings
-
-Go to Web Hooks
-
-Annotate route to the CD pipeline, the one triggered with PR that
-changes the image of `events`.
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-oc get route/el-events-cd-pl-pr-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}' && echo ""
-----
-
-Expect something like:
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-el-events-cd-pl-pr-listener-gramola-cicd.apps.acme.com
-----
-
-Create Web Hook (click on Add Webhook) - Payload URL, the URL of the
-route of the trigger listener you just got (don’t forget the `http://`
-part, it’s NOT `https://`) - Type a secret… any thing should work -
-Click on Let me…. and select Pull Requests and deselect Push Events…
-
-Click on `Add webhook`
-
-Let’s check the webhook is working:
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-oc logs -f deployment/el-events-cd-pl-pr-listener -n ${CICD_NAMESPACE}
-----
-
-You should get something like this, pay attention to one of the last
-lines saying *``event type ping is not allowed''*.
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-...
-{"level":"info","ts":"2021-08-26T16:12:08.205Z","logger":"eventlistener","caller":"sink/sink.go:213","msg":"interceptor stopped trigger processing: rpc error: code = FailedPrecondition desc = event type ping is not allowed","knative.dev/controller":"eventlistener","/triggers-eventid":"8e99abfc-f288-470b-b0dc-21e4167186fe","/trigger":"github-listener"}
-----
-
-We have to do the same for the `gateway` service… so annotate route to
-the CD pipeline, the one triggered with PR that changes the image of
-`gateway`.
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-oc get route/el-gateway-cd-pl-pr-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}' && echo ""
-----
-
-Expect something like:
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-el-gateway-cd-pl-pr-listener-gramola-cicd.apps.acme.com
-----
-
-Create Web Hook (click on Add Webhook) - Payload URL, the URL of the
-route of the trigger listener you just got (don’t forget the `http://`
-part, it’s NOT `https://`) - Type a secret… any thing should work -
-Click on Let me…. and select Pull Requests and deselect Push Events…
-
-Click on `Add webhook`
-
-Let’s check the webhook is working:
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-oc logs -f deployment/el-gateway-cd-pl-pr-listener -n ${CICD_NAMESPACE}
-----
-
-You should get something like this, pay attention to one of the last
-lines saying *``event type ping is not allowed''*.
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-...
-{"level":"info","ts":"2021-08-26T16:16:56.921Z","logger":"eventlistener","caller":"sink/sink.go:213","msg":"interceptor stopped trigger processing: rpc error: code = FailedPrecondition desc = event type ping is not allowed","knative.dev/controller":"eventlistener","/triggers-eventid":"52fb39c6-40dc-431f-a155-224268ef95de","/trigger":"github-listener"}
-----
-
-== Useful commands
-
-== Sync Root Apps alone
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-argocd app sync gramola-root-app-dev
-argocd app sync gramola-root-app-test
-argocd app sync gramola-root-app-test-cloud
-----
-
-== Sync apps manually
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-argocd app sync events-app-dev
-argocd app sync events-app-test
-argocd app sync events-app-test-cloud
-----
-
-== Sync children apps (app of apps)
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-argocd app sync -l app.kubernetes.io/instance=gramola-root-app
-argocd app sync -l app.kubernetes.io/instance=gramola-root-app-dev
-argocd app sync -l app.kubernetes.io/instance=gramola-root-app-test
-argocd app sync -l app.kubernetes.io/instance=gramola-root-app-test-cloud
-----
-
-== AUX
-
-git clone
-https://oauth2:1AbCDeF_g2HIJKLMNOPqr@gitlab.com/yourusername/project.git
-project

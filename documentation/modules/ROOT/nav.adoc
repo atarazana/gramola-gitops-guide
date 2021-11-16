@@ -9,22 +9,29 @@
 
 * xref:03-prepare-repositories.adoc[3. Prepare Repositories]
 ** xref:03-prepare-repositories.adoc#deploying-gitea[Deploying Gitea]
-** xref:03-prepare-repositories.adoc#create-git-user[Create Git User]
-** xref:03-prepare-repositories.adoc#migrate-gramola-repositories[Migrate Repositories]
+** xref:03-prepare-repositories.adoc#create-git-users[Create Git Users]
 ** xref:03-prepare-repositories.adoc#create-git-pat[Create Git PAT]
+** xref:03-prepare-repositories.adoc#migrate-repositories[Migrate Repositories]
 
 * xref:04-prepare-argocd.adoc[4. Prepare ArgoCD]
 ** xref:04-prepare-argocd.adoc#checking-argocd[Checking ArgoCD]
 ** xref:04-prepare-argocd.adoc#log-in-argocd[Log in ArgoCD]
 ** xref:04-prepare-argocd.adoc#register-repositories[Register Repositories]
 ** xref:04-prepare-argocd.adoc#register-additional-clusters[Register Additional Clusters]
-** xref:04-prepare-argocd.adoc#add-project-definitions[Add Project definitions]
+** xref:04-prepare-argocd.adoc#add-project-definitions[Project definitions]
 
 * xref:05-deploy-gramola-with-gitops.adoc[5. Deploy Gramola]
-** xref:05-deploy-gramola-with-gitops.adoc#create-root-apps[Create Root Apps]
+** xref:05-deploy-gramola-with-gitops.adoc#create-root-app[Create Root App]
+** xref:05-deploy-gramola-with-gitops.adoc#create-additional-root-app[Create Additional Root App]
 
 * xref:06-deploy-cicd-pipelines-with-gitops.adoc[6. Deploy CICD Pipelines]
 ** xref:06-deploy-cicd-pipelines-with-gitops.adoc#create-pipelines-root-app[Create Pipelines Root App]
-** xref:06-deploy-cicd-pipelines-with-gitops.adoc#create-git-secret-for-pipelines[Create Git Secret]
-** xref:06-deploy-cicd-pipelines-with-gitops.adoc#create-registry-secret-for-pipelines[Create Registry Secret]
+** xref:06-deploy-cicd-pipelines-with-gitops.adoc#create-git-secret[Create Git Secret]
+** xref:06-deploy-cicd-pipelines-with-gitops.adoc#create-registry-secret[Create Registry Secret]
 
+* xref:07-setup-cicd-pipelines.adoc[7. Setup Pipelines]
+** xref:07-setup-cicd-pipelines.adoc#checking-cicd-pipelines[Checking CICD Pipelines]
+** xref:07-setup-cicd-pipelines.adoc#create-pipelines-web-hooks[Create Pipelines Web Hooks]
+
+* xref:08-test-cicd-pipelines.adoc[8. Test CICD Pipelines]
+** xref:08-test-cicd-pipelines.adoc#checking-cicd-pipelines[Checking CICD Pipelines]

@@ -1,7 +1,5 @@
 = Prepare Cluster
 include::_attributes.adoc[]
-:username: user1
-:password: openshift
 
 Everything we do in this section requires that you have fulfilled the xref:01-setup.adoc#prerequisite[prerequisites] section and you're logged in your OpenShift cluster.
 
@@ -12,9 +10,9 @@ Everything we do in this section requires that you have fulfilled the xref:01-se
 
 So if not already logged in, please do it now.
 
-[source,sh]
+[source,sh, subs="+macros,+attributes"]
 ----
-oc login -u USER -p PASS --server=https://api.cluster.example.com:6443
+oc login -u {username} -p {password} --server=https://api.{api-domain}
 ----
 
 [#install-operators]
@@ -32,4 +30,37 @@ Install *ArgoCD* (with OpenShift OAuth configured) and *Tekton*:
 ----
 until kubectl apply -k util/bootstrap/; do sleep 2; done
 ----
+
+[#high-level-tests]
+== High level tests
+
+Let's open the OpenShift Web Console and run some validation tests.
+
+Open this link: https://{openshift-console-host}[^]
+
+You should see something like.
+
+NOTE: You can skip the tour or run it if you want and have time.
+
+image::openshift-console.png[OpenShift Web Console]
+
+Now, take a look to the next picture, there are two arrows pointing to:
+
+- The ArgoCD web console link
+- The Pipelines section
+
+image::argocd-pipelines-test-1.png[High level tests 1]
+
+You can see both then we're on the good way.
+
+Open the ArgoCD web console then click on the "LOG IN VIA OPENSHIFT" button on the upper right corner and use your credentials:
+
+NOTE: The first time you successfully log in you'll see an Authorize Access request, leave it "as is"  and click on the button that says "Allow selected permissions"
+
+image::argocd-login.png[ArgoCD Log In]
+
+Finally if all went well you should land in the ArgoCD console and see this.
+
+image::argocd-console.png[ArgoCD Console]
+
 

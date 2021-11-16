@@ -1,3 +1,23 @@
-:experimental:
+:experimental: true
 :source-highlighter: highlightjs
+
+:base-domain: %BASE_SUBDOMAIN%
+:api-domain: {base-domain}:6443
+:cluster-subdomain: apps.{base-domain}
+:username: %USERNAME%
+:password: openshift
+
+:namespace-suffix: {username}
+:cicd-namespace: gramola-cicd
+
+:root-apps-namespace: openshift-gitops
 :gitea-namespace: gitea-system
+
+:git-provider: gitea
+:gitea-host: repository-gitea-system.{cluster-subdomain}
+
+:argocd-server: openshift-gitops-server-openshift-gitops.{cluster-subdomain}
+
+:openshift-console-host: console-openshift-console.{cluster-subdomain}
+
+:project_name: {username}%CLUSTER_SUBDOMAIN%

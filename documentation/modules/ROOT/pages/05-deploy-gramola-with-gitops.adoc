@@ -1,31 +1,24 @@
 = Deploy Gramola With GitOps
 include::_attributes.adoc[]
-:username: user1
-:password: openshift
-:namespace-suffix: -{username}
-:root-apps-namespace: openshift-gitops
 
-[#create-root-apps]
-== Create Root Apps
+[#create-root-app]
+== Create Root App
 
 ArgoCD uses a powerful abstraction of what an application is from the point of view of deployment. In an ArgoCD application we define where to look for the descriptors we want to create (*spec->source*) and maintain in Kubernetes and also how and where we want them (*spec->destination*). More over, because we can store Application objects also in git repository we could chain a set of applications with a parent application... hence we can nest application and call "*Root Application*" to the top parent of a set of elements including Applications.
 
-The next command creates a Root Application called *gramola-root-app* that points to our configuration repository at *${BASE_REPO_URL}* and folder *argocd/root-apps*.
-
-*BASE_REPO_URL* points to your migrated configuration repo.
+The next command creates a Root Application called *gramola-root-app* that points to our configuration repository https://{gitea-host}/{username}/gramola[here^] and folder *argocd/root-apps*.
 
 NOTE: https://argoproj.github.io/argo-cd/user-guide/helm/
 
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-export BASE_REPO_URL=https://${GITEA_HOST}/{username}/gramola
-
+export USERNAME="{namespace-suffix}"
 cat <<EOF | kubectl apply -n {root-apps-namespace} -f -
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: gramola-root-app-{namespace-suffix}
+  name: gramola-root-app-$\{USERNAME}
   namespace: {root-apps-namespace}
   labels:
     argocd-root-app: "true"
@@ -42,25 +35,39 @@ spec:
     helm:
       parameters:
         - name: baseRepoUrl
-          value: ${BASE_REPO_URL}
+          value: https://{gitea-host}/{username}/gramola
         - name: namespaceSuffix
-          value: "{namespace-suffix}"
+          value: "-$\{USERNAME}"
+        - name: username
+          value: "{username}"
     path: argocd/root-apps
-    repoURL: ${BASE_REPO_URL}
+    repoURL: https://{gitea-host}/{username}/gramola
     targetRevision: HEAD
 EOF
 ----
 
-If an additional cluster has been set up
+You should see something like.
+
+[.console-output]
+[source,bash, subs="+macros,+attributes"]
+----
+application.argoproj.io/gramola-root-app-user1 created
+----
+
+[#create-additional-root-app]
+== Create Additional Root App
+
+If an additional cluster has been set up...
 
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
+export USERNAME="{namespace-suffix}"
 cat <<EOF | kubectl apply -n {root-apps-namespace} -f -
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: gramola-root-app-cloud-{namespace-suffix}
+  name: gramola-root-app-cloud-$\{USERNAME}
   namespace: {root-apps-namespace}
   labels:
     argocd-root-app: "true"
@@ -77,14 +84,23 @@ spec:
     helm:
       parameters:
         - name: baseRepoUrl
-          value: ${BASE_REPO_URL}
+          value: https://{gitea-host}/{username}/gramola
         - name: destinationName
           value: ${CLUSTER_NAME}
         - name: namespaceSuffix
-          value: "{namespace-suffix}"
+          value: "-$\{USERNAME}"
+        - name: username
+          value: "{username}"
     path: argocd/root-apps-cloud
-    repoURL: ${BASE_REPO_URL}
+    repoURL: https://{gitea-host}/{username}/gramola
     targetRevision: HEAD
 EOF
 ----
 
+Similarly if you created the root app for the additional cluster you should see...
+
+[.console-output]
+[source,bash, subs="+macros,+attributes"]
+----
+application.argoproj.io/gramola-root-app-cloud-user1 created
+----

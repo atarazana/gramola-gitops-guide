@@ -1,7 +1,5 @@
 = Prepare ArgoCD
 include::_attributes.adoc[]
-:username: user1
-:password: openshift
 
 *ArgoCD* is the *GitOps* engine *OpenShift GitOps* rely on it should have been installed previously in xref:02-prepare-cluster.adoc#install-operators[Install Operators].
 
@@ -9,52 +7,37 @@ include::_attributes.adoc[]
 [#checking-argocd]
 == Checking ArgoCD
 
-Checking the status of an operators is a bit counterintuitive because we that something bad is false. As you can see below `Type` of condition is `CatalogSourcesUnhealthy`, which is a bad thing, but the `Status` is `False` so it's a good thing ;-)
-
-[source,bash, subs="+macros,+attributes"]
-----
-Conditions:
-   Last Transition Time:  2019-07-29T13:42:57Z
-   Message:               all available catalogsources are healthy
-   Reason:                AllCatalogSourcesHealthy
-   Status:                False
-   Type:                  CatalogSourcesUnhealthy
-----
-
-Because the message is less counterintuitive  let's check that instead. Please run this command to check the status of the operator.
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-echo $(kubectl get subs/openshift-gitops-operator -n openshift-operators -o jsonpath='{.status.conditions[0].message}')
-----
-
-If the operator is fine you should get this response.
-
-[.console-output]
-[source,bash, subs="+macros,+attributes"]
-----
-all available catalogsources are healthy
-----
+include::partial$argocd-tests.adoc[]
 
 [#log-in-argocd]
 == Log in ArgoCD with CLI
 
-Well *ArgoCD* operator is healthy but we still need to check if *ArgoCD* itself is also healthy, one way to do this is trying to log in using the *CLI* you should have installed as stated in xref:01-setup.adoc#prerequisite[Prerequisites] section.
+Well *ArgoCD* is healthy now let's see if the *CLI* works correctly by trying to log in with it (you should have installed as stated in xref:01-setup.adoc#prerequisite[Prerequisites] section).
+
+[IMPORTANT]
+====
+You'll be redirected to OpenShift Web Console to enter your credentials:
+
+- USERNAME: {username}
+- PASSWORD: {password}
+====
 
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-./util/argocd-login.sh
+argocd login {argocd-server} --insecure --sso
 ----
 
-The output should be similar to this one.
+After being successfully logged in, you should be redirected to localhost:8085 with a message of successful authentication and in the terminal output you should see something similar to this.
 
 [.console-output]
 [source,bash, subs="+macros,+attributes"]
 ----
-'admin:login' logged in successfully
-Context 'openshift-gitops-server-openshift-gitops.apps.cluster-1028.1028.sandbox65.opentlc.com' updated
+Opening browser for authentication
+Performing authorization_code flow login: https://{argocd-server}/api/dex/auth?access_type=offline&client_id=argo-cd-cli&code_challenge=VVX5Feb1ySsRQAUNfvSrolTt8yak2HKjUZ-YjuQgItI&code_challenge_method=S256&redirect_uri=http%3A%2F%2Flocalhost%3A8085%2Fauth%2Fcallback&response_type=code&scope=openid+profile+email+groups+offline_access&state=zsQHLaywsv
+Authentication successful
+'{username}' logged in successfully
+Context '{argocd-server}' updated
 ----
 
 [#register-repositories]
@@ -65,10 +48,7 @@ In this guide we cover the case of a protected git repository that needs to be i
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-GITEA_HOST=$(kubectl get route/repository -n {gitea-namespace} -o jsonpath={'.status.ingress[0].host'})
-echo "GITEA_HOST=${GITEA_HOST}"
-
-argocd repo add https://${GITEA_HOST}/{username}/gramola.git --username {username} --password ${GIT_TOKEN} --upsert
+argocd repo add https://{gitea-host}/{username}/gramola.git --username {username} --password ${GIT_PAT} --upsert
 ----
 
 Run this command to list the registered repositories.
@@ -85,7 +65,7 @@ This is a typical response.
 [source,bash, subs="+macros,+attributes"]
 ----
 TYPE  NAME  REPO                                                                                                           INSECURE  OCI    LFS    CREDS  STATUS      MESSAGE
-git         https://repository-gitea-system.apps.example.com/user1/gramola.git          false     false  false  true   Successful  
+git         https://{gitea-host}/user1/gramola.git          false     false  false  true   Successful  
 ----
 
 [#register-additional-clusters]
@@ -117,19 +97,26 @@ Check if your cluster has been added correctly.
 argocd cluster list
 ----
 
-[#add-project-definitions]
-== Add Project definitions
+[#project-definitions]
+== Project definitions
 
-In ArgoCD you can constrain which repositories and destinations can be linked with the definition of an application, in our case we are not constraining but we still create project definition to be prepared for future needs. 
+In ArgoCD you can constrain which repositories and destinations can be linked with the definition of an application, in our case we are not constraining but we still have created project definitions to be prepared for future needs. 
 
-IMPORTANT: Now you *HAVE* to log back in the cluster where ArgoCD is running. This makes more sense if you just registered an additional cluster.
+Run this command to see the list of project definitions.
 
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-kubectl apply -f argocd/projects/project-dev.yml
-kubectl apply -f argocd/projects/project-test.yml
-
 argocd proj list
 ----
 
+This is the expected result, one project definition for development and another one for testing.
+
+[.console-output]
+[source,bash, subs="+macros,+attributes"]
+----
+NAME                  DESCRIPTION           DESTINATIONS  SOURCES  CLUSTER-RESOURCE-WHITELIST  NAMESPACE-RESOURCE-BLACKLIST  SIGNATURE-KEYS  ORPHANED-RESOURCES
+default                                     *,*           *        */*                         <none>                        <none>          disabled
+gramola-project-dev   Gramola Project Dev   *,*           *        */*                         <none>                        <none>          disabled
+gramola-project-test  Gramola Project Test  *,*           *        */*                         <none>                        <none>          disabled
+----
