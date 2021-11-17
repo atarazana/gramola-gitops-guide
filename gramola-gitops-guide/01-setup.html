@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Setup :: Gramola GitOps Guide</title>
+    <link rel="canonical" href="https://atarazana.github.io/gramola-gitops-guide/gramola-gitops-guide/01-setup.html">
+    <link rel="prev" href="index.html">
+    <link rel="next" href="02-prepare-cluster.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" href="../_/css/site.css">
+<link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img
+          src="../_/img/header_logo.png" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" href="https://atarazana.github.io/gramola-gitops-guide">Gramola GitOps Guide</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Books</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">CheatSheets</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">CheatSheet A</a>
+            <a class="navbar-item" href="#">CheatSheet B</a>
+            <a class="navbar-item" href="#">CheatSheet C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Upcoming Events</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Event A</a>
+            <a class="navbar-item" href="#">Event B</a>
+            <a class="navbar-item" href="#">Event C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Tutorial A</a>
+            <a class="navbar-item" href="#">Tutorial B</a>
+            <a class="navbar-item" href="#">Tutorial C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="gramola-gitops-guide" data-version="master">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html" class=" query-params-link">Gramola GitOps Guide</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="01-setup.html">1. Setup</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#prerequisite">Prerequisites</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#openshift">Setup OpenShift 4</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#container-registry-account">Container Registry Account</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#download-tutorial">Get tutorial sources</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="02-prepare-cluster.html">2. Prepare Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-prepare-cluster.html#install-operators">Install Operators</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="03-prepare-repositories.html">3. Prepare Repositories</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="03-prepare-repositories.html#deploying-gitea">Deploying Gitea</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="03-prepare-repositories.html#create-git-users">Create Git Users</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="03-prepare-repositories.html#create-git-pat">Create Git PAT</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="03-prepare-repositories.html#migrate-repositories">Migrate Repositories</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="04-prepare-argocd.html">4. Prepare ArgoCD</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-prepare-argocd.html#checking-argocd">Checking ArgoCD</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-prepare-argocd.html#log-in-argocd">Log in ArgoCD</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-prepare-argocd.html#register-repositories">Register Repositories</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-prepare-argocd.html#register-additional-clusters">Register Additional Clusters</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-prepare-argocd.html#add-project-definitions">Project definitions</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="05-deploy-gramola-with-gitops.html">5. Deploy Gramola</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-deploy-gramola-with-gitops.html#create-root-app">Create Root App</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-deploy-gramola-with-gitops.html#create-additional-root-app">Create Additional Root App</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="06-deploy-cicd-pipelines-with-gitops.html">6. Deploy CICD Pipelines</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="06-deploy-cicd-pipelines-with-gitops.html#create-pipelines-root-app">Create Pipelines Root App</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="06-deploy-cicd-pipelines-with-gitops.html#create-git-secret">Create Git Secret</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="06-deploy-cicd-pipelines-with-gitops.html#create-registry-secret">Create Registry Secret</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="07-setup-cicd-pipelines.html">7. Setup Pipelines</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-setup-cicd-pipelines.html#checking-cicd-pipelines">Checking CICD Pipelines</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-setup-cicd-pipelines.html#create-pipelines-web-hooks">Create Pipelines Web Hooks</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="08-test-cicd-pipelines.html">8. Test CICD Pipelines</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-test-cicd-pipelines.html#checking-cicd-pipelines">Checking CICD Pipelines</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Gramola GitOps Guide</span>
+    <span class="version">master</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Gramola GitOps Guide</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="index.html">master</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Gramola GitOps Guide</a></li>
+    <li><a href="01-setup.html">1. Setup</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/atarazana/gramola-gitops-guide/edit/main/documentation/modules/ROOT/pages/01-setup.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Setup</h1>
+<div class="sect1">
+<h2 id="prerequisite"><a class="anchor" href="#prerequisite"></a>Prerequisite CLI tools</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following CLI tools are required for running the exercises in this tutorial.
+Please have them installed and configured before you get started with any of the tutorial chapters.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-center valign-top"><strong>Tool</strong></th>
+<th class="tableblock halign-center valign-top"><strong>macOS</strong></th>
+<th class="tableblock halign-center valign-top"><strong>Fedora</strong></th>
+<th class="tableblock halign-center valign-top"><strong>windows</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>Git</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://git-scm.com/download/mac">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://git-scm.com/download/linux">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://git-scm.com/download/win">Download</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>oc 4.8</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-4.8/openshift-client-mac.tar.gz">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-4.8/openshift-client-linux.tar.gz">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-4.8/openshift-client-windows.zip">Download</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>kubectl v1.18.6</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://storage.googleapis.com/kubernetes-release/release/v1.18.6/bin/darwin/amd64/kubectl">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://storage.googleapis.com/kubernetes-release/release/v1.18.6/bin/linux/amd64/kubectl">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://storage.googleapis.com/kubernetes-release/release/v1.18.6/bin/windows/amd64/kubectl.exe">Download</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><code>argocd v2.1.3</code></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/argoproj/argo-cd/releases/download/v2.1.3/argocd-darwin-amd64">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/argoproj/argo-cd/releases/download/v2.1.3/argocd-linux-amd64">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/argoproj/argo-cd/releases/download/v2.1.3/argocd-windows-amd64.exe">Download</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/mikefarah/yq">yq v2.4.1</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/mikefarah/yq/releases/download/2.4.1/yq_darwin_amd64">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/mikefarah/yq/releases/download/2.4.1/yq_linux_amd64">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/mikefarah/yq/releases/download/2.4.1/yq_windows_amd64.exe">Download</a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The following CLI tools are optional for running the exercises in this tutorial.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-center valign-top"><strong>Tool</strong></th>
+<th class="tableblock halign-center valign-top"><strong>macOS</strong></th>
+<th class="tableblock halign-center valign-top"><strong>Fedora</strong></th>
+<th class="tableblock halign-center valign-top"><strong>windows</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/stedolan/jq">jq v1.6.0</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/stedolan/jq/releases/download/jq-1.6/jq-osx-amd64">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64">Download</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/stedolan/jq/releases/download/jq-1.6/jq-win64.exe">Download</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="openshift"><a class="anchor" href="#openshift"></a>Setup OpenShift 4</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To run this guide <strong>you need to have at least one OpenShift cluster</strong> provisioned <strong>and be custer admin</strong>. For instance using <a href="https://try.openshift.com">try.openshift.com</a>, or can use any existing OpenShift4 cluster(s). Once you have your cluster, you can download the latest OpenShift client (oc) from <a href="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/">here</a> and add it to your path.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>oc version</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can check the OpenShift version using:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc version</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output should show oc version &gt;=4.7:</p>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">Client Version: 4.7.0-202102130115.p0-c66c03f
+Kubernetes Version: v1.18.6</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then login into the OpenShift cluster using <code>oc login</code></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="container-registry-account"><a class="anchor" href="#container-registry-account"></a>Container Registry Account</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Please open a browser and go to <a href="https://quay.io" class="bare">https://quay.io</a> then click on <strong>SIGN IN</strong>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/create-quay-account-01.png" alt="SIGN IN">
+</div>
+</div>
+<div class="paragraph">
+<p>Now click on <strong>Register for a Red Hat account</strong>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/create-quay-account-02.png" alt="SIGN IN">
+</div>
+</div>
+<div class="paragraph">
+<p>Please, choose a login name and fill in all the mandatory fields, then click <strong>NEXT</strong>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/create-quay-account-03.png" alt="SIGN IN">
+</div>
+</div>
+<div class="paragraph">
+<p>As you did before, fill in all the mandatory fields, then click <strong>NEXT</strong>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/create-quay-account-04.png" alt="SIGN IN">
+</div>
+</div>
+<div class="paragraph">
+<p>You aren&#8217;t a robot, are you? Then please check to continue.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/create-quay-account-05.png" alt="SIGN IN">
+</div>
+</div>
+<div class="paragraph">
+<p>If your Red Hat account user name is also a valid Quay username please confirm it, otherwise choose a different one not already taken.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/create-quay-account-06.png" alt="SIGN IN">
+</div>
+</div>
+<div class="paragraph">
+<p>No need to fill in any more fields just skip it.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/create-quay-account-07.png" alt="SIGN IN">
+</div>
+</div>
+<div class="paragraph">
+<p>Finally you have your Quay account. We have to create a bot account so that we don&#8217;t expose our password, to do so, please click on your account user name as in the next picture.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/create-quay-account-08.png" alt="SIGN IN">
+</div>
+</div>
+<div class="paragraph">
+<p>Now click on the robot icon on the left side.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/create-quay-account-09.png" alt="SIGN IN">
+</div>
+</div>
+<div class="paragraph">
+<p>Click on <strong>Create Robot Account</strong>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/create-quay-account-10.png" alt="SIGN IN">
+</div>
+</div>
+<div class="paragraph">
+<p>Now, provide a username and a description, <strong>cicd</strong> sounds like a good name, doesn&#8217;t it?</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/create-quay-account-11.png" alt="SIGN IN">
+</div>
+</div>
+<div class="paragraph">
+<p>Ok, we have our bot account, now we need to create empty repositories for our gramola microservices. Click on <strong>Create New Repository</strong> and follow instructions to create <code>gramola-events</code> repository.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/create-quay-account-12.png" alt="SIGN IN">
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s name our new repository as <strong>gramola-events</strong>, make it <strong>public</strong> and <strong>empty</strong>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/create-quay-account-13.png" alt="SIGN IN">
+</div>
+</div>
+<div class="paragraph">
+<p>Please do the same, this time with this name: <strong>gramola-gateway</strong>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/create-quay-account-14.png" alt="SIGN IN">
+</div>
+</div>
+<div class="paragraph">
+<p>Now that we have created our empty image repositories we have to give permissions on them to the bot account. Please navigate to <strong>Account Settings</strong>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/create-quay-account-15.png" alt="SIGN IN">
+</div>
+</div>
+<div class="paragraph">
+<p>Then go to the robot accounts area, click on robot icon on the left. You should see something like this. To give permissions on our repositories click on the <strong>"No repositories"</strong> link.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/create-quay-account-16.png" alt="SIGN IN">
+</div>
+</div>
+<div class="paragraph">
+<p>Give <strong>WRITE</strong> permissions to <strong>gramola-events</strong> and <strong>gramola-gateway</strong> repositories and click on <strong>Update permissions</strong>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/create-quay-account-17.png" alt="SIGN IN">
+</div>
+</div>
+<div class="paragraph">
+<p>In the next chapters you will need to use the username and token of your bot account, let&#8217;s have a look to those values so that you know how to get them later. Click on <strong>Options&#8594;View Credentials</strong>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/create-quay-account-18.png" alt="SIGN IN">
+</div>
+</div>
+<div class="paragraph">
+<p>As you can see the username is composed: <strong>[USER NAME]+[BOT ACCOUNT NAME]</strong>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/create-quay-account-19.png" alt="SIGN IN">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="download-tutorial"><a class="anchor" href="#download-tutorial"></a>Get tutorial sources</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Even though in a following chapter you will need to fork this repository you still need to clone it locally first to bootstrap the environment.</p>
+</div>
+<div class="paragraph">
+<p>Before we start setting up the environment, let’s clone the tutorial sources and set the <code>TUTORIAL_HOME</code> environment variable to point to the root directory of the tutorial:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone <a href="https://github.com/atarazana/gramola.git" class="bare">https://github.com/atarazana/gramola.git</a> gitops-guides</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export TUTORIAL_HOME="$(pwd)/gitops-guides"</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd $TUTORIAL_HOME</code></pre>
+</div>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="index.html" class="query-params-link">Gramola GitOps Guide</a></span>
+  <span class="next"><a href="02-prepare-cluster.html" class="query-params-link">2. Prepare Cluster</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://developers.redhat.com" target="_blank"></div>
+</footer>
+<script src="../_/js/vendor/clipboard.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

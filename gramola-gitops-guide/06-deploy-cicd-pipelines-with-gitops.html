@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Deploy CICD Pipelines With GitOps :: Gramola GitOps Guide</title>
+    <link rel="canonical" href="https://atarazana.github.io/gramola-gitops-guide/gramola-gitops-guide/06-deploy-cicd-pipelines-with-gitops.html">
+    <link rel="prev" href="05-deploy-gramola-with-gitops.html">
+    <link rel="next" href="07-setup-cicd-pipelines.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" href="../_/css/site.css">
+<link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img
+          src="../_/img/header_logo.png" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" href="https://atarazana.github.io/gramola-gitops-guide">Gramola GitOps Guide</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Books</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">CheatSheets</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">CheatSheet A</a>
+            <a class="navbar-item" href="#">CheatSheet B</a>
+            <a class="navbar-item" href="#">CheatSheet C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Upcoming Events</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Event A</a>
+            <a class="navbar-item" href="#">Event B</a>
+            <a class="navbar-item" href="#">Event C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Tutorial A</a>
+            <a class="navbar-item" href="#">Tutorial B</a>
+            <a class="navbar-item" href="#">Tutorial C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="gramola-gitops-guide" data-version="master">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html" class=" query-params-link">Gramola GitOps Guide</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="01-setup.html">1. Setup</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-setup.html#prerequisite">Prerequisites</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-setup.html#openshift">Setup OpenShift 4</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-setup.html#container-registry-account">Container Registry Account</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-setup.html#download-tutorial">Get tutorial sources</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="02-prepare-cluster.html">2. Prepare Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-prepare-cluster.html#install-operators">Install Operators</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="03-prepare-repositories.html">3. Prepare Repositories</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="03-prepare-repositories.html#deploying-gitea">Deploying Gitea</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="03-prepare-repositories.html#create-git-users">Create Git Users</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="03-prepare-repositories.html#create-git-pat">Create Git PAT</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="03-prepare-repositories.html#migrate-repositories">Migrate Repositories</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="04-prepare-argocd.html">4. Prepare ArgoCD</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-prepare-argocd.html#checking-argocd">Checking ArgoCD</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-prepare-argocd.html#log-in-argocd">Log in ArgoCD</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-prepare-argocd.html#register-repositories">Register Repositories</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-prepare-argocd.html#register-additional-clusters">Register Additional Clusters</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-prepare-argocd.html#add-project-definitions">Project definitions</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="05-deploy-gramola-with-gitops.html">5. Deploy Gramola</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-deploy-gramola-with-gitops.html#create-root-app">Create Root App</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-deploy-gramola-with-gitops.html#create-additional-root-app">Create Additional Root App</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="06-deploy-cicd-pipelines-with-gitops.html">6. Deploy CICD Pipelines</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#create-pipelines-root-app">Create Pipelines Root App</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#create-git-secret">Create Git Secret</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#create-registry-secret">Create Registry Secret</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="07-setup-cicd-pipelines.html">7. Setup Pipelines</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-setup-cicd-pipelines.html#checking-cicd-pipelines">Checking CICD Pipelines</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-setup-cicd-pipelines.html#create-pipelines-web-hooks">Create Pipelines Web Hooks</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="08-test-cicd-pipelines.html">8. Test CICD Pipelines</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-test-cicd-pipelines.html#checking-cicd-pipelines">Checking CICD Pipelines</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Gramola GitOps Guide</span>
+    <span class="version">master</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Gramola GitOps Guide</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="index.html">master</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Gramola GitOps Guide</a></li>
+    <li><a href="06-deploy-cicd-pipelines-with-gitops.html">6. Deploy CICD Pipelines</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/atarazana/gramola-gitops-guide/edit/main/documentation/modules/ROOT/pages/06-deploy-cicd-pipelines-with-gitops.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Deploy CICD Pipelines With GitOps</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this section you&#8217;re going to deploy CI and CD pipelines that will help automatizing the processes of continuos integration and delivery.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="create-pipelines-root-app"><a class="anchor" href="#create-pipelines-root-app"></a>Create Pipelines Root App</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We are going to deploy another ArgoCD application, this time to deploy pipelines. But before we do we need to store some information in environment variables, namely:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>CONTAINER_REGISTRY_SERVER</strong></p>
+</li>
+<li>
+<p><strong>CONTAINER_REGISTRY_ORG</strong></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Just as a refresh if you followed the instructions to create a quay.io account here is how you get the robot account credentials.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/container-registry-credentials-1.png" alt="Quay Robot Account Credentials 1">
+</div>
+</div>
+<div class="paragraph">
+<p>Then copy <strong>username</strong> and <strong>token</strong> and paste them as required in the next steps.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/container-registry-credentials-2.png" alt="Quay Robot Account Credentials 2">
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If you have your container registry account in <strong>quay.io</strong> then that&#8217;s the value you have to type for <strong>CONTAINER_REGISTRY_SERVER</strong>.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">echo "CONTAINER_REGISTRY_SERVER: " &amp;&amp; read CONTAINER_REGISTRY_SERVER</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<strong>CONTAINER_REGISTRY_ORG</strong> should be your user account or organization.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">echo "CONTAINER_REGISTRY_ORG: " &amp;&amp; read CONTAINER_REGISTRY_ORG</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now we can create the root app in charge of deploying all the CICD related elements.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export USERNAME="%USERNAME%"
+export CICD_NAMESPACE="gramola-cicd-${USERNAME}"
+
+if [ -z "${CONTAINER_REGISTRY_SERVER}" ] &amp;&amp; [ -z "${CONTAINER_REGISTRY_ORG}" ]; then
+    echo "You should provide a value for CONTAINER_REGISTRY_SERVER and CONTAINER_REGISTRY_ORG"
+else
+cat &lt;&lt;EOF | kubectl apply -n openshift-gitops -f -
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gramola-root-app-cicd-${USERNAME}
+  namespace: openshift-gitops
+  labels:
+    argocd-cicd-app: "true"
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: openshift-gitops
+    name: in-cluster
+  project: default
+  syncPolicy:
+    automated: {}
+  source:
+    helm:
+      parameters:
+        - name: baseRepoUrl
+          value: <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola</a>
+        - name: namespaceSuffix
+          value: "-${USERNAME}"
+        - name: username
+          value: "%USERNAME%"
+        - name: containerRegistryServer
+          value: ${CONTAINER_REGISTRY_SERVER}
+        - name: containerRegistryOrg
+          value: ${CONTAINER_REGISTRY_ORG}
+    path: argocd/cicd
+    repoURL: <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola.git" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola.git</a>
+    targetRevision: HEAD
+EOF
+fi</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="create-git-secret"><a class="anchor" href="#create-git-secret"></a>Create Git Secret</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We are going to create secrets instead of storing them in the git repo, but before we do that let’s check that ArgoCD has created the namespace for us.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If the namespace is not there yet, you can check the sync status of the ArgoCD application with:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd app list | grep gramola-root-app-cicd</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get project ${CICD_NAMESPACE}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You should see something like this:</p>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">NAME                 DISPLAY NAME   STATUS
+gramola-cicd-user1                  Active</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Fine, the namespace is in place, it&#8217;s time to create the git secret our pipelines will use when cloning and also while creating Pull Requests which are the fuel for the CD part of the pipelines to promote from one environment to the next.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export GIT_URL="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola"
+export GIT_USERNAME=%USERNAME%
+export GIT_PAT_SECRET_NAME=$(yq r ./apps/cicd/values.yaml gitPatSecretName)
+
+kubectl create secret -n ${CICD_NAMESPACE} generic ${GIT_PAT_SECRET_NAME} --dry-run=client -o yaml \
+  | yq w - type kubernetes.io/basic-auth \
+  | yq w - stringData.[user.name] ${GIT_USERNAME} \
+  | yq w - stringData.[user.email] "${GIT_USERNAME}@example.com" \
+  | yq w - stringData.username ${GIT_USERNAME} \
+  | yq w - stringData.password ${GIT_PAT} | kubectl apply -f -</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We need to annotate the secret so that it can actually be used by the pipeline.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl annotate -n ${CICD_NAMESPACE} secret ${GIT_PAT_SECRET_NAME} \
+  "tekton.dev/git-0=https://repository-gitea-system.apps.%BASE_SUBDOMAIN%"</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="create-registry-secret"><a class="anchor" href="#create-registry-secret"></a>Create Registry Secret</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As we have explained before, in this section we will deploy both CI and CD pipelines for the microservices that compose Gramola. If you have just created a secret so that the CI and CD pipelines can create Pull Requests, this time you are going to create a secret with the credentials needed to push images to the container images registry.</p>
+</div>
+<div class="paragraph">
+<p>The next set of commands will ask you for the <strong>usernane</strong> and <strong>password</strong> of the container registry account you already had or created in  <a href="01-setup.html#container-registry-account" class="page">this</a> section.</p>
+</div>
+<div class="paragraph">
+<p><strong>USERNAME</strong></p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">echo "CONTAINER_REGISTRY_USERNAME: " &amp;&amp; read CONTAINER_REGISTRY_USERNAME</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>TOKEN</strong></p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">echo "CONTAINER_REGISTRY_PASSWORD: " &amp;&amp; read -s CONTAINER_REGISTRY_PASSWORD</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now that we have gather all the needed information let&#8217;s create the secret.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+As we did with the git secret we have to annotate it so that Tekton know it has to use this and no other.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export CONTAINER_REGISTRY_SECRET_NAME=$(yq r ./apps/cicd/values.yaml containerRegistrySecretName)
+
+if [ -z "${CONTAINER_REGISTRY_USERNAME}" ] &amp;&amp; [ -z "${CONTAINER_REGISTRY_PASSWORD}" ]; then
+    echo "You should provide a value for CONTAINER_REGISTRY_USERNAME and CONTAINER_REGISTRY_PASSWORD"
+else
+kubectl create -n ${CICD_NAMESPACE} secret docker-registry ${CONTAINER_REGISTRY_SECRET_NAME} \
+  --docker-server=https://$CONTAINER_REGISTRY_SERVER \
+  --docker-username=$CONTAINER_REGISTRY_USERNAME \
+  --docker-password=$CONTAINER_REGISTRY_PASSWORD
+kubectl annotate -n ${CICD_NAMESPACE} secret ${CONTAINER_REGISTRY_SECRET_NAME} \
+  "tekton.dev/docker-0=https://${CONTAINER_REGISTRY_SERVER}"
+fi</code></pre>
+</div>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="05-deploy-gramola-with-gitops.html" class="query-params-link">5. Deploy Gramola</a></span>
+  <span class="next"><a href="07-setup-cicd-pipelines.html" class="query-params-link">7. Setup Pipelines</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://developers.redhat.com" target="_blank"></div>
+</footer>
+<script src="../_/js/vendor/clipboard.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

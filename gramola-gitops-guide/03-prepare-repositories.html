@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Prepare Repositories :: Gramola GitOps Guide</title>
+    <link rel="canonical" href="https://atarazana.github.io/gramola-gitops-guide/gramola-gitops-guide/03-prepare-repositories.html">
+    <link rel="prev" href="02-prepare-cluster.html">
+    <link rel="next" href="04-prepare-argocd.html">
+    <meta name="generator" content="Antora 2.3.4">
+    <link rel="stylesheet" href="../_/css/site.css">
+<link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img
+          src="../_/img/header_logo.png" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" href="https://atarazana.github.io/gramola-gitops-guide">Gramola GitOps Guide</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Books</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">CheatSheets</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">CheatSheet A</a>
+            <a class="navbar-item" href="#">CheatSheet B</a>
+            <a class="navbar-item" href="#">CheatSheet C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Upcoming Events</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Event A</a>
+            <a class="navbar-item" href="#">Event B</a>
+            <a class="navbar-item" href="#">Event C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Tutorial A</a>
+            <a class="navbar-item" href="#">Tutorial B</a>
+            <a class="navbar-item" href="#">Tutorial C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="gramola-gitops-guide" data-version="master">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html" class=" query-params-link">Gramola GitOps Guide</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="01-setup.html">1. Setup</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-setup.html#prerequisite">Prerequisites</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-setup.html#openshift">Setup OpenShift 4</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-setup.html#container-registry-account">Container Registry Account</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="01-setup.html#download-tutorial">Get tutorial sources</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="02-prepare-cluster.html">2. Prepare Cluster</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-prepare-cluster.html#install-operators">Install Operators</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="03-prepare-repositories.html">3. Prepare Repositories</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#deploying-gitea">Deploying Gitea</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#create-git-users">Create Git Users</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#create-git-pat">Create Git PAT</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#migrate-repositories">Migrate Repositories</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="04-prepare-argocd.html">4. Prepare ArgoCD</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-prepare-argocd.html#checking-argocd">Checking ArgoCD</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-prepare-argocd.html#log-in-argocd">Log in ArgoCD</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-prepare-argocd.html#register-repositories">Register Repositories</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-prepare-argocd.html#register-additional-clusters">Register Additional Clusters</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="04-prepare-argocd.html#add-project-definitions">Project definitions</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="05-deploy-gramola-with-gitops.html">5. Deploy Gramola</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-deploy-gramola-with-gitops.html#create-root-app">Create Root App</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-deploy-gramola-with-gitops.html#create-additional-root-app">Create Additional Root App</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="06-deploy-cicd-pipelines-with-gitops.html">6. Deploy CICD Pipelines</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="06-deploy-cicd-pipelines-with-gitops.html#create-pipelines-root-app">Create Pipelines Root App</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="06-deploy-cicd-pipelines-with-gitops.html#create-git-secret">Create Git Secret</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="06-deploy-cicd-pipelines-with-gitops.html#create-registry-secret">Create Registry Secret</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="07-setup-cicd-pipelines.html">7. Setup Pipelines</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-setup-cicd-pipelines.html#checking-cicd-pipelines">Checking CICD Pipelines</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="07-setup-cicd-pipelines.html#create-pipelines-web-hooks">Create Pipelines Web Hooks</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="08-test-cicd-pipelines.html">8. Test CICD Pipelines</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-test-cicd-pipelines.html#checking-cicd-pipelines">Checking CICD Pipelines</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Gramola GitOps Guide</span>
+    <span class="version">master</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Gramola GitOps Guide</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="index.html">master</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Gramola GitOps Guide</a></li>
+    <li><a href="03-prepare-repositories.html">3. Prepare Repositories</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/atarazana/gramola-gitops-guide/edit/main/documentation/modules/ROOT/pages/03-prepare-repositories.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Prepare Repositories</h1>
+<div class="sect1">
+<h2 id="source-of-truth"><a class="anchor" href="#source-of-truth"></a>Source Of Truth</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As we have already exposed in GitOps Git is the source of truth so we need one to start with&#8230;&#8203; you may have your own but for the sake of homogeneity in this guide we&#8217;re going to use a git server deployed in OpenShift.</p>
+</div>
+<div class="paragraph">
+<p>Why not relying on a preexisting git server somewhere you may ask? This is so, because in order to execute the pipelines section of this guide you have to fork some git repositories.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This is necessary because:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>webhooks need to be created and obviously you need permissions on them</p>
+</li>
+<li>
+<p>you want to make changes to the code and promote those changes across environments</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>These are the repositories you need to fork:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Configuration Repo:</strong> <a href="https://github.com/atarazana/gramola.git" class="bare">https://github.com/atarazana/gramola.git</a></p>
+</li>
+<li>
+<p><strong>Events Microservice:</strong> <a href="https://github.com/atarazana/gramola-events.git" class="bare">https://github.com/atarazana/gramola-events.git</a></p>
+</li>
+<li>
+<p><strong>Gateway Microservice:</strong> <a href="https://github.com/atarazana/gramola-gateway.git" class="bare">https://github.com/atarazana/gramola-gateway.git</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You could fork them in your preferred git server, but for the sake of simplicity we&#8217;re going to give you instructions to deploy a git server in OpenShift and for them there.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploying-gitea"><a class="anchor" href="#deploying-gitea"></a>Deploying Gitea</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Run this command to deploy the Gitea operator and Gitea itself in your OpenShift cluster.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Gitea will be installed in <code>gitea-system</code> namespace
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">until kubectl apply -k util/gitea/; do sleep 2; done</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The previous command will retry until it&#8217;s all installed but <strong>we still need to check if it all works properly</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s have a look to the Gitea deployment object.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This command only works as expected once the Deployment object has been created by the operator, be patient and try again if you get.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">Error from server (NotFound): deployments.apps "repository" not found</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl rollout status deploy/repository -n gitea-system</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is the normal state after being successfully rolled out.</p>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">deployment "repository" successfully rolled out
+get deployment/repository -n gitea-system
+NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+repository   1/1     1            1           32m</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Once Gitea has been rolled out, run this little smoke test.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -I <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/</a></code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+You should get something like this. If you don&#8217;t, be patient and run this command in 2 mins or so.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">HTTP/1.1 200 OK
+set-cookie: i_like_gitea=82e42fd387b6ea7a; Path=/; HttpOnly; SameSite=Lax
+date: Mon, 25 Oct 2021 08:06:22 GMT
+set-cookie: 5b3fc896c2f6eedc568a6b59cd1862ea=23d42cb20150039ef52136e8993c6865; path=/; HttpOnly; Secure; SameSite=None
+cache-control: private</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="create-git-users"><a class="anchor" href="#create-git-users"></a>Create Git Users</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Now that Gitea is installed and up and running, it&#8217;s time to some users in the cluster, to do so we&#8217;re going to create a <code>Job</code> that will in it&#8217;s turn create 20 users.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kustomize build util/setup/ | sed -e 's/^  name\:.*$//g' | kubectl create -f -</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you just want to create one use do this.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Ignore error "Internal Server Error" user %USERNAME% should have been created.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">GITEA_INSTALL_TOKEN=$(curl -s -XPOST -H "Content-Type: application/json"  -k -d '{"name":"install"}' -u opentlc-mgr:r3dh4t1\! <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/users/opentlc-mgr/tokens" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/users/opentlc-mgr/tokens</a> | jq -r .sha1)
+echo "GITEA_INSTALL_TOKEN=${GITEA_INSTALL_TOKEN}"
+
+curl -X 'POST' \
+    "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/admin/users?access_token=${GITEA_INSTALL_TOKEN}" \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d '{
+          "email": "%USERNAME%@example.com",
+          "full_name": "User %USERNAME%",
+          "login_name": "%USERNAME%",
+          "must_change_password": false,
+          "password": "openshift",
+          "send_notify": true,
+          "source_id": 0,
+          "username": "%USERNAME%",
+          "visibility" : "public"
+    }'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="explore-gitea-console"><a class="anchor" href="#explore-gitea-console"></a>Explore Gitea Console</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before we continue with the migration of the git repositories of our application open the console and check that your credentials are valid and all looks good. Open <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%" class="bare" target="_blank" rel="noopener">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%</a> and use these credentials:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>USERNAME:</strong> %USERNAME%</p>
+</li>
+<li>
+<p><strong>PASSWORD:</strong> openshift</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You should see something like this. Please enter your credentials and hit the green button.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/gitea-login.png" alt="Gitea Login">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="create-git-pat"><a class="anchor" href="#create-git-pat"></a>Create Git PAT</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Let&#8217;s create a <strong>Personal Access Token</strong> (PAT) in Gitea for user <strong>%USERNAME%</strong>.</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+You&#8217;ll need this token later so don&#8217;t forget to copy it somewhere just in case you close the terminal window.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">GIT_PAT=$(curl -s -XPOST -H "Content-Type: application/json"  -k -d '{"name":"cicd'"${RANDOM}"'"}' -u %USERNAME%:openshift <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/users/opentlc-mgr/tokens" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/users/opentlc-mgr/tokens</a> | jq -r .sha1)
+echo "GIT_PAT=${GIT_PAT}"</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="migrate-repositories"><a class="anchor" href="#migrate-repositories"></a>Migrate Repositories</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Now that user <strong>%USERNAME%</strong> has been created let&#8217;s migrate <code>gramola</code> repositories into Gitea.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">  curl -X 'POST' \
+      "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/repos/migrate" \
+      -H 'accept: application/json' \
+      -H  "Authorization: token ${GIT_PAT}" \
+      -H 'Content-Type: application/json' \
+      -d '{
+      "clone_addr": "https://github.com/atarazana/gramola.git",
+      "description": "gramola configuration",
+      "issues": false,
+      "labels": false,
+      "lfs": false,
+      "milestones": false,
+      "private": false,
+      "pull_requests": false,
+      "releases": false,
+      "repo_name": "gramola",
+      "repo_owner": "%USERNAME%",
+      "service": "git",
+      "wiki": false
+    }'
+
+  curl -X 'POST' \
+      "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/repos/migrate" \
+      -H 'accept: application/json' \
+      -H  "Authorization: token ${GIT_PAT}" \
+      -H 'Content-Type: application/json' \
+      -d '{
+      "clone_addr": "https://github.com/atarazana/gramola-events.git",
+      "description": "gramola configuration",
+      "issues": false,
+      "labels": false,
+      "lfs": false,
+      "milestones": false,
+      "private": false,
+      "pull_requests": false,
+      "releases": false,
+      "repo_name": "gramola-events",
+      "repo_owner": "%USERNAME%",
+      "service": "git",
+      "wiki": false
+    }'
+
+  curl -X 'POST' \
+      "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/repos/migrate" \
+      -H 'accept: application/json' \
+      -H  "Authorization: token ${GIT_PAT}" \
+      -H 'Content-Type: application/json' \
+      -d '{
+      "clone_addr": "https://github.com/atarazana/gramola-gateway.git",
+      "description": "gramola configuration",
+      "issues": false,
+      "labels": false,
+      "lfs": false,
+      "milestones": false,
+      "private": false,
+      "pull_requests": false,
+      "releases": false,
+      "repo_name": "gramola-gateway",
+      "repo_owner": "%USERNAME%",
+      "service": "git",
+      "wiki": false
+    }'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After successfully migrating all the repos you should see this in the Gitea console.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/gitea-migrated-repos.png" alt="Gitea Migrated Repos">
+</div>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="02-prepare-cluster.html" class="query-params-link">2. Prepare Cluster</a></span>
+  <span class="next"><a href="04-prepare-argocd.html" class="query-params-link">4. Prepare ArgoCD</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://developers.redhat.com" target="_blank"></div>
+</footer>
+<script src="../_/js/vendor/clipboard.js"></script>
+<script src="../_/js/site.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
