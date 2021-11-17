@@ -3,7 +3,7 @@ runtime:
 
 site:
   title: Gramola GitOps Guide (Dev Mode)
-  url: http://localhost:3000/quarkus-zero-to-serverless-guide/index.html
+  url: http://localhost:3000/gramola-gitops-guide/index.html
   start_page: gramola-gitops-guide::index.adoc
 
 content:
