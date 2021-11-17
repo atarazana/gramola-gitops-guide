@@ -3,8 +3,8 @@ runtime:
 
 site:
   title: Gramola GitOps Guide
-  url: https://redhat-scholars.github.io/course-template
-  start_page: template-tutorial::index.adoc
+  url: https://atarazana.github.io/gramola-gitops-guide
+  start_page: gramola-gitops-guide::index.adoc
 
 content:
   sources:
