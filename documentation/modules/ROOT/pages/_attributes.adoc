@@ -5,7 +5,7 @@
 :api-domain: {base-domain}:6443
 :cluster-subdomain: apps.{base-domain}
 :username: %USERNAME%
-:password: openshift
+:password: %PASSWORD%
 
 :namespace-suffix: {username}
 :cicd-namespace: gramola-cicd
