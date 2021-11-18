@@ -48,7 +48,7 @@ In this guide we cover the case of a protected git repository that needs to be i
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-argocd --insecure repo add https://{gitea-host}/{username}/gramola.git --username {username} --password ${GIT_PAT} --upsert
+argocd --insecure repo add https://{gitea-host}/{username}/gramola.git --username {username} --password ${GIT_PAT} --upsert --insecure-skip-server-verification
 ----
 
 Run this command to list the registered repositories.
