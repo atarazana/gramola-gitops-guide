@@ -52,7 +52,7 @@ Now that Gitea is installed and up and running, it's time to some users in the c
 kustomize build util/setup/ | sed -e 's/^  name\:.*$//g' | kubectl create -f -
 ----
 
-If you just want to create one use do this.
+If you just want to create one user do this.
 
 include::partial$gitea-create-user.adoc[]
 

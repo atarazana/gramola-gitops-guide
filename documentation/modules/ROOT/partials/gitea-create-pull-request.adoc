@@ -1,7 +1,7 @@
 
 
 
-curl -X 'POST' \
+curl -k -X 'POST' \
   'https://'"${GITEA_HOST}"'/api/v1/repos/user1/gramola-events/pulls' \
   -H 'accept: application/json' \
   -H 'Authorization: token '"${GIT_PAT}"'' \

@@ -2,7 +2,7 @@
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-  curl -X 'POST' \
+  curl -k -X 'POST' \
       "https://{gitea-host}/api/v1/repos/migrate" \
       -H 'accept: application/json' \
       -H  "Authorization: token ${GIT_PAT}" \
@@ -23,7 +23,7 @@
       "wiki": false
     }'
 
-  curl -X 'POST' \
+  curl -k -X 'POST' \
       "https://{gitea-host}/api/v1/repos/migrate" \
       -H 'accept: application/json' \
       -H  "Authorization: token ${GIT_PAT}" \
@@ -44,7 +44,7 @@
       "wiki": false
     }'
 
-  curl -X 'POST' \
+  curl -k -X 'POST' \
       "https://{gitea-host}/api/v1/repos/migrate" \
       -H 'accept: application/json' \
       -H  "Authorization: token ${GIT_PAT}" \

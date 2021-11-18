@@ -32,7 +32,7 @@ Once Gitea has been rolled out, run this little smoke test.
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-curl -I https://{gitea-host}/
+curl -k -I https://{gitea-host}/
 ----
 
 NOTE: You should get something like this. If you don't, be patient and run this command in 2 mins or so.
