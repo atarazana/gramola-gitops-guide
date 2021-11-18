@@ -48,7 +48,7 @@ In this guide we cover the case of a protected git repository that needs to be i
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-argocd repo add https://{gitea-host}/{username}/gramola.git --username {username} --password ${GIT_PAT} --upsert
+argocd --insecure repo add https://{gitea-host}/{username}/gramola.git --username {username} --password ${GIT_PAT} --upsert
 ----
 
 Run this command to list the registered repositories.
@@ -56,7 +56,7 @@ Run this command to list the registered repositories.
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-argocd repo list
+argocd --insecure repo list
 ----
 
 This is a typical response.
@@ -94,7 +94,7 @@ Check if your cluster has been added correctly.
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-argocd cluster list
+argocd --insecure cluster list
 ----
 
 [#project-definitions]
@@ -107,7 +107,7 @@ Run this command to see the list of project definitions.
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-argocd proj list
+argocd --insecure proj list
 ----
 
 This is the expected result, one project definition for development and another one for testing.

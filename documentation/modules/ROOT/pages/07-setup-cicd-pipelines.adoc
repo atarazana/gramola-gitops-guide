@@ -237,9 +237,9 @@ lines saying *``event type ping is not allowed''*.
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-argocd app sync gramola-root-app-dev
-argocd app sync gramola-root-app-test
-argocd app sync gramola-root-app-test-cloud
+argocd --insecure app sync gramola-root-app-dev
+argocd --insecure app sync gramola-root-app-test
+argocd --insecure app sync gramola-root-app-test-cloud
 ----
 
 == Sync apps manually
@@ -247,9 +247,9 @@ argocd app sync gramola-root-app-test-cloud
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-argocd app sync events-app-dev
-argocd app sync events-app-test
-argocd app sync events-app-test-cloud
+argocd --insecure app sync events-app-dev
+argocd --insecure app sync events-app-test
+argocd --insecure app sync events-app-test-cloud
 ----
 
 == Sync children apps (app of apps)
@@ -257,10 +257,10 @@ argocd app sync events-app-test-cloud
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-argocd app sync -l app.kubernetes.io/instance=gramola-root-app
-argocd app sync -l app.kubernetes.io/instance=gramola-root-app-dev
-argocd app sync -l app.kubernetes.io/instance=gramola-root-app-test
-argocd app sync -l app.kubernetes.io/instance=gramola-root-app-test-cloud
+argocd --insecure app sync -l app.kubernetes.io/instance=gramola-root-app
+argocd --insecure app sync -l app.kubernetes.io/instance=gramola-root-app-dev
+argocd --insecure app sync -l app.kubernetes.io/instance=gramola-root-app-test
+argocd --insecure app sync -l app.kubernetes.io/instance=gramola-root-app-test-cloud
 ----
 
 == AUX
