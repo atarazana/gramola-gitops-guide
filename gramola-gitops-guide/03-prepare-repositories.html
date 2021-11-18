@@ -413,7 +413,7 @@ curl -k -X 'POST' \
           "full_name": "User %USERNAME%",
           "login_name": "%USERNAME%",
           "must_change_password": false,
-          "password": "openshift",
+          "password": "%PASSWORD%",
           "send_notify": true,
           "source_id": 0,
           "username": "%USERNAME%",
@@ -435,7 +435,7 @@ curl -k -X 'POST' \
 <p><strong>USERNAME:</strong> %USERNAME%</p>
 </li>
 <li>
-<p><strong>PASSWORD:</strong> openshift</p>
+<p><strong>PASSWORD:</strong> %PASSWORD%</p>
 </li>
 </ul>
 </div>
@@ -469,7 +469,7 @@ You&#8217;ll need this token later so don&#8217;t forget to copy it somewhere ju
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">GIT_PAT=$(curl -k -s -XPOST -H "Content-Type: application/json"  -k -d '{"name":"cicd'"${RANDOM}"'"}' -u %USERNAME%:openshift <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/users/opentlc-mgr/tokens" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/users/opentlc-mgr/tokens</a> | jq -r .sha1)
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">GIT_PAT=$(curl -k -s -XPOST -H "Content-Type: application/json"  -k -d '{"name":"cicd'"${RANDOM}"'"}' -u %USERNAME%:%PASSWORD% <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/users/opentlc-mgr/tokens" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/users/opentlc-mgr/tokens</a> | jq -r .sha1)
 echo "GIT_PAT=${GIT_PAT}"</code></pre>
 </div>
 </div>
