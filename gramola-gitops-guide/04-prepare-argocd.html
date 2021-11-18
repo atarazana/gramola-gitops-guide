@@ -322,7 +322,7 @@ Context 'openshift-gitops-server-openshift-gitops.apps.%BASE_SUBDOMAIN%' updated
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd repo add <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola.git" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola.git</a> --username %USERNAME% --password ${GIT_PAT} --upsert</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd --insecure repo add <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola.git" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola.git</a> --username %USERNAME% --password ${GIT_PAT} --upsert</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -330,7 +330,7 @@ Context 'openshift-gitops-server-openshift-gitops.apps.%BASE_SUBDOMAIN%' updated
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd repo list</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd --insecure repo list</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -379,7 +379,7 @@ oc login ${API_SERVER} --username=myuser --password=mypass</code></pre>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd cluster list</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd --insecure cluster list</code></pre>
 </div>
 </div>
 </div>
@@ -395,7 +395,7 @@ oc login ${API_SERVER} --username=myuser --password=mypass</code></pre>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd proj list</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd --insecure proj list</code></pre>
 </div>
 </div>
 <div class="paragraph">

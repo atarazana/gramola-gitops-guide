@@ -707,9 +707,9 @@ lines saying <strong>``event type ping is not allowed''</strong>.</p>
 <div class="sectionbody">
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd app sync gramola-root-app-dev
-argocd app sync gramola-root-app-test
-argocd app sync gramola-root-app-test-cloud</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd --insecure app sync gramola-root-app-dev
+argocd --insecure app sync gramola-root-app-test
+argocd --insecure app sync gramola-root-app-test-cloud</code></pre>
 </div>
 </div>
 </div>
@@ -719,9 +719,9 @@ argocd app sync gramola-root-app-test-cloud</code></pre>
 <div class="sectionbody">
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd app sync events-app-dev
-argocd app sync events-app-test
-argocd app sync events-app-test-cloud</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd --insecure app sync events-app-dev
+argocd --insecure app sync events-app-test
+argocd --insecure app sync events-app-test-cloud</code></pre>
 </div>
 </div>
 </div>
@@ -731,10 +731,10 @@ argocd app sync events-app-test-cloud</code></pre>
 <div class="sectionbody">
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd app sync -l app.kubernetes.io/instance=gramola-root-app
-argocd app sync -l app.kubernetes.io/instance=gramola-root-app-dev
-argocd app sync -l app.kubernetes.io/instance=gramola-root-app-test
-argocd app sync -l app.kubernetes.io/instance=gramola-root-app-test-cloud</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd --insecure app sync -l app.kubernetes.io/instance=gramola-root-app
+argocd --insecure app sync -l app.kubernetes.io/instance=gramola-root-app-dev
+argocd --insecure app sync -l app.kubernetes.io/instance=gramola-root-app-test
+argocd --insecure app sync -l app.kubernetes.io/instance=gramola-root-app-test-cloud</code></pre>
 </div>
 </div>
 </div>
