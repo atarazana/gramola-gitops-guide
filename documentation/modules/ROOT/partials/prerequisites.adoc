@@ -27,9 +27,9 @@ Please have them installed and configured before you get started with any of the
 | https://github.com/argoproj/argo-cd/releases/download/{argocd-version}/argocd-linux-amd64[Download]
 | https://github.com/argoproj/argo-cd/releases/download/{argocd-version}/argocd-windows-amd64.exe[Download]
 
-| https://github.com/mikefarah/yq[yq v2.4.1]
-| https://github.com/mikefarah/yq/releases/download/2.4.1/yq_darwin_amd64[Download]
-| https://github.com/mikefarah/yq/releases/download/2.4.1/yq_linux_amd64[Download]
-| https://github.com/mikefarah/yq/releases/download/2.4.1/yq_windows_amd64.exe[Download]
+| https://github.com/mikefarah/yq[yq {yq-version}]
+| https://github.com/mikefarah/yq/releases/download/{yq-version}/yq_darwin_amd64[Download]
+| https://github.com/mikefarah/yq/releases/download/{yq-version}/yq_linux_amd64[Download]
+| https://github.com/mikefarah/yq/releases/download/{yq-version}/yq_windows_amd64.exe[Download]
 
 |===
