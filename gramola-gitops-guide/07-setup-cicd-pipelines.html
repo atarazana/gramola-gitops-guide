@@ -378,7 +378,7 @@ This is just an example covering the bare minimum tasks of a CI pipeline! Of cou
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">EVENTS_CI_EL_LISTENER_HOST=$(oc get route/el-events-ci-pl-push-gitea-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}')
 
-curl -X 'POST' "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/repos/%USERNAME%/gramola-events/hooks" \
+curl -k -X 'POST' "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/repos/%USERNAME%/gramola-events/hooks" \
   -H "accept: application/json" \
   -H "Authorization: token ${GIT_PAT}" \
   -H "Content-Type: application/json" \
@@ -411,7 +411,7 @@ curl -X 'POST' "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/rep
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">GATEWAY_CI_EL_LISTENER_HOST=$(oc get route/el-gateway-ci-pl-push-gitea-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}')
 
-curl -X 'POST' "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/repos/%USERNAME%/gramola-gateway/hooks" \
+curl -k -X 'POST' "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/repos/%USERNAME%/gramola-gateway/hooks" \
   -H "accept: application/json" \
   -H "Authorization: token ${GIT_PAT}" \
   -H "Content-Type: application/json" \
@@ -444,7 +444,7 @@ curl -X 'POST' "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/rep
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">EVENTS_CD_EL_LISTENER_HOST=$(oc get route/el-events-cd-pl-pr-gitea-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}')
 
-curl -X 'POST' "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/repos/%USERNAME%/gramola/hooks" \
+curl -k -X 'POST' "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/repos/%USERNAME%/gramola/hooks" \
   -H "accept: application/json" \
   -H "Authorization: token ${GIT_PAT}" \
   -H "Content-Type: application/json" \
@@ -477,7 +477,7 @@ curl -X 'POST' "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/rep
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">GATEWAY_CD_EL_LISTENER_HOST=$(oc get route/el-gateway-cd-pl-pr-gitea-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}')
 
-curl -X 'POST' "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/repos/%USERNAME%/gramola/hooks" \
+curl -k -X 'POST' "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/repos/%USERNAME%/gramola/hooks" \
   -H "accept: application/json" \
   -H "Authorization: token ${GIT_PAT}" \
   -H "Content-Type: application/json" \

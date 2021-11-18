@@ -347,7 +347,7 @@ repository   1/1     1            1           32m</code></pre>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -I <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/</a></code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -k -I <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/</a></code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -385,7 +385,7 @@ cache-control: private</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>If you just want to create one use do this.</p>
+<p>If you just want to create one user do this.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -401,10 +401,10 @@ Ignore error "Internal Server Error" user %USERNAME% should have been created.
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">GITEA_INSTALL_TOKEN=$(curl -s -XPOST -H "Content-Type: application/json"  -k -d '{"name":"install"}' -u opentlc-mgr:r3dh4t1\! <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/users/opentlc-mgr/tokens" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/users/opentlc-mgr/tokens</a> | jq -r .sha1)
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">GITEA_INSTALL_TOKEN=$(curl -k -s -XPOST -H "Content-Type: application/json"  -k -d '{"name":"install"}' -u opentlc-mgr:r3dh4t1\! <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/users/opentlc-mgr/tokens" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/users/opentlc-mgr/tokens</a> | jq -r .sha1)
 echo "GITEA_INSTALL_TOKEN=${GITEA_INSTALL_TOKEN}"
 
-curl -X 'POST' \
+curl -k -X 'POST' \
     "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/admin/users?access_token=${GITEA_INSTALL_TOKEN}" \
     -H 'accept: application/json' \
     -H 'Content-Type: application/json' \
@@ -469,7 +469,7 @@ You&#8217;ll need this token later so don&#8217;t forget to copy it somewhere ju
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">GIT_PAT=$(curl -s -XPOST -H "Content-Type: application/json"  -k -d '{"name":"cicd'"${RANDOM}"'"}' -u %USERNAME%:openshift <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/users/opentlc-mgr/tokens" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/users/opentlc-mgr/tokens</a> | jq -r .sha1)
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">GIT_PAT=$(curl -k -s -XPOST -H "Content-Type: application/json"  -k -d '{"name":"cicd'"${RANDOM}"'"}' -u %USERNAME%:openshift <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/users/opentlc-mgr/tokens" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/users/opentlc-mgr/tokens</a> | jq -r .sha1)
 echo "GIT_PAT=${GIT_PAT}"</code></pre>
 </div>
 </div>
@@ -483,7 +483,7 @@ echo "GIT_PAT=${GIT_PAT}"</code></pre>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">  curl -X 'POST' \
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">  curl -k -X 'POST' \
       "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/repos/migrate" \
       -H 'accept: application/json' \
       -H  "Authorization: token ${GIT_PAT}" \
@@ -504,7 +504,7 @@ echo "GIT_PAT=${GIT_PAT}"</code></pre>
       "wiki": false
     }'
 
-  curl -X 'POST' \
+  curl -k -X 'POST' \
       "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/repos/migrate" \
       -H 'accept: application/json' \
       -H  "Authorization: token ${GIT_PAT}" \
@@ -525,7 +525,7 @@ echo "GIT_PAT=${GIT_PAT}"</code></pre>
       "wiki": false
     }'
 
-  curl -X 'POST' \
+  curl -k -X 'POST' \
       "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/repos/migrate" \
       -H 'accept: application/json' \
       -H  "Authorization: token ${GIT_PAT}" \
