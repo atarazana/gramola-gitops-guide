@@ -322,7 +322,7 @@ Context 'openshift-gitops-server-openshift-gitops.apps.%BASE_SUBDOMAIN%' updated
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd --insecure repo add <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola.git" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola.git</a> --username %USERNAME% --password ${GIT_PAT} --upsert</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd --insecure repo add <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola.git" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola.git</a> --username %USERNAME% --password ${GIT_PAT} --upsert --insecure-skip-server-verification</code></pre>
 </div>
 </div>
 <div class="paragraph">
