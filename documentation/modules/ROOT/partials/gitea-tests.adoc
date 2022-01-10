@@ -22,7 +22,7 @@ This is the normal state after being successfully rolled out.
 [source,bash, subs="+macros,+attributes"]
 ----
 deployment "repository" successfully rolled out
-get deployment/repository -n {gitea-namespace}
+oc get deployment/repository -n {gitea-namespace}
 NAME         READY   UP-TO-DATE   AVAILABLE   AGE
 repository   1/1     1            1           32m
 ----
