@@ -44,7 +44,7 @@ include::partial$gitea-tests.adoc[]
 [#create-git-users]
 == Create Git Users
 
-Now that Gitea is installed and up and running, it's time to some users in the cluster, to do so we're going to create a `Job` that will in it's turn create 20 users.
+Now that Gitea is installed and up and running, it's time to add some users in the cluster, to do so we're going to create a `Job` that will in it's turn create 20 users.
 
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
