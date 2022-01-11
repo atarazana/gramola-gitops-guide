@@ -55,83 +55,6 @@ Well triggers are in place but we need web hooks to feed them!
 
 include::partial$gitea-create-webhooks.adoc[]
 
-[#check-ci-web-hook]
-== Check CI Web Hook
-
-Let’s check the webhook is working:
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-oc logs -f deployment/el-events-ci-pl-push-listener -n ${CICD_NAMESPACE}
-----
-
-You should get something like this, pay attention to one of the last
-lines saying *``event type ping is not allowed''*.
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-...
-{"level":"info","ts":"2021-08-26T15:31:19.005Z","logger":"eventlistener","caller":"sink/sink.go:213","msg":"interceptor stopped trigger processing: rpc error: code = FailedPrecondition desc = event type ping is not allowed","knative.dev/controller":"eventlistener","/triggers-eventid":"c5b06856-471d-43e5-9892-2d812b23e1ac","/trigger":"github-listener"}
-----
-
-Now if you push a change in the code the CI pipeline for `events` should
-we kicked off.
-
-If you haven’t stopped the log output you should see something like:
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-...
-{"level":"info","ts":"2021-08-26T15:37:54.796Z","logger":"eventlistener","caller":"resources/create.go:95","msg":"Generating resource: kind: &APIResource{Name:pipelineruns,Namespaced:true,Kind:PipelineRun,Verbs:[delete deletecollection get list patch create update watch],ShortNames:[pr prs],SingularName:pipelinerun,Categories:[tekton tekton-pipelines],Group:tekton.dev,Version:v1beta1,StorageVersionHash:RcAKAgPYYoo=,}, name: events-ci-pl-push-plr-","knative.dev/controller":"eventlistener"}
-{"level":"info","ts":"2021-08-26T15:37:54.796Z","logger":"eventlistener","caller":"resources/create.go:103","msg":"For event ID \"57d7515c-f954-43ee-b99b-bf53a1578058\" creating resource tekton.dev/v1beta1, Resource=pipelineruns","knative.dev/controller":"eventlistener"}
-----
-
-Stop the log output with `Ctrl+C`.
-
-We have to do the same for the `gateway` service, you now the drill,
-let’s get the route host got the listener.
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-oc get route/el-gateway-ci-pl-push-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}' && echo ""
-----
-
-This time go to the `gramola-gateway` repo and create a webhook like we
-did before but using the host you just got.
-
-Again as we did for `gramola-events` let’s have a look to the logs of
-the listener:
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-oc logs -f deployment/el-gateway-ci-pl-push-listener -n ${CICD_NAMESPACE}
-----
-
-If it all went well you should see this:
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-...
-{"level":"info","ts":"2021-08-26T15:58:30.986Z","logger":"eventlistener","caller":"sink/sink.go:213","msg":"interceptor stopped trigger processing: rpc error: code = FailedPrecondition desc = event type ping is not allowed","knative.dev/controller":"eventlistener","/triggers-eventid":"bf2144ab-d3ca-471c-a340-9d9ae9e150e4","/trigger":"github-listener"}
-----
-
-Now make a change to the code of `gramola-gateway` and let’s see if the
-pipeline is triggered or not.
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-...
-{"level":"info","ts":"2021-08-26T16:03:26.383Z","logger":"eventlistener","caller":"resources/create.go:95","msg":"Generating resource: kind: &APIResource{Name:pipelineruns,Namespaced:true,Kind:PipelineRun,Verbs:[delete deletecollection get list patch create update watch],ShortNames:[pr prs],SingularName:pipelinerun,Categories:[tekton tekton-pipelines],Group:tekton.dev,Version:v1beta1,StorageVersionHash:RcAKAgPYYoo=,}, name: gateway-ci-pl-push-plr-","knative.dev/controller":"eventlistener"}
-{"level":"info","ts":"2021-08-26T16:03:26.383Z","logger":"eventlistener","caller":"resources/create.go:103","msg":"For event ID \"de0712e7-9d0e-4896-87a2-1058047fe7ce\" creating resource tekton.dev/v1beta1, Resource=pipelineruns","knative.dev/controller":"eventlistener"}
-----
-
 == Creating Web Hooks for the Cd Pipelines
 
 Continuos Delivery pipelines are triggered once a PR to the
@@ -151,7 +74,7 @@ changes the image of `events`.
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-oc get route/el-events-cd-pl-pr-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}' && echo ""
+oc get route/el-events-cd-pl-pr-gitea-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}' && echo ""
 ----
 
 Expect something like:
@@ -159,7 +82,7 @@ Expect something like:
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-el-events-cd-pl-pr-listener-gramola-cicd.apps.acme.com
+el-events-cd-pl-pr-gitea-listener-gramola-cicd.apps.acme.com
 ----
 
 Create Web Hook (click on Add Webhook) - Payload URL, the URL of the
@@ -174,7 +97,7 @@ Let’s check the webhook is working:
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-oc logs -f deployment/el-events-cd-pl-pr-listener -n ${CICD_NAMESPACE}
+oc logs -f deployment/el-events-cd-pl-pr-gitea-listener -n ${CICD_NAMESPACE}
 ----
 
 You should get something like this, pay attention to one of the last
@@ -194,7 +117,7 @@ the CD pipeline, the one triggered with PR that changes the image of
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-oc get route/el-gateway-cd-pl-pr-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}' && echo ""
+oc get route/el-gateway-cd-pl-pr-gitea-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}' && echo ""
 ----
 
 Expect something like:
@@ -202,7 +125,7 @@ Expect something like:
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-el-gateway-cd-pl-pr-listener-gramola-cicd.apps.acme.com
+el-gateway-cd-pl-pr-gitea-listener-gramola-cicd.apps.acme.com
 ----
 
 Create Web Hook (click on Add Webhook) - Payload URL, the URL of the
@@ -217,7 +140,7 @@ Let’s check the webhook is working:
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-oc logs -f deployment/el-gateway-cd-pl-pr-listener -n ${CICD_NAMESPACE}
+oc logs -f deployment/el-gateway-cd-pl-pr-gitea-listener -n ${CICD_NAMESPACE}
 ----
 
 You should get something like this, pay attention to one of the last
