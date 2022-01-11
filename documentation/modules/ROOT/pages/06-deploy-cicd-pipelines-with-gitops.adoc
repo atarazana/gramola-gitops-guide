@@ -130,7 +130,7 @@ Fine, the namespace is in place, it's time to create the git secret our pipeline
 ----
 export GIT_URL="https://{gitea-host}/{username}/gramola"
 export GIT_USERNAME={username}
-export GIT_PAT_SECRET_NAME=$(yq r ./apps/cicd/values.yaml gitPatSecretName)
+export GIT_PAT_SECRET_NAME=$(yq eval '.gitPatSecretName' ./apps/cicd/values.yaml)
 
 cat <<EOF | kubectl apply -f - 
 apiVersion: v1
