@@ -184,7 +184,7 @@ NOTE: As we did with the git secret we have to annotate it so that Tekton know i
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-export CONTAINER_REGISTRY_SECRET_NAME=$(yq r ./apps/cicd/values.yaml containerRegistrySecretName)
+export CONTAINER_REGISTRY_SECRET_NAME=$(yq eval '.containerRegistrySecretName' ./apps/cicd/values.yaml)
 
 if [ -z "${CONTAINER_REGISTRY_USERNAME}" ] && [ -z "${CONTAINER_REGISTRY_PASSWORD}" ]; then
     echo "You should provide a value for CONTAINER_REGISTRY_USERNAME and CONTAINER_REGISTRY_PASSWORD"
