@@ -1,60 +1,6 @@
 = Deploy CICD Pipelines With GitOps
 include::_attributes.adoc[]
 
-[#checking-cicd-pipelines]
-== Checking pipelines
-
-Well so far we have used the command line to create the ArgoCD root application that in its turn has created all the needed elements:
-
-- Cluster Tasks
-- Pipelines
-- Triggers
-
-All those elements have been created in namespace devoted to CICD, let's have a look at the pipelines. Open the OpenShift web console and navigate to the CICD project (_red arrow_).
-
-NOTE: Make sure that on the upper left corner the "Administrator" view is selected and that you are in the *'Home->Projects'* section.
-
-image::pipelines-check-1.png[Pipelines Check 1]
-
-Now navigate to 'Pipelines->Pipelines'. As you can see there are CI and CD pipelines for each microservice.
-
-image::pipelines-check-2.png[Pipelines Check 2]
-
-Le's have a look to the *CI pipeline* for the `Events` microservice *'events-ci-pl'*. As you can see is made of a series of tasks:
-
-- *fetch-repository:* Fetches the `Events` code fro the Gitea repository you migrated before
-- *package:* Compiles and packages the code in a JAR file
-- *build:* Builds a container image, pushes it to the registry of images and saves the hash in an output variable
-- *fetch-config-repository:* Fetches the configuration of Gramola (remember git is the source of truth for ArgoCD)
-- *update-image:* Updates the hash in the *kustomization file* in the `dev` overlay of `Events` but in a short lived feature branch
-- *gitea-pr-create:* Creates a *Pull Request* with the *feature branch* over the *main branch*
-- *github-pr-create:* _N/A in this case we use Gitea_
-
-NOTE: This is just an example covering the bare minimum tasks of a CI pipeline! Of course there should be other critical tasks such as: unit testing, code quality, ...
-
-image::pipelines-check-3.png[Pipelines Check 3]
-
-Navigate back and open the *CD pipeline*, again for `Events`, called *'events-cd-pl'*. This time the list of tasks is even shorter...
-
-- *argocd-sync:* This triggers both the refresh from the configuration git repository and the assets synchronization
-- *fetch-config-repository:* Fetches the configuration of Gramola (remember git is the source of truth for ArgoCD)
-- *update-image:* Updates the hash in the *kustomization file* in the `dev` overlay of `Events` but in a short lived feature branch
-- *gitea-pr-create:* Creates a *Pull Request* with the *feature branch* over the *main branch*
-- *github-pr-create:* _N/A in this case we use Gitea_
-
-image::pipelines-check-4.png[Pipelines Check 4]
-
-Finally if you navigate to 'Pipelines->Triggers' you'll see there are many of them, we'll only use those for Gitea but the example is ready for receiving events from GitHub and GitLab. 
-
-image::pipelines-check-5.png[Pipelines Check 5]
-
-Well triggers are in place but we need web hooks to feed them!
-
-[#create-pipelines-web-hooks]
-== Create Pipelines Web Hooks
-
-include::partial$gitea-create-webhooks.adoc[]
-
 [#check-ci-web-hook]
 == Check CI Web Hook
 
@@ -132,139 +78,34 @@ pipeline is triggered or not.
 {"level":"info","ts":"2021-08-26T16:03:26.383Z","logger":"eventlistener","caller":"resources/create.go:103","msg":"For event ID \"de0712e7-9d0e-4896-87a2-1058047fe7ce\" creating resource tekton.dev/v1beta1, Resource=pipelineruns","knative.dev/controller":"eventlistener"}
 ----
 
-== Creating Web Hooks for the Cd Pipelines
+Now let's take a look at these pipelines in OpenShift console. Go to 'pipelines->events-ci-pl' and inside 'pipelineruns' open the run created by the webhook, you must see something like this:
 
-Continuos Delivery pipelines are triggered once a PR to the
-configuration repository `gramola` changing the image of a deployment
-has been merged. This means we have to create webhooks for this type of
-event for all the services that comprises `gramola`, our application:
+image::pipeline-ci-run.png[Pipeline CI run]
 
-Go to github to the gramola repo:
+As we can see the pipeline has been automatically triggered due to the repository update and a pull request must has been created in Gitea, let's check.
 
-Go to Settings
+Go to Gitea and inside 'Gramola' repository there must be a pull request like 'Updating 'gramola-events' image for overlay 'dev' with new image', merge it:
 
-Go to Web Hooks
+image::gitea-merged-pr.png[Gitea merged PR]
 
-Annotate route to the CD pipeline, the one triggered with PR that
-changes the image of `events`.
+Now the cd pipeline must be automatically triggered by this merged PR. Go to 'pipelines->events-cd-pl' and inside 'pipelineruns' open the run created after the merge, you must see something like this:
 
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-oc get route/el-events-cd-pl-pr-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}' && echo ""
-----
+image::pipelines-events-cd.png[Pipeline events CD]
 
-Expect something like:
+As we can see, this pipeline has updated the Gramola Events image with latest changes and has also created a new PR for test environment. You can validate these by doing:
 
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-el-events-cd-pl-pr-listener-gramola-cicd.apps.acme.com
-----
+- In you terminal execute the following command to view existing replica sets (update the user name):
+  [.console-input]
+  [source,bash, subs="+macros,+attributes"]
+  ----
+  oc get replicaset -n gramola-dev-*user*
+  ----
 
-Create Web Hook (click on Add Webhook) - Payload URL, the URL of the
-route of the trigger listener you just got (don’t forget the `http://`
-part, it’s NOT `https://`) - Type a secret… any thing should work -
-Click on Let me…. and select Pull Requests and deselect Push Events…
+  A new replica set has been created for 'gramola-events' in order to update the image version.
 
-Click on `Add webhook`
+- Go to Gitea and inside 'Gramola' repository there must be a pull request like 'Updating 'gramola-events' image for overlay 'test' with new image'. You can merge to continue with the deployment process in test environment.
 
-Let’s check the webhook is working:
 
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-oc logs -f deployment/el-events-cd-pl-pr-listener -n ${CICD_NAMESPACE}
-----
 
-You should get something like this, pay attention to one of the last
-lines saying *``event type ping is not allowed''*.
 
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-...
-{"level":"info","ts":"2021-08-26T16:12:08.205Z","logger":"eventlistener","caller":"sink/sink.go:213","msg":"interceptor stopped trigger processing: rpc error: code = FailedPrecondition desc = event type ping is not allowed","knative.dev/controller":"eventlistener","/triggers-eventid":"8e99abfc-f288-470b-b0dc-21e4167186fe","/trigger":"github-listener"}
-----
 
-We have to do the same for the `gateway` service… so annotate route to
-the CD pipeline, the one triggered with PR that changes the image of
-`gateway`.
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-oc get route/el-gateway-cd-pl-pr-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}' && echo ""
-----
-
-Expect something like:
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-el-gateway-cd-pl-pr-listener-gramola-cicd.apps.acme.com
-----
-
-Create Web Hook (click on Add Webhook) - Payload URL, the URL of the
-route of the trigger listener you just got (don’t forget the `http://`
-part, it’s NOT `https://`) - Type a secret… any thing should work -
-Click on Let me…. and select Pull Requests and deselect Push Events…
-
-Click on `Add webhook`
-
-Let’s check the webhook is working:
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-oc logs -f deployment/el-gateway-cd-pl-pr-listener -n ${CICD_NAMESPACE}
-----
-
-You should get something like this, pay attention to one of the last
-lines saying *``event type ping is not allowed''*.
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-...
-{"level":"info","ts":"2021-08-26T16:16:56.921Z","logger":"eventlistener","caller":"sink/sink.go:213","msg":"interceptor stopped trigger processing: rpc error: code = FailedPrecondition desc = event type ping is not allowed","knative.dev/controller":"eventlistener","/triggers-eventid":"52fb39c6-40dc-431f-a155-224268ef95de","/trigger":"github-listener"}
-----
-
-== Useful commands
-
-== Sync Root Apps alone
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-argocd --insecure app sync gramola-root-app-dev
-argocd --insecure app sync gramola-root-app-test
-argocd --insecure app sync gramola-root-app-test-cloud
-----
-
-== Sync apps manually
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-argocd --insecure app sync events-app-dev
-argocd --insecure app sync events-app-test
-argocd --insecure app sync events-app-test-cloud
-----
-
-== Sync children apps (app of apps)
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-argocd --insecure app sync -l app.kubernetes.io/instance=gramola-root-app
-argocd --insecure app sync -l app.kubernetes.io/instance=gramola-root-app-dev
-argocd --insecure app sync -l app.kubernetes.io/instance=gramola-root-app-test
-argocd --insecure app sync -l app.kubernetes.io/instance=gramola-root-app-test-cloud
-----
-
-== AUX
-
-git clone
-https://oauth2:1AbCDeF_g2HIJKLMNOPqr@gitlab.com/yourusername/project.git
-project
