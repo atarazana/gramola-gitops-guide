@@ -7,7 +7,7 @@
     <link rel="canonical" href="https://atarazana.github.io/gramola-gitops-guide/gramola-gitops-guide/06-deploy-cicd-pipelines-with-gitops.html">
     <link rel="prev" href="05-deploy-gramola-with-gitops.html">
     <link rel="next" href="07-setup-cicd-pipelines.html">
-    <meta name="generator" content="Antora 2.3.4">
+    <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
 <link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -199,7 +199,7 @@
     <li class="component is-current">
       <span class="title">Gramola GitOps Guide</span>
       <ul class="versions">
-        <li class="version is-current is-latest">
+        <li class="version is-current">
           <a href="index.html">master</a>
         </li>
       </ul>
@@ -393,7 +393,7 @@ gramola-cicd-user1                  Active</code></pre>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export GIT_URL="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola"
 export GIT_USERNAME=%USERNAME%
-export GIT_PAT_SECRET_NAME=$(yq r ./apps/cicd/values.yaml gitPatSecretName)
+export GIT_PAT_SECRET_NAME=$(yq eval '.gitPatSecretName' ./apps/cicd/values.yaml)
 
 cat &lt;&lt;EOF | kubectl apply -f -
 apiVersion: v1
@@ -428,7 +428,7 @@ EOF</code></pre>
 <p>As we have explained before, in this section we will deploy both CI and CD pipelines for the microservices that compose Gramola. If you have just created a secret so that the CI and CD pipelines can create Pull Requests, this time you are going to create a secret with the credentials needed to push images to the container images registry.</p>
 </div>
 <div class="paragraph">
-<p>The next set of commands will ask you for the <strong>usernane</strong> and <strong>password</strong> of the container registry account you already had or created in  <a href="01-setup.html#container-registry-account" class="page">this</a> section.</p>
+<p>The next set of commands will ask you for the <strong>usernane</strong> and <strong>password</strong> of the container registry account you already had or created in  <a href="01-setup.html#container-registry-account" class="xref page">this</a> section.</p>
 </div>
 <div class="paragraph">
 <p><strong>USERNAME</strong></p>
@@ -463,7 +463,7 @@ As we did with the git secret we have to annotate it so that Tekton know it has 
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export CONTAINER_REGISTRY_SECRET_NAME=$(yq r ./apps/cicd/values.yaml containerRegistrySecretName)
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export CONTAINER_REGISTRY_SECRET_NAME=$(yq eval '.containerRegistrySecretName' ./apps/cicd/values.yaml)
 
 if [ -z "${CONTAINER_REGISTRY_USERNAME}" ] &amp;&amp; [ -z "${CONTAINER_REGISTRY_PASSWORD}" ]; then
     echo "You should provide a value for CONTAINER_REGISTRY_USERNAME and CONTAINER_REGISTRY_PASSWORD"

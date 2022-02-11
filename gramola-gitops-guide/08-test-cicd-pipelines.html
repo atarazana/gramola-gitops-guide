@@ -6,7 +6,7 @@
     <title>Deploy CICD Pipelines With GitOps :: Gramola GitOps Guide</title>
     <link rel="canonical" href="https://atarazana.github.io/gramola-gitops-guide/gramola-gitops-guide/08-test-cicd-pipelines.html">
     <link rel="prev" href="07-setup-cicd-pipelines.html">
-    <meta name="generator" content="Antora 2.3.4">
+    <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
 <link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -198,7 +198,7 @@
     <li class="component is-current">
       <span class="title">Gramola GitOps Guide</span>
       <ul class="versions">
-        <li class="version is-current is-latest">
+        <li class="version is-current">
           <a href="index.html">master</a>
         </li>
       </ul>
@@ -223,287 +223,6 @@
   <div class="content">
 <article class="doc">
 <h1 class="page">Deploy CICD Pipelines With GitOps</h1>
-<div class="sect1">
-<h2 id="checking-cicd-pipelines"><a class="anchor" href="#checking-cicd-pipelines"></a>Checking pipelines</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Well so far we have used the command line to create the ArgoCD root application that in its turn has created all the needed elements:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Cluster Tasks</p>
-</li>
-<li>
-<p>Pipelines</p>
-</li>
-<li>
-<p>Triggers</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>All those elements have been created in namespace devoted to CICD, let&#8217;s have a look at the pipelines. Open the OpenShift web console and navigate to the CICD project (<em>red arrow</em>).</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Make sure that on the upper left corner the "Administrator" view is selected and that you are in the <strong>'Home&#8594;Projects'</strong> section.
-</td>
-</tr>
-</table>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/pipelines-check-1.png" alt="Pipelines Check 1">
-</div>
-</div>
-<div class="paragraph">
-<p>Now navigate to 'Pipelines&#8594;Pipelines'. As you can see there are CI and CD pipelines for each microservice.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/pipelines-check-2.png" alt="Pipelines Check 2">
-</div>
-</div>
-<div class="paragraph">
-<p>Le&#8217;s have a look to the <strong>CI pipeline</strong> for the <code>Events</code> microservice <strong>'events-ci-pl'</strong>. As you can see is made of a series of tasks:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>fetch-repository:</strong> Fetches the <code>Events</code> code fro the Gitea repository you migrated before</p>
-</li>
-<li>
-<p><strong>package:</strong> Compiles and packages the code in a JAR file</p>
-</li>
-<li>
-<p><strong>build:</strong> Builds a container image, pushes it to the registry of images and saves the hash in an output variable</p>
-</li>
-<li>
-<p><strong>fetch-config-repository:</strong> Fetches the configuration of Gramola (remember git is the source of truth for ArgoCD)</p>
-</li>
-<li>
-<p><strong>update-image:</strong> Updates the hash in the <strong>kustomization file</strong> in the <code>dev</code> overlay of <code>Events</code> but in a short lived feature branch</p>
-</li>
-<li>
-<p><strong>gitea-pr-create:</strong> Creates a <strong>Pull Request</strong> with the <strong>feature branch</strong> over the <strong>main branch</strong></p>
-</li>
-<li>
-<p><strong>github-pr-create:</strong> <em>N/A in this case we use Gitea</em></p>
-</li>
-</ul>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-This is just an example covering the bare minimum tasks of a CI pipeline! Of course there should be other critical tasks such as: unit testing, code quality, &#8230;&#8203;
-</td>
-</tr>
-</table>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/pipelines-check-3.png" alt="Pipelines Check 3">
-</div>
-</div>
-<div class="paragraph">
-<p>Navigate back and open the <strong>CD pipeline</strong>, again for <code>Events</code>, called <strong>'events-cd-pl'</strong>. This time the list of tasks is even shorter&#8230;&#8203;</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>argocd-sync:</strong> This triggers both the refresh from the configuration git repository and the assets synchronization</p>
-</li>
-<li>
-<p><strong>fetch-config-repository:</strong> Fetches the configuration of Gramola (remember git is the source of truth for ArgoCD)</p>
-</li>
-<li>
-<p><strong>update-image:</strong> Updates the hash in the <strong>kustomization file</strong> in the <code>dev</code> overlay of <code>Events</code> but in a short lived feature branch</p>
-</li>
-<li>
-<p><strong>gitea-pr-create:</strong> Creates a <strong>Pull Request</strong> with the <strong>feature branch</strong> over the <strong>main branch</strong></p>
-</li>
-<li>
-<p><strong>github-pr-create:</strong> <em>N/A in this case we use Gitea</em></p>
-</li>
-</ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/pipelines-check-4.png" alt="Pipelines Check 4">
-</div>
-</div>
-<div class="paragraph">
-<p>Finally if you navigate to 'Pipelines&#8594;Triggers' you&#8217;ll see there are many of them, we&#8217;ll only use those for Gitea but the example is ready for receiving events from GitHub and GitLab.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/pipelines-check-5.png" alt="Pipelines Check 5">
-</div>
-</div>
-<div class="paragraph">
-<p>Well triggers are in place but we need web hooks to feed them!</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="create-pipelines-web-hooks"><a class="anchor" href="#create-pipelines-web-hooks"></a>Create Pipelines Web Hooks</h2>
-<div class="sectionbody">
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<a href="https://github.com/drone/go-scm/blob/master/scm/driver/gitea/testdata/webhooks/push.json" class="bare">https://github.com/drone/go-scm/blob/master/scm/driver/gitea/testdata/webhooks/push.json</a>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p><strong>Events CI Webhook</strong></p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">EVENTS_CI_EL_LISTENER_HOST=$(oc get route/el-events-ci-pl-push-gitea-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}')
-
-curl -k -X 'POST' "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/repos/%USERNAME%/gramola-events/hooks" \
-  -H "accept: application/json" \
-  -H "Authorization: token ${GIT_PAT}" \
-  -H "Content-Type: application/json" \
-  -d '{
-  "active": true,
-  "branch_filter": "*",
-  "config": {
-     "content_type": "json",
-     "url": "http://'"${EVENTS_CI_EL_LISTENER_HOST}"'"
-  },
-  "events": [
-    "push"
-  ],
-  "type": "gitea"
-}'</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Expected output:</p>
-</div>
-<div class="listingblock console-output">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"id":1,"type":"gitea","config":{"content_type":"json","url":"http://"},"events":["push"],"active":true,"updated_at":"2021-11-12T10:14:15Z","created_at":"2021-11-12T10:14:15Z"}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>Gateway CI Webhook</strong></p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">GATEWAY_CI_EL_LISTENER_HOST=$(oc get route/el-gateway-ci-pl-push-gitea-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}')
-
-curl -k -X 'POST' "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/repos/%USERNAME%/gramola-gateway/hooks" \
-  -H "accept: application/json" \
-  -H "Authorization: token ${GIT_PAT}" \
-  -H "Content-Type: application/json" \
-  -d '{
-  "active": true,
-  "branch_filter": "*",
-  "config": {
-     "content_type": "json",
-     "url": "http://'"${GATEWAY_CI_EL_LISTENER_HOST}"'"
-  },
-  "events": [
-    "push"
-  ],
-  "type": "gitea"
-}'</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Expected output:</p>
-</div>
-<div class="listingblock console-output">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"id":2,"type":"gitea","config":{"content_type":"json","url":"http://"},"events":["push"],"active":true,"updated_at":"2021-11-12T10:15:19Z","created_at":"2021-11-12T10:15:19Z"}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>Events CD Webhook</strong></p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">EVENTS_CD_EL_LISTENER_HOST=$(oc get route/el-events-cd-pl-pr-gitea-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}')
-
-curl -k -X 'POST' "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/repos/%USERNAME%/gramola/hooks" \
-  -H "accept: application/json" \
-  -H "Authorization: token ${GIT_PAT}" \
-  -H "Content-Type: application/json" \
-  -d '{
-  "active": true,
-  "branch_filter": "*",
-  "config": {
-     "content_type": "json",
-     "url": "http://'"${EVENTS_CD_EL_LISTENER_HOST}"'"
-  },
-  "events": [
-    "pull_request"
-  ],
-  "type": "gitea"
-}'</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Expected output:</p>
-</div>
-<div class="listingblock console-output">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"id":3,"type":"gitea","config":{"content_type":"json","url":"http://"},"events":["pull_request","pull_request_assign","pull_request_label","pull_request_milestone","pull_request_comment","pull_request_review_approved","pull_request_review_rejected","pull_request_review_comment","pull_request_sync"],"active":true,"updated_at":"2021-11-12T10:16:31Z","created_at":"2021-11-12T10:16:31Z"}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>Gateway CD Webhook</strong></p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">GATEWAY_CD_EL_LISTENER_HOST=$(oc get route/el-gateway-cd-pl-pr-gitea-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}')
-
-curl -k -X 'POST' "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/repos/%USERNAME%/gramola/hooks" \
-  -H "accept: application/json" \
-  -H "Authorization: token ${GIT_PAT}" \
-  -H "Content-Type: application/json" \
-  -d '{
-  "active": true,
-  "branch_filter": "*",
-  "config": {
-     "content_type": "json",
-     "url": "http://'"${GATEWAY_CD_EL_LISTENER_HOST}"'"
-  },
-  "events": [
-    "pull_request"
-  ],
-  "type": "gitea"
-}'</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Expected output:</p>
-</div>
-<div class="listingblock console-output">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"id":4,"type":"gitea","config":{"content_type":"json","url":"http://"},"events":["pull_request","pull_request_assign","pull_request_label","pull_request_milestone","pull_request_comment","pull_request_review_approved","pull_request_review_rejected","pull_request_review_comment","pull_request_sync"],"active":true,"updated_at":"2021-11-12T10:17:15Z","created_at":"2021-11-12T10:17:15Z"}</code></pre>
-</div>
-</div>
-</div>
-</div>
 <div class="sect1">
 <h2 id="check-ci-web-hook"><a class="anchor" href="#check-ci-web-hook"></a>Check CI Web Hook</h2>
 <div class="sectionbody">
@@ -584,167 +303,55 @@ pipeline is triggered or not.</p>
 {"level":"info","ts":"2021-08-26T16:03:26.383Z","logger":"eventlistener","caller":"resources/create.go:103","msg":"For event ID \"de0712e7-9d0e-4896-87a2-1058047fe7ce\" creating resource tekton.dev/v1beta1, Resource=pipelineruns","knative.dev/controller":"eventlistener"}</code></pre>
 </div>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_creating_web_hooks_for_the_cd_pipelines"><a class="anchor" href="#_creating_web_hooks_for_the_cd_pipelines"></a>Creating Web Hooks for the Cd Pipelines</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>Continuos Delivery pipelines are triggered once a PR to the
-configuration repository <code>gramola</code> changing the image of a deployment
-has been merged. This means we have to create webhooks for this type of
-event for all the services that comprises <code>gramola</code>, our application:</p>
+<p>Now let&#8217;s take a look at these pipelines in OpenShift console. Go to 'pipelines&#8594;events-ci-pl' and inside 'pipelineruns' open the run created by the webhook, you must see something like this:</p>
 </div>
-<div class="paragraph">
-<p>Go to github to the gramola repo:</p>
-</div>
-<div class="paragraph">
-<p>Go to Settings</p>
-</div>
-<div class="paragraph">
-<p>Go to Web Hooks</p>
-</div>
-<div class="paragraph">
-<p>Annotate route to the CD pipeline, the one triggered with PR that
-changes the image of <code>events</code>.</p>
-</div>
-<div class="listingblock console-input">
+<div class="imageblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get route/el-events-cd-pl-pr-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}' &amp;&amp; echo ""</code></pre>
+<img src="_images/pipeline-ci-run.png" alt="Pipeline CI run">
 </div>
 </div>
 <div class="paragraph">
-<p>Expect something like:</p>
+<p>As we can see the pipeline has been automatically triggered due to the repository update and a pull request must has been created in Gitea, let&#8217;s check.</p>
 </div>
-<div class="listingblock console-input">
+<div class="paragraph">
+<p>Go to Gitea and inside 'Gramola' repository there must be a pull request like 'Updating 'gramola-events' image for overlay 'dev' with new image', merge it:</p>
+</div>
+<div class="imageblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">el-events-cd-pl-pr-listener-gramola-cicd.apps.acme.com</code></pre>
+<img src="_images/gitea-merged-pr.png" alt="Gitea merged PR">
 </div>
 </div>
 <div class="paragraph">
-<p>Create Web Hook (click on Add Webhook) - Payload URL, the URL of the
-route of the trigger listener you just got (don’t forget the <code>http://</code>
-part, it’s NOT <code>https://</code>) - Type a secret… any thing should work -
-Click on Let me…. and select Pull Requests and deselect Push Events…</p>
+<p>Now the cd pipeline must be automatically triggered by this merged PR. Go to 'pipelines&#8594;events-cd-pl' and inside 'pipelineruns' open the run created after the merge, you must see something like this:</p>
 </div>
-<div class="paragraph">
-<p>Click on <code>Add webhook</code></p>
-</div>
-<div class="paragraph">
-<p>Let’s check the webhook is working:</p>
-</div>
-<div class="listingblock console-input">
+<div class="imageblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc logs -f deployment/el-events-cd-pl-pr-listener -n ${CICD_NAMESPACE}</code></pre>
+<img src="_images/pipelines-events-cd.png" alt="Pipeline events CD">
 </div>
 </div>
 <div class="paragraph">
-<p>You should get something like this, pay attention to one of the last
-lines saying <strong>``event type ping is not allowed''</strong>.</p>
+<p>As we can see, this pipeline has updated the Gramola Events image with latest changes and has also created a new PR for test environment. You can validate these by doing:</p>
 </div>
-<div class="listingblock console-input">
+<div class="ulist">
+<ul>
+<li>
+<p>In you terminal execute the following command to view existing replica sets (update the user name):
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+oc get replicaset -n gramola-dev-<strong>user</strong>
+----</p>
+<div class="literalblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">...
-{"level":"info","ts":"2021-08-26T16:12:08.205Z","logger":"eventlistener","caller":"sink/sink.go:213","msg":"interceptor stopped trigger processing: rpc error: code = FailedPrecondition desc = event type ping is not allowed","knative.dev/controller":"eventlistener","/triggers-eventid":"8e99abfc-f288-470b-b0dc-21e4167186fe","/trigger":"github-listener"}</code></pre>
+<pre>A new replica set has been created for 'gramola-events' in order to update the image version.</pre>
 </div>
 </div>
-<div class="paragraph">
-<p>We have to do the same for the <code>gateway</code> service… so annotate route to
-the CD pipeline, the one triggered with PR that changes the image of
-<code>gateway</code>.</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get route/el-gateway-cd-pl-pr-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}' &amp;&amp; echo ""</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Expect something like:</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">el-gateway-cd-pl-pr-listener-gramola-cicd.apps.acme.com</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Create Web Hook (click on Add Webhook) - Payload URL, the URL of the
-route of the trigger listener you just got (don’t forget the <code>http://</code>
-part, it’s NOT <code>https://</code>) - Type a secret… any thing should work -
-Click on Let me…. and select Pull Requests and deselect Push Events…</p>
-</div>
-<div class="paragraph">
-<p>Click on <code>Add webhook</code></p>
-</div>
-<div class="paragraph">
-<p>Let’s check the webhook is working:</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc logs -f deployment/el-gateway-cd-pl-pr-listener -n ${CICD_NAMESPACE}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You should get something like this, pay attention to one of the last
-lines saying <strong>``event type ping is not allowed''</strong>.</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">...
-{"level":"info","ts":"2021-08-26T16:16:56.921Z","logger":"eventlistener","caller":"sink/sink.go:213","msg":"interceptor stopped trigger processing: rpc error: code = FailedPrecondition desc = event type ping is not allowed","knative.dev/controller":"eventlistener","/triggers-eventid":"52fb39c6-40dc-431f-a155-224268ef95de","/trigger":"github-listener"}</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_useful_commands"><a class="anchor" href="#_useful_commands"></a>Useful commands</h2>
-<div class="sectionbody">
-
-</div>
-</div>
-<div class="sect1">
-<h2 id="_sync_root_apps_alone"><a class="anchor" href="#_sync_root_apps_alone"></a>Sync Root Apps alone</h2>
-<div class="sectionbody">
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd --insecure app sync gramola-root-app-dev
-argocd --insecure app sync gramola-root-app-test
-argocd --insecure app sync gramola-root-app-test-cloud</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_sync_apps_manually"><a class="anchor" href="#_sync_apps_manually"></a>Sync apps manually</h2>
-<div class="sectionbody">
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd --insecure app sync events-app-dev
-argocd --insecure app sync events-app-test
-argocd --insecure app sync events-app-test-cloud</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_sync_children_apps_app_of_apps"><a class="anchor" href="#_sync_children_apps_app_of_apps"></a>Sync children apps (app of apps)</h2>
-<div class="sectionbody">
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd --insecure app sync -l app.kubernetes.io/instance=gramola-root-app
-argocd --insecure app sync -l app.kubernetes.io/instance=gramola-root-app-dev
-argocd --insecure app sync -l app.kubernetes.io/instance=gramola-root-app-test
-argocd --insecure app sync -l app.kubernetes.io/instance=gramola-root-app-test-cloud</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_aux"><a class="anchor" href="#_aux"></a>AUX</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>git clone
-<a href="https://oauth2:1AbCDeF_g2HIJKLMNOPqr@gitlab.com/yourusername/project.git" class="bare">https://oauth2:1AbCDeF_g2HIJKLMNOPqr@gitlab.com/yourusername/project.git</a>
-project</p>
+</li>
+<li>
+<p>Go to Gitea and inside 'Gramola' repository there must be a pull request like 'Updating 'gramola-events' image for overlay 'test' with new image'. You can merge to continue with the deployment process in test environment.</p>
+</li>
+</ul>
 </div>
 </div>
 </div>

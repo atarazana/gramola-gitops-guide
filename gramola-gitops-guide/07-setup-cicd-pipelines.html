@@ -7,7 +7,7 @@
     <link rel="canonical" href="https://atarazana.github.io/gramola-gitops-guide/gramola-gitops-guide/07-setup-cicd-pipelines.html">
     <link rel="prev" href="06-deploy-cicd-pipelines-with-gitops.html">
     <link rel="next" href="08-test-cicd-pipelines.html">
-    <meta name="generator" content="Antora 2.3.4">
+    <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
 <link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -199,7 +199,7 @@
     <li class="component is-current">
       <span class="title">Gramola GitOps Guide</span>
       <ul class="versions">
-        <li class="version is-current is-latest">
+        <li class="version is-current">
           <a href="index.html">master</a>
         </li>
       </ul>
@@ -401,7 +401,7 @@ curl -k -X 'POST' "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/
 </div>
 <div class="listingblock console-output">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"id":1,"type":"gitea","config":{"content_type":"json","url":"http://"},"events":["push"],"active":true,"updated_at":"2021-11-12T10:14:15Z","created_at":"2021-11-12T10:14:15Z"}</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"id":1,"type":"gitea","config":{"content_type":"json","url":"<a href="http://"},"events":">"push"</a>,"active":true,"updated_at":"2021-11-12T10:14:15Z","created_at":"2021-11-12T10:14:15Z"}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -434,7 +434,7 @@ curl -k -X 'POST' "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/
 </div>
 <div class="listingblock console-output">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"id":2,"type":"gitea","config":{"content_type":"json","url":"http://"},"events":["push"],"active":true,"updated_at":"2021-11-12T10:15:19Z","created_at":"2021-11-12T10:15:19Z"}</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"id":2,"type":"gitea","config":{"content_type":"json","url":"<a href="http://"},"events":">"push"</a>,"active":true,"updated_at":"2021-11-12T10:15:19Z","created_at":"2021-11-12T10:15:19Z"}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -467,7 +467,7 @@ curl -k -X 'POST' "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/
 </div>
 <div class="listingblock console-output">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"id":3,"type":"gitea","config":{"content_type":"json","url":"http://"},"events":["pull_request","pull_request_assign","pull_request_label","pull_request_milestone","pull_request_comment","pull_request_review_approved","pull_request_review_rejected","pull_request_review_comment","pull_request_sync"],"active":true,"updated_at":"2021-11-12T10:16:31Z","created_at":"2021-11-12T10:16:31Z"}</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"id":3,"type":"gitea","config":{"content_type":"json","url":"<a href="http://"},"events":">"pull_request","pull_request_assign","pull_request_label","pull_request_milestone","pull_request_comment","pull_request_review_approved","pull_request_review_rejected","pull_request_review_comment","pull_request_sync"</a>,"active":true,"updated_at":"2021-11-12T10:16:31Z","created_at":"2021-11-12T10:16:31Z"}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -500,89 +500,7 @@ curl -k -X 'POST' "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/
 </div>
 <div class="listingblock console-output">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"id":4,"type":"gitea","config":{"content_type":"json","url":"http://"},"events":["pull_request","pull_request_assign","pull_request_label","pull_request_milestone","pull_request_comment","pull_request_review_approved","pull_request_review_rejected","pull_request_review_comment","pull_request_sync"],"active":true,"updated_at":"2021-11-12T10:17:15Z","created_at":"2021-11-12T10:17:15Z"}</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="check-ci-web-hook"><a class="anchor" href="#check-ci-web-hook"></a>Check CI Web Hook</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Let’s check the webhook is working:</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc logs -f deployment/el-events-ci-pl-push-listener -n ${CICD_NAMESPACE}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You should get something like this, pay attention to one of the last
-lines saying <strong>``event type ping is not allowed''</strong>.</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">...
-{"level":"info","ts":"2021-08-26T15:31:19.005Z","logger":"eventlistener","caller":"sink/sink.go:213","msg":"interceptor stopped trigger processing: rpc error: code = FailedPrecondition desc = event type ping is not allowed","knative.dev/controller":"eventlistener","/triggers-eventid":"c5b06856-471d-43e5-9892-2d812b23e1ac","/trigger":"github-listener"}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Now if you push a change in the code the CI pipeline for <code>events</code> should
-we kicked off.</p>
-</div>
-<div class="paragraph">
-<p>If you haven’t stopped the log output you should see something like:</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">...
-{"level":"info","ts":"2021-08-26T15:37:54.796Z","logger":"eventlistener","caller":"resources/create.go:95","msg":"Generating resource: kind: &amp;APIResource{Name:pipelineruns,Namespaced:true,Kind:PipelineRun,Verbs:[delete deletecollection get list patch create update watch],ShortNames:[pr prs],SingularName:pipelinerun,Categories:[tekton tekton-pipelines],Group:tekton.dev,Version:v1beta1,StorageVersionHash:RcAKAgPYYoo=,}, name: events-ci-pl-push-plr-","knative.dev/controller":"eventlistener"}
-{"level":"info","ts":"2021-08-26T15:37:54.796Z","logger":"eventlistener","caller":"resources/create.go:103","msg":"For event ID \"57d7515c-f954-43ee-b99b-bf53a1578058\" creating resource tekton.dev/v1beta1, Resource=pipelineruns","knative.dev/controller":"eventlistener"}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Stop the log output with <code>Ctrl+C</code>.</p>
-</div>
-<div class="paragraph">
-<p>We have to do the same for the <code>gateway</code> service, you now the drill,
-let’s get the route host got the listener.</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get route/el-gateway-ci-pl-push-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}' &amp;&amp; echo ""</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This time go to the <code>gramola-gateway</code> repo and create a webhook like we
-did before but using the host you just got.</p>
-</div>
-<div class="paragraph">
-<p>Again as we did for <code>gramola-events</code> let’s have a look to the logs of
-the listener:</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc logs -f deployment/el-gateway-ci-pl-push-listener -n ${CICD_NAMESPACE}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>If it all went well you should see this:</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">...
-{"level":"info","ts":"2021-08-26T15:58:30.986Z","logger":"eventlistener","caller":"sink/sink.go:213","msg":"interceptor stopped trigger processing: rpc error: code = FailedPrecondition desc = event type ping is not allowed","knative.dev/controller":"eventlistener","/triggers-eventid":"bf2144ab-d3ca-471c-a340-9d9ae9e150e4","/trigger":"github-listener"}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Now make a change to the code of <code>gramola-gateway</code> and let’s see if the
-pipeline is triggered or not.</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">...
-{"level":"info","ts":"2021-08-26T16:03:26.383Z","logger":"eventlistener","caller":"resources/create.go:95","msg":"Generating resource: kind: &amp;APIResource{Name:pipelineruns,Namespaced:true,Kind:PipelineRun,Verbs:[delete deletecollection get list patch create update watch],ShortNames:[pr prs],SingularName:pipelinerun,Categories:[tekton tekton-pipelines],Group:tekton.dev,Version:v1beta1,StorageVersionHash:RcAKAgPYYoo=,}, name: gateway-ci-pl-push-plr-","knative.dev/controller":"eventlistener"}
-{"level":"info","ts":"2021-08-26T16:03:26.383Z","logger":"eventlistener","caller":"resources/create.go:103","msg":"For event ID \"de0712e7-9d0e-4896-87a2-1058047fe7ce\" creating resource tekton.dev/v1beta1, Resource=pipelineruns","knative.dev/controller":"eventlistener"}</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"id":4,"type":"gitea","config":{"content_type":"json","url":"<a href="http://"},"events":">"pull_request","pull_request_assign","pull_request_label","pull_request_milestone","pull_request_comment","pull_request_review_approved","pull_request_review_rejected","pull_request_review_comment","pull_request_sync"</a>,"active":true,"updated_at":"2021-11-12T10:17:15Z","created_at":"2021-11-12T10:17:15Z"}</code></pre>
 </div>
 </div>
 </div>
@@ -611,7 +529,7 @@ changes the image of <code>events</code>.</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get route/el-events-cd-pl-pr-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}' &amp;&amp; echo ""</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get route/el-events-cd-pl-pr-gitea-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}' &amp;&amp; echo ""</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -619,7 +537,7 @@ changes the image of <code>events</code>.</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">el-events-cd-pl-pr-listener-gramola-cicd.apps.acme.com</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">el-events-cd-pl-pr-gitea-listener-gramola-cicd.apps.acme.com</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -636,7 +554,7 @@ Click on Let me…. and select Pull Requests and deselect Push Events…</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc logs -f deployment/el-events-cd-pl-pr-listener -n ${CICD_NAMESPACE}</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc logs -f deployment/el-events-cd-pl-pr-gitea-listener -n ${CICD_NAMESPACE}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -656,7 +574,7 @@ the CD pipeline, the one triggered with PR that changes the image of
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get route/el-gateway-cd-pl-pr-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}' &amp;&amp; echo ""</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get route/el-gateway-cd-pl-pr-gitea-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}' &amp;&amp; echo ""</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -664,7 +582,7 @@ the CD pipeline, the one triggered with PR that changes the image of
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">el-gateway-cd-pl-pr-listener-gramola-cicd.apps.acme.com</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">el-gateway-cd-pl-pr-gitea-listener-gramola-cicd.apps.acme.com</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -681,7 +599,7 @@ Click on Let me…. and select Pull Requests and deselect Push Events…</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc logs -f deployment/el-gateway-cd-pl-pr-listener -n ${CICD_NAMESPACE}</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc logs -f deployment/el-gateway-cd-pl-pr-gitea-listener -n ${CICD_NAMESPACE}</code></pre>
 </div>
 </div>
 <div class="paragraph">
