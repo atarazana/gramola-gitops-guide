@@ -5,11 +5,13 @@
 ** xref:01-setup.adoc#download-tutorial[Get tutorial sources]
 
 * xref:02-prepare-cluster.adoc[2. Prepare Cluster]
-** xref:02-prepare-cluster.adoc#install-operators[Install Operators]
+** xref:02-prepare-cluster.adoc#deploying-argocd-and-tekton[Deploying ArgoCD & Tekton]
+** xref:02-prepare-cluster.adoc#adding-project-definitions[Adding Project Definitions]
+** xref:02-prepare-cluster.adoc#deploying-gitea[Deploying Gitea]
+** xref:02-prepare-cluster.adoc#create-git-users[Create Git Users]
 
 * xref:03-prepare-repositories.adoc[3. Prepare Repositories]
-** xref:03-prepare-repositories.adoc#deploying-gitea[Deploying Gitea]
-** xref:03-prepare-repositories.adoc#create-git-users[Create Git Users]
+** xref:03-prepare-repositories.adoc#explore-gitea-console[Explore Gitea console]
 ** xref:03-prepare-repositories.adoc#create-git-pat[Create Git PAT]
 ** xref:03-prepare-repositories.adoc#migrate-repositories[Migrate Repositories]
 
@@ -29,9 +31,12 @@
 ** xref:06-deploy-cicd-pipelines-with-gitops.adoc#create-git-secret[Create Git Secret]
 ** xref:06-deploy-cicd-pipelines-with-gitops.adoc#create-registry-secret[Create Registry Secret]
 
-* xref:07-setup-cicd-pipelines.adoc[7. Setup Pipelines]
+* xref:07-setup-cicd-pipelines.adoc[7. Setup CICD Pipelines]
 ** xref:07-setup-cicd-pipelines.adoc#checking-cicd-pipelines[Checking CICD Pipelines]
 ** xref:07-setup-cicd-pipelines.adoc#create-pipelines-web-hooks[Create Pipelines Web Hooks]
 
 * xref:08-test-cicd-pipelines.adoc[8. Test CICD Pipelines]
 ** xref:08-test-cicd-pipelines.adoc#checking-cicd-pipelines[Checking CICD Pipelines]
+
+* xref:09-end-to-end-test.adoc[9. End to End Test]
+** xref:09-end-to-end-test.adoc#introduction[Introduction]

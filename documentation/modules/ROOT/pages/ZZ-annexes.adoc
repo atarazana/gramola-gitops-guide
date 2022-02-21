@@ -22,3 +22,40 @@ NOTE: We’re covering Github in this guide if you use a different git server yo
 
 In order to refer to a repository in ArgoCD you have to register it before, the next command will do this for you asking for the repo url
 and the the Personal Access Token (PAT) to access to the repository.
+
+== Useful commands
+
+=== Sync Root Apps alone
+
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+argocd --insecure app sync gramola-root-app-dev
+argocd --insecure app sync gramola-root-app-test
+argocd --insecure app sync gramola-root-app-test-cloud
+----
+
+=== Sync apps manually
+
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+argocd --insecure app sync events-app-dev
+argocd --insecure app sync events-app-test
+argocd --insecure app sync events-app-test-cloud
+----
+
+=== Sync children apps (app of apps)
+
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+argocd --insecure app sync -l app.kubernetes.io/instance=gramola-root-app
+argocd --insecure app sync -l app.kubernetes.io/instance=gramola-root-app-dev
+argocd --insecure app sync -l app.kubernetes.io/instance=gramola-root-app-test
+argocd --insecure app sync -l app.kubernetes.io/instance=gramola-root-app-test-cloud
+----
+
+== Github Webhook payload
+
+NOTE: https://github.com/drone/go-scm/blob/master/scm/driver/gitea/testdata/webhooks/push.json

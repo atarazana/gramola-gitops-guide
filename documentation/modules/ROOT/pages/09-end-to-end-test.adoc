@@ -1,0 +1,28 @@
+= End To End Test
+include::_attributes.adoc[]
+
+[#introduction]
+== Introduction
+
+So far, you have deployed your application and CICD pipelines; additionally you have created webhook and they are, apparently, working properly but we will never know for sure unless we make a change in the code and see if it all works as expected and we see that change being promoted through our environments. It's about time for an end to end test.
+
+The next diagram summarizes the end to end test you are going to run. As you can see, you will make a change to the code in the _Events API_ (*gramola-events*) which, via a webhook, will trigger the CI pipeline and hence the promotion of code. 
+
+image::end-to-end-pipeline-1.png[End to End Pipeline Test]
+
+These are the high level sequence of events (only relevant steps are mentioned here more details later on):
+
+1. Change the code and push those changes to the repository of code (*gramola-events* in this case).
+2. The *_Push Event_* is sent by the webhook to the *gramola-events CI Pipeline Event Listener* which in its turn triggers the pipeline by creating a *_PipelineRun_* object.
+3. The `build` step builds the image for *gramola-events* and pushes it to the registry, the hash of the new image is used to update the _kustomization.yaml_ file in the _dev overlay_, in a short-lived feature-branch in the configuration repository (*gramola*)
+4. A *_Pull Request_* is created for *merging* the `feature branch` with the `main branch` in the `pr-create` step.
+5. The PR has to be confirmed so that changes are effectively merged into the main branch (this is a manual step)
+6. Once the PR is confirmed, the merge is effective and a *_Pull Request Event_* is sent by the corresponding webhook to the *gramola-events CD Pipeline Event Listener* which in its turn triggers the pipeline by creating another *_PipelineRun_* object. At this point the hash of the new image has replaced the previous one.
+7. The _CD pipeline fetches configuration not code_ and _in parallel triggers the sync of_ *events-app-dev* which means the new hash of the image is replaced in the Deployment object and hence a rolling update is rolled out. Once the app is in sync a new PR is created to promo
+
+
+
+https://repository-gitea-system.apps.cluster-prhg6.prhg6.sandbox770.opentlc.com/user1
+
+
+

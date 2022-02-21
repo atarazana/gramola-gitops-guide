@@ -1,29 +1,41 @@
-= Deploy CICD Pipelines With GitOps
+= Test CICD Pipelines
 include::_attributes.adoc[]
 
 [#check-ci-web-hook]
 == Check CI Web Hook
 
-Let’s check the webhook is working:
+Let’s check if the webhook is working:
 
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-oc logs -f deployment/el-events-ci-pl-push-listener -n ${CICD_NAMESPACE}
+oc logs -f deployment/el-events-ci-pl-push-{git-provider}-listener -n ${CICD_NAMESPACE}
 ----
 
-You should get something like this, pay attention to one of the last
-lines saying *``event type ping is not allowed''*.
+You should get something like this.
 
-[.console-input]
+[.console-output]
 [source,bash, subs="+macros,+attributes"]
 ----
 ...
-{"level":"info","ts":"2021-08-26T15:31:19.005Z","logger":"eventlistener","caller":"sink/sink.go:213","msg":"interceptor stopped trigger processing: rpc error: code = FailedPrecondition desc = event type ping is not allowed","knative.dev/controller":"eventlistener","/triggers-eventid":"c5b06856-471d-43e5-9892-2d812b23e1ac","/trigger":"github-listener"}
+{"level":"info","ts":"2022-02-14T17:33:55.087Z","logger":"eventlistener","caller":"eventlistenersink/main.go:181","msg":"Listen and serve on port 8080","commit":"fbb0fd1","knative.dev/controller":"eventlistener"}
 ----
 
-Now if you push a change in the code the CI pipeline for `events` should
-we kicked off.
+Now if you push a change in the code the CI pipeline for `events` should we kicked off.
+
+For instance you can run this set of commands, in a new terminal.
+
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+export USERNAME={username}
+export GIT_URL={gitea-host}
+git clone https://repository-gitea-system.apps. cluster-prhg6.prhg6.sandbox770.opentlc.com/user1/gramola-events
+cd gramola-events
+sed -i 's/info.name=gramola-events-/info.name=gramola-events-{username}/g' ./src/main/resources/application.properties
+
+----
+
 
 If you haven’t stopped the log output you should see something like:
 
@@ -105,7 +117,16 @@ As we can see, this pipeline has updated the Gramola Events image with latest ch
 
 - Go to Gitea and inside 'Gramola' repository there must be a pull request like 'Updating 'gramola-events' image for overlay 'test' with new image'. You can merge to continue with the deployment process in test environment.
 
+TODO Explain the web hook mechanism and add the diagram!!!
 
+== End to End Pipeline Test
+
+So, our web hooks are, apparently, working properly but we will never know for sure unless we make a change in the code and see if it all works as expected and we see that change being promoted through our environments.
+
+image::end-to-end-pipeline-1.png[End to End Pipeline]
+
+
+https://repository-gitea-system.apps.cluster-prhg6.prhg6.sandbox770.opentlc.com/user1
 
 
 

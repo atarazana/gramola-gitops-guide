@@ -25,7 +25,7 @@ You'll be redirected to OpenShift Web Console to enter your credentials:
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-argocd login {argocd-server} --insecure --sso
+argocd login {argocd-server} --insecure --sso --grpc-web
 ----
 
 After being successfully logged in, you should be redirected to localhost:8085 with a message of successful authentication and in the terminal output you should see something similar to this.
@@ -48,7 +48,7 @@ In this guide we cover the case of a protected git repository that needs to be i
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-argocd --insecure repo add https://{gitea-host}/{username}/gramola.git --username {username} --password ${GIT_PAT} --upsert --insecure-skip-server-verification
+argocd --insecure repo add https://{gitea-host}/{username}/gramola.git --username {username} --password ${GIT_PAT} --upsert --insecure-skip-server-verification --grpc-web
 ----
 
 Run this command to list the registered repositories.
@@ -56,7 +56,7 @@ Run this command to list the registered repositories.
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-argocd --insecure repo list
+argocd --insecure repo list --grpc-web
 ----
 
 This is a typical response.
@@ -94,7 +94,7 @@ Check if your cluster has been added correctly.
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-argocd --insecure cluster list
+argocd --insecure cluster list --grpc-web
 ----
 
 [#project-definitions]
@@ -107,7 +107,7 @@ Run this command to see the list of project definitions.
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-argocd --insecure proj list
+argocd --insecure proj list --grpc-web
 ----
 
 This is the expected result, one project definition for development and another one for testing.

@@ -6,9 +6,9 @@ include::_attributes.adoc[]
 
 ArgoCD uses a powerful abstraction of what an application is from the point of view of deployment. In an ArgoCD application we define where to look for the descriptors we want to create (*spec->source*) and maintain in Kubernetes and also how and where we want them (*spec->destination*). More over, because we can store Application objects also in git repository we could chain a set of applications with a parent application... hence we can nest application and call "*Root Application*" to the top parent of a set of elements including Applications.
 
-The next command creates a Root Application called *gramola-root-app* that points to our configuration repository https://{gitea-host}/{username}/gramola[here^] and folder *argocd/root-apps*.
+The next command creates a Root Application called *gramola-root-app* that points to our configuration repository https://{gitea-host}/{username}/gramola[^] and folder *argocd/root-apps*.
 
-NOTE: https://argoproj.github.io/argo-cd/user-guide/helm/
+NOTE: Go link:https://argoproj.github.io/argo-cd/user-guide/helm/[here^] to learn more about the ArgoCD helm plugin.
 
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
@@ -55,7 +55,7 @@ application.argoproj.io/gramola-root-app-user1 created
 ----
 
 [#create-additional-root-app]
-== Create Additional Root App
+== Create Additional Root App TODO!!!
 
 If an additional cluster has been set up...
 

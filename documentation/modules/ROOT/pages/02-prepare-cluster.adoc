@@ -15,8 +15,8 @@ So if not already logged in, please do it now.
 oc login -u {username} -p {password} --server=https://api.{api-domain}
 ----
 
-[#install-operators]
-== Installing ArgoCD and Pipelines using the operators
+[#deploying-argocd-and-tekton]
+== Deploying ArgoCD and Tekton using the operators
 
 In order to run this guide we're going to need several components, more prominently:
 
@@ -63,4 +63,68 @@ Finally if all went well you should land in the ArgoCD console and see this.
 
 image::argocd-console.png[ArgoCD Console]
 
+[#adding-project-definitions]
+== Adding Project Definitions
 
+ArgoCD can constrain which repositories and destinations can be linked with the definition of an application, in our case we are not constraining anything but we are still going to create project definitions to be prepared for future needs. 
+
+Execute these commands to create the Gramola project definitions:
+
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+kubectl apply -f argocd/projects/project-dev.yml
+kubectl apply -f argocd/projects/project-test.yml
+----
+
+[#deploying-gitea]
+== Deploying Gitea using the operators
+
+Run this command to deploy the Gitea operator and Gitea itself in your OpenShift cluster.
+
+NOTE: Gitea will be installed in `gitea-system` namespace
+
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+until kubectl apply -k util/gitea/; do sleep 2; done
+----
+
+The previous command will retry until it's all installed but *we still need to check if it all works properly*.
+
+include::partial$gitea-tests.adoc[]
+
+[#create-git-users]
+== Create Git Users
+
+Now that Gitea is installed and up and running, it's time to add some users in the cluster, to do so we're going to create a `Job` that will in it's turn create 20 users.
+
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+kustomize build util/setup/ | sed -e 's/^  name\:.*$//g' | kubectl create -f -
+----
+
+Have a look to the logs with:
+
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+JOB_NAME=$(oc get job -n gitea-system -o jsonpath='{.items[0].metadata.name}')
+oc logs -n gitea-system -f job/${JOB_NAME}
+----
+
+You should see something like:
+
+[.console-output]
+[source,bash, subs="+macros,+attributes"]
+----
+...
+Creating user20
+  {"id":21,"login":"user20","full_name":"User user20","email":"user20@example.com","avatar_url":"https://repository-gitea-system.apps.cluster-prhg6.prhg6.sandbox770.opentlc.com/avatar/3d67433db6e5deb7685759425360bafc","language":"","is_admin":false,"last_login":"1970-01-01T00:00:00Z","created":"2022-02-14T10:49:20Z","restricted":false,"active":true,"prohibit_login":false,"location":"","website":"","description":"","visibility":"public","followers_count":0,"following_count":0,"starred_repos_count":0,"username":"user20"}
+------------------------------
+----
+
+If you just want to create one user do this.
+
+include::partial$gitea-create-user.adoc[]
