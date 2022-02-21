@@ -92,7 +92,16 @@
     <a class="nav-link" href="02-prepare-cluster.html">2. Prepare Cluster</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="02-prepare-cluster.html#install-operators">Install Operators</a>
+    <a class="nav-link" href="02-prepare-cluster.html#deploying-argocd-and-tekton">Deploying ArgoCD &amp; Tekton</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-prepare-cluster.html#adding-project-definitions">Adding Project Definitions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-prepare-cluster.html#deploying-gitea">Deploying Gitea</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-prepare-cluster.html#create-git-users">Create Git Users</a>
   </li>
 </ul>
   </li>
@@ -101,10 +110,7 @@
     <a class="nav-link" href="03-prepare-repositories.html">3. Prepare Repositories</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="03-prepare-repositories.html#deploying-gitea">Deploying Gitea</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="03-prepare-repositories.html#create-git-users">Create Git Users</a>
+    <a class="nav-link" href="03-prepare-repositories.html#explore-gitea-console">Explore Gitea console</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="03-prepare-repositories.html#create-git-pat">Create Git PAT</a>
@@ -164,7 +170,7 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="07-setup-cicd-pipelines.html">7. Setup Pipelines</a>
+    <a class="nav-link" href="07-setup-cicd-pipelines.html">7. Setup CICD Pipelines</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="07-setup-cicd-pipelines.html#checking-cicd-pipelines">Checking CICD Pipelines</a>
@@ -180,6 +186,15 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="08-test-cicd-pipelines.html#checking-cicd-pipelines">Checking CICD Pipelines</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="09-end-to-end-test.html">9. End to End Test</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="09-end-to-end-test.html#introduction">Introduction</a>
   </li>
 </ul>
   </li>
@@ -258,6 +273,59 @@ We’re covering Github in this guide if you use a different git server you may 
 <p>In order to refer to a repository in ArgoCD you have to register it before, the next command will do this for you asking for the repo url
 and the the Personal Access Token (PAT) to access to the repository.</p>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_useful_commands"><a class="anchor" href="#_useful_commands"></a>Useful commands</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_sync_root_apps_alone"><a class="anchor" href="#_sync_root_apps_alone"></a>Sync Root Apps alone</h3>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd --insecure app sync gramola-root-app-dev
+argocd --insecure app sync gramola-root-app-test
+argocd --insecure app sync gramola-root-app-test-cloud</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_sync_apps_manually"><a class="anchor" href="#_sync_apps_manually"></a>Sync apps manually</h3>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd --insecure app sync events-app-dev
+argocd --insecure app sync events-app-test
+argocd --insecure app sync events-app-test-cloud</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_sync_children_apps_app_of_apps"><a class="anchor" href="#_sync_children_apps_app_of_apps"></a>Sync children apps (app of apps)</h3>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd --insecure app sync -l app.kubernetes.io/instance=gramola-root-app
+argocd --insecure app sync -l app.kubernetes.io/instance=gramola-root-app-dev
+argocd --insecure app sync -l app.kubernetes.io/instance=gramola-root-app-test
+argocd --insecure app sync -l app.kubernetes.io/instance=gramola-root-app-test-cloud</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_github_webhook_payload"><a class="anchor" href="#_github_webhook_payload"></a>Github Webhook payload</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<a href="https://github.com/drone/go-scm/blob/master/scm/driver/gitea/testdata/webhooks/push.json" class="bare">https://github.com/drone/go-scm/blob/master/scm/driver/gitea/testdata/webhooks/push.json</a>
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>

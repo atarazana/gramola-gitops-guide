@@ -94,7 +94,16 @@
     <a class="nav-link" href="02-prepare-cluster.html">2. Prepare Cluster</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="02-prepare-cluster.html#install-operators">Install Operators</a>
+    <a class="nav-link" href="02-prepare-cluster.html#deploying-argocd-and-tekton">Deploying ArgoCD &amp; Tekton</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-prepare-cluster.html#adding-project-definitions">Adding Project Definitions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-prepare-cluster.html#deploying-gitea">Deploying Gitea</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-prepare-cluster.html#create-git-users">Create Git Users</a>
   </li>
 </ul>
   </li>
@@ -103,10 +112,7 @@
     <a class="nav-link" href="03-prepare-repositories.html">3. Prepare Repositories</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="03-prepare-repositories.html#deploying-gitea">Deploying Gitea</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="03-prepare-repositories.html#create-git-users">Create Git Users</a>
+    <a class="nav-link" href="03-prepare-repositories.html#explore-gitea-console">Explore Gitea console</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="03-prepare-repositories.html#create-git-pat">Create Git PAT</a>
@@ -166,7 +172,7 @@
   </li>
   <li class="nav-item is-current-page" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="07-setup-cicd-pipelines.html">7. Setup Pipelines</a>
+    <a class="nav-link" href="07-setup-cicd-pipelines.html">7. Setup CICD Pipelines</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="#checking-cicd-pipelines">Checking CICD Pipelines</a>
@@ -182,6 +188,15 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="08-test-cicd-pipelines.html#checking-cicd-pipelines">Checking CICD Pipelines</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="09-end-to-end-test.html">9. End to End Test</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="09-end-to-end-test.html#introduction">Introduction</a>
   </li>
 </ul>
   </li>
@@ -216,7 +231,7 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">Gramola GitOps Guide</a></li>
-    <li><a href="07-setup-cicd-pipelines.html">7. Setup Pipelines</a></li>
+    <li><a href="07-setup-cicd-pipelines.html">7. Setup CICD Pipelines</a></li>
   </ul>
 </nav>
   <div class="edit-this-page"><a href="https://github.com/atarazana/gramola-gitops-guide/edit/main/documentation/modules/ROOT/pages/07-setup-cicd-pipelines.adoc">Edit this Page</a></div>
@@ -228,7 +243,7 @@
 <h2 id="checking-cicd-pipelines"><a class="anchor" href="#checking-cicd-pipelines"></a>Checking pipelines</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Well so far we have used the command line to create the ArgoCD root application that in its turn has created all the needed elements:</p>
+<p>Well, so far we have used the command line to create the ArgoCD root application that in its turn has created all the needed elements:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -357,23 +372,10 @@ This is just an example covering the bare minimum tasks of a CI pipeline! Of cou
 </div>
 </div>
 <div class="sect1">
-<h2 id="create-pipelines-web-hooks"><a class="anchor" href="#create-pipelines-web-hooks"></a>Create Pipelines Web Hooks</h2>
+<h2 id="create-pipeline-web-hooks"><a class="anchor" href="#create-pipeline-web-hooks"></a>Create Pipeline Web Hooks</h2>
 <div class="sectionbody">
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<a href="https://github.com/drone/go-scm/blob/master/scm/driver/gitea/testdata/webhooks/push.json" class="bare">https://github.com/drone/go-scm/blob/master/scm/driver/gitea/testdata/webhooks/push.json</a>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p><strong>Events CI Webhook</strong></p>
-</div>
+<div class="sect2">
+<h3 id="events-ci-webhook"><a class="anchor" href="#events-ci-webhook"></a>Events CI Webhook</h3>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">EVENTS_CI_EL_LISTENER_HOST=$(oc get route/el-events-ci-pl-push-gitea-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}')
@@ -404,9 +406,9 @@ curl -k -X 'POST' "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"id":1,"type":"gitea","config":{"content_type":"json","url":"<a href="http://"},"events":">"push"</a>,"active":true,"updated_at":"2021-11-12T10:14:15Z","created_at":"2021-11-12T10:14:15Z"}</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p><strong>Gateway CI Webhook</strong></p>
 </div>
+<div class="sect2">
+<h3 id="gateway-ci-webhook"><a class="anchor" href="#gateway-ci-webhook"></a>Gateway CI Webhook</h3>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">GATEWAY_CI_EL_LISTENER_HOST=$(oc get route/el-gateway-ci-pl-push-gitea-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}')
@@ -437,9 +439,9 @@ curl -k -X 'POST' "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"id":2,"type":"gitea","config":{"content_type":"json","url":"<a href="http://"},"events":">"push"</a>,"active":true,"updated_at":"2021-11-12T10:15:19Z","created_at":"2021-11-12T10:15:19Z"}</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p><strong>Events CD Webhook</strong></p>
 </div>
+<div class="sect2">
+<h3 id="events-cd-webhook"><a class="anchor" href="#events-cd-webhook"></a>Events CD Webhook</h3>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">EVENTS_CD_EL_LISTENER_HOST=$(oc get route/el-events-cd-pl-pr-gitea-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}')
@@ -470,9 +472,9 @@ curl -k -X 'POST' "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"id":3,"type":"gitea","config":{"content_type":"json","url":"<a href="http://"},"events":">"pull_request","pull_request_assign","pull_request_label","pull_request_milestone","pull_request_comment","pull_request_review_approved","pull_request_review_rejected","pull_request_review_comment","pull_request_sync"</a>,"active":true,"updated_at":"2021-11-12T10:16:31Z","created_at":"2021-11-12T10:16:31Z"}</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p><strong>Gateway CD Webhook</strong></p>
 </div>
+<div class="sect2">
+<h3 id="gateway-cd-webhook"><a class="anchor" href="#gateway-cd-webhook"></a>Gateway CD Webhook</h3>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">GATEWAY_CD_EL_LISTENER_HOST=$(oc get route/el-gateway-cd-pl-pr-gitea-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}')
@@ -503,167 +505,6 @@ curl -k -X 'POST' "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"id":4,"type":"gitea","config":{"content_type":"json","url":"<a href="http://"},"events":">"pull_request","pull_request_assign","pull_request_label","pull_request_milestone","pull_request_comment","pull_request_review_approved","pull_request_review_rejected","pull_request_review_comment","pull_request_sync"</a>,"active":true,"updated_at":"2021-11-12T10:17:15Z","created_at":"2021-11-12T10:17:15Z"}</code></pre>
 </div>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_creating_web_hooks_for_the_cd_pipelines"><a class="anchor" href="#_creating_web_hooks_for_the_cd_pipelines"></a>Creating Web Hooks for the Cd Pipelines</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Continuos Delivery pipelines are triggered once a PR to the
-configuration repository <code>gramola</code> changing the image of a deployment
-has been merged. This means we have to create webhooks for this type of
-event for all the services that comprises <code>gramola</code>, our application:</p>
-</div>
-<div class="paragraph">
-<p>Go to github to the gramola repo:</p>
-</div>
-<div class="paragraph">
-<p>Go to Settings</p>
-</div>
-<div class="paragraph">
-<p>Go to Web Hooks</p>
-</div>
-<div class="paragraph">
-<p>Annotate route to the CD pipeline, the one triggered with PR that
-changes the image of <code>events</code>.</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get route/el-events-cd-pl-pr-gitea-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}' &amp;&amp; echo ""</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Expect something like:</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">el-events-cd-pl-pr-gitea-listener-gramola-cicd.apps.acme.com</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Create Web Hook (click on Add Webhook) - Payload URL, the URL of the
-route of the trigger listener you just got (don’t forget the <code>http://</code>
-part, it’s NOT <code>https://</code>) - Type a secret… any thing should work -
-Click on Let me…. and select Pull Requests and deselect Push Events…</p>
-</div>
-<div class="paragraph">
-<p>Click on <code>Add webhook</code></p>
-</div>
-<div class="paragraph">
-<p>Let’s check the webhook is working:</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc logs -f deployment/el-events-cd-pl-pr-gitea-listener -n ${CICD_NAMESPACE}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You should get something like this, pay attention to one of the last
-lines saying <strong>``event type ping is not allowed''</strong>.</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">...
-{"level":"info","ts":"2021-08-26T16:12:08.205Z","logger":"eventlistener","caller":"sink/sink.go:213","msg":"interceptor stopped trigger processing: rpc error: code = FailedPrecondition desc = event type ping is not allowed","knative.dev/controller":"eventlistener","/triggers-eventid":"8e99abfc-f288-470b-b0dc-21e4167186fe","/trigger":"github-listener"}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>We have to do the same for the <code>gateway</code> service… so annotate route to
-the CD pipeline, the one triggered with PR that changes the image of
-<code>gateway</code>.</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get route/el-gateway-cd-pl-pr-gitea-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}' &amp;&amp; echo ""</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Expect something like:</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">el-gateway-cd-pl-pr-gitea-listener-gramola-cicd.apps.acme.com</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Create Web Hook (click on Add Webhook) - Payload URL, the URL of the
-route of the trigger listener you just got (don’t forget the <code>http://</code>
-part, it’s NOT <code>https://</code>) - Type a secret… any thing should work -
-Click on Let me…. and select Pull Requests and deselect Push Events…</p>
-</div>
-<div class="paragraph">
-<p>Click on <code>Add webhook</code></p>
-</div>
-<div class="paragraph">
-<p>Let’s check the webhook is working:</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc logs -f deployment/el-gateway-cd-pl-pr-gitea-listener -n ${CICD_NAMESPACE}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You should get something like this, pay attention to one of the last
-lines saying <strong>``event type ping is not allowed''</strong>.</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">...
-{"level":"info","ts":"2021-08-26T16:16:56.921Z","logger":"eventlistener","caller":"sink/sink.go:213","msg":"interceptor stopped trigger processing: rpc error: code = FailedPrecondition desc = event type ping is not allowed","knative.dev/controller":"eventlistener","/triggers-eventid":"52fb39c6-40dc-431f-a155-224268ef95de","/trigger":"github-listener"}</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_useful_commands"><a class="anchor" href="#_useful_commands"></a>Useful commands</h2>
-<div class="sectionbody">
-
-</div>
-</div>
-<div class="sect1">
-<h2 id="_sync_root_apps_alone"><a class="anchor" href="#_sync_root_apps_alone"></a>Sync Root Apps alone</h2>
-<div class="sectionbody">
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd --insecure app sync gramola-root-app-dev
-argocd --insecure app sync gramola-root-app-test
-argocd --insecure app sync gramola-root-app-test-cloud</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_sync_apps_manually"><a class="anchor" href="#_sync_apps_manually"></a>Sync apps manually</h2>
-<div class="sectionbody">
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd --insecure app sync events-app-dev
-argocd --insecure app sync events-app-test
-argocd --insecure app sync events-app-test-cloud</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_sync_children_apps_app_of_apps"><a class="anchor" href="#_sync_children_apps_app_of_apps"></a>Sync children apps (app of apps)</h2>
-<div class="sectionbody">
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd --insecure app sync -l app.kubernetes.io/instance=gramola-root-app
-argocd --insecure app sync -l app.kubernetes.io/instance=gramola-root-app-dev
-argocd --insecure app sync -l app.kubernetes.io/instance=gramola-root-app-test
-argocd --insecure app sync -l app.kubernetes.io/instance=gramola-root-app-test-cloud</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_aux"><a class="anchor" href="#_aux"></a>AUX</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>git clone
-<a href="https://oauth2:1AbCDeF_g2HIJKLMNOPqr@gitlab.com/yourusername/project.git" class="bare">https://oauth2:1AbCDeF_g2HIJKLMNOPqr@gitlab.com/yourusername/project.git</a>
-project</p>
 </div>
 </div>
 </div>

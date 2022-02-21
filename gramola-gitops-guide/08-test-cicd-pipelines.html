@@ -3,9 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Deploy CICD Pipelines With GitOps :: Gramola GitOps Guide</title>
+    <title>Test CICD Pipelines :: Gramola GitOps Guide</title>
     <link rel="canonical" href="https://atarazana.github.io/gramola-gitops-guide/gramola-gitops-guide/08-test-cicd-pipelines.html">
     <link rel="prev" href="07-setup-cicd-pipelines.html">
+    <link rel="next" href="09-end-to-end-test.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
 <link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
@@ -93,7 +94,16 @@
     <a class="nav-link" href="02-prepare-cluster.html">2. Prepare Cluster</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="02-prepare-cluster.html#install-operators">Install Operators</a>
+    <a class="nav-link" href="02-prepare-cluster.html#deploying-argocd-and-tekton">Deploying ArgoCD &amp; Tekton</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-prepare-cluster.html#adding-project-definitions">Adding Project Definitions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-prepare-cluster.html#deploying-gitea">Deploying Gitea</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-prepare-cluster.html#create-git-users">Create Git Users</a>
   </li>
 </ul>
   </li>
@@ -102,10 +112,7 @@
     <a class="nav-link" href="03-prepare-repositories.html">3. Prepare Repositories</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="03-prepare-repositories.html#deploying-gitea">Deploying Gitea</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="03-prepare-repositories.html#create-git-users">Create Git Users</a>
+    <a class="nav-link" href="03-prepare-repositories.html#explore-gitea-console">Explore Gitea console</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="03-prepare-repositories.html#create-git-pat">Create Git PAT</a>
@@ -165,7 +172,7 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="07-setup-cicd-pipelines.html">7. Setup Pipelines</a>
+    <a class="nav-link" href="07-setup-cicd-pipelines.html">7. Setup CICD Pipelines</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="07-setup-cicd-pipelines.html#checking-cicd-pipelines">Checking CICD Pipelines</a>
@@ -181,6 +188,15 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="#checking-cicd-pipelines">Checking CICD Pipelines</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="09-end-to-end-test.html">9. End to End Test</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="09-end-to-end-test.html#introduction">Introduction</a>
   </li>
 </ul>
   </li>
@@ -222,31 +238,41 @@
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Deploy CICD Pipelines With GitOps</h1>
+<h1 class="page">Test CICD Pipelines</h1>
 <div class="sect1">
 <h2 id="check-ci-web-hook"><a class="anchor" href="#check-ci-web-hook"></a>Check CI Web Hook</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Let’s check the webhook is working:</p>
+<p>Let’s check if the webhook is working:</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc logs -f deployment/el-events-ci-pl-push-listener -n ${CICD_NAMESPACE}</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc logs -f deployment/el-events-ci-pl-push-gitea-listener -n ${CICD_NAMESPACE}</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You should get something like this, pay attention to one of the last
-lines saying <strong>``event type ping is not allowed''</strong>.</p>
+<p>You should get something like this.</p>
 </div>
-<div class="listingblock console-input">
+<div class="listingblock console-output">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">...
-{"level":"info","ts":"2021-08-26T15:31:19.005Z","logger":"eventlistener","caller":"sink/sink.go:213","msg":"interceptor stopped trigger processing: rpc error: code = FailedPrecondition desc = event type ping is not allowed","knative.dev/controller":"eventlistener","/triggers-eventid":"c5b06856-471d-43e5-9892-2d812b23e1ac","/trigger":"github-listener"}</code></pre>
+{"level":"info","ts":"2022-02-14T17:33:55.087Z","logger":"eventlistener","caller":"eventlistenersink/main.go:181","msg":"Listen and serve on port 8080","commit":"fbb0fd1","knative.dev/controller":"eventlistener"}</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Now if you push a change in the code the CI pipeline for <code>events</code> should
-we kicked off.</p>
+<p>Now if you push a change in the code the CI pipeline for <code>events</code> should we kicked off.</p>
+</div>
+<div class="paragraph">
+<p>For instance you can run this set of commands, in a new terminal.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export USERNAME=%USERNAME%
+export GIT_URL=repository-gitea-system.apps.%BASE_SUBDOMAIN%
+git clone <a href="https://repository-gitea-system.apps" class="bare">https://repository-gitea-system.apps</a>. cluster-prhg6.prhg6.sandbox770.opentlc.com/user1/gramola-events
+cd gramola-events
+sed -i 's/info.name=gramola-events-/info.name=gramola-events-%USERNAME%/g' ./src/main/resources/application.properties</code></pre>
+</div>
 </div>
 <div class="paragraph">
 <p>If you haven’t stopped the log output you should see something like:</p>
@@ -353,10 +379,30 @@ oc get replicaset -n gramola-dev-<strong>user</strong>
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>TODO Explain the web hook mechanism and add the diagram!!!</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_end_to_end_pipeline_test"><a class="anchor" href="#_end_to_end_pipeline_test"></a>End to End Pipeline Test</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>So, our web hooks are, apparently, working properly but we will never know for sure unless we make a change in the code and see if it all works as expected and we see that change being promoted through our environments.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/end-to-end-pipeline-1.png" alt="End to End Pipeline">
+</div>
+</div>
+<div class="paragraph">
+<p><a href="https://repository-gitea-system.apps.cluster-prhg6.prhg6.sandbox770.opentlc.com/user1" class="bare">https://repository-gitea-system.apps.cluster-prhg6.prhg6.sandbox770.opentlc.com/user1</a></p>
+</div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="07-setup-cicd-pipelines.html" class="query-params-link">7. Setup Pipelines</a></span>
+  <span class="prev"><a href="07-setup-cicd-pipelines.html" class="query-params-link">7. Setup CICD Pipelines</a></span>
+  <span class="next"><a href="09-end-to-end-test.html" class="query-params-link">9. End to End Test</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">

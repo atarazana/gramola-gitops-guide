@@ -94,7 +94,16 @@
     <a class="nav-link" href="02-prepare-cluster.html">2. Prepare Cluster</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="02-prepare-cluster.html#install-operators">Install Operators</a>
+    <a class="nav-link" href="02-prepare-cluster.html#deploying-argocd-and-tekton">Deploying ArgoCD &amp; Tekton</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-prepare-cluster.html#adding-project-definitions">Adding Project Definitions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-prepare-cluster.html#deploying-gitea">Deploying Gitea</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-prepare-cluster.html#create-git-users">Create Git Users</a>
   </li>
 </ul>
   </li>
@@ -103,10 +112,7 @@
     <a class="nav-link" href="03-prepare-repositories.html">3. Prepare Repositories</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#deploying-gitea">Deploying Gitea</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#create-git-users">Create Git Users</a>
+    <a class="nav-link" href="#explore-gitea-console">Explore Gitea console</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="#create-git-pat">Create Git PAT</a>
@@ -166,7 +172,7 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="07-setup-cicd-pipelines.html">7. Setup Pipelines</a>
+    <a class="nav-link" href="07-setup-cicd-pipelines.html">7. Setup CICD Pipelines</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="07-setup-cicd-pipelines.html#checking-cicd-pipelines">Checking CICD Pipelines</a>
@@ -182,6 +188,15 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="08-test-cicd-pipelines.html#checking-cicd-pipelines">Checking CICD Pipelines</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="09-end-to-end-test.html">9. End to End Test</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="09-end-to-end-test.html#introduction">Introduction</a>
   </li>
 </ul>
   </li>
@@ -224,6 +239,35 @@
   <div class="content">
 <article class="doc">
 <h1 class="page">Prepare Repositories</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Everything we do in this section requires that you have fulfilled the <a href="01-setup.html#prerequisite" class="xref page">prerequisites</a> section and you&#8217;re logged in your OpenShift cluster.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>EVEN</strong> if you have two clusters and want to run the multicluster section&#8230;&#8203; so&#8230;&#8203; <strong>log in the main one now</strong> <span class="underline">not in the secondary</span>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>So if not already logged in, please do it now.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">oc login -u %USERNAME% -p %PASSWORD% --server=https://api.%BASE_SUBDOMAIN%:6443</code></pre>
+</div>
+</div>
+</div>
+</div>
 <div class="sect1">
 <h2 id="source-of-truth"><a class="anchor" href="#source-of-truth"></a>Source Of Truth</h2>
 <div class="sectionbody">
@@ -274,152 +318,7 @@
 </ul>
 </div>
 <div class="paragraph">
-<p>You could fork them in your preferred git server, but for the sake of simplicity we&#8217;re going to give you instructions to deploy a git server in OpenShift and for them there.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="deploying-gitea"><a class="anchor" href="#deploying-gitea"></a>Deploying Gitea</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Run this command to deploy the Gitea operator and Gitea itself in your OpenShift cluster.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Gitea will be installed in <code>gitea-system</code> namespace
-</td>
-</tr>
-</table>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">until kubectl apply -k util/gitea/; do sleep 2; done</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The previous command will retry until it&#8217;s all installed but <strong>we still need to check if it all works properly</strong>.</p>
-</div>
-<div class="paragraph">
-<p>Let&#8217;s have a look to the Gitea deployment object.</p>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>This command only works as expected once the Deployment object has been created by the operator, be patient and try again if you get.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">Error from server (NotFound): deployments.apps "repository" not found</code></pre>
-</div>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl rollout status deploy/repository -n gitea-system</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This is the normal state after being successfully rolled out.</p>
-</div>
-<div class="listingblock console-output">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">deployment "repository" successfully rolled out
-oc get deployment/repository -n gitea-system
-NAME         READY   UP-TO-DATE   AVAILABLE   AGE
-repository   1/1     1            1           32m</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Once Gitea has been rolled out, run this little smoke test.</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -k -I <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/</a></code></pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-You should get something like this. If you don&#8217;t, be patient and run this command in 2 mins or so.
-</td>
-</tr>
-</table>
-</div>
-<div class="listingblock console-output">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">HTTP/1.1 200 OK
-set-cookie: i_like_gitea=82e42fd387b6ea7a; Path=/; HttpOnly; SameSite=Lax
-date: Mon, 25 Oct 2021 08:06:22 GMT
-set-cookie: 5b3fc896c2f6eedc568a6b59cd1862ea=23d42cb20150039ef52136e8993c6865; path=/; HttpOnly; Secure; SameSite=None
-cache-control: private</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="create-git-users"><a class="anchor" href="#create-git-users"></a>Create Git Users</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Now that Gitea is installed and up and running, it&#8217;s time to add some users in the cluster, to do so we&#8217;re going to create a <code>Job</code> that will in it&#8217;s turn create 20 users.</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kustomize build util/setup/ | sed -e 's/^  name\:.*$//g' | kubectl create -f -</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>If you just want to create one user do this.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Ignore error "Internal Server Error" user %USERNAME% should have been created.
-</td>
-</tr>
-</table>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">GITEA_INSTALL_TOKEN=$(curl -k -s -XPOST -H "Content-Type: application/json"  -k -d '{"name":"install"}' -u %USERNAME%:%PASSWORD% <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/users/opentlc-mgr/tokens" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/users/opentlc-mgr/tokens</a> | jq -r .sha1)
-echo "GITEA_INSTALL_TOKEN=${GITEA_INSTALL_TOKEN}"
-
-curl -k -X 'POST' \
-    "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/admin/users?access_token=${GITEA_INSTALL_TOKEN}" \
-    -H 'accept: application/json' \
-    -H 'Content-Type: application/json' \
-    -d '{
-          "email": "%USERNAME%@example.com",
-          "full_name": "User %USERNAME%",
-          "login_name": "%USERNAME%",
-          "must_change_password": false,
-          "password": "%PASSWORD%",
-          "send_notify": true,
-          "source_id": 0,
-          "username": "%USERNAME%",
-          "visibility" : "public"
-    }'</code></pre>
-</div>
+<p>You could fork them in your preferred git server, but for the sake of simplicity your&#8217;re going to use a git server (<a href="https://gitea.io" target="_blank" rel="noopener">Gitea</a>) which should&#8217;ve been deployed in section <a href="02-prepare-cluster.html#deploying-gitea" class="xref page">Deploying Gitea</a>.</p>
 </div>
 </div>
 </div>
@@ -427,7 +326,7 @@ curl -k -X 'POST' \
 <h2 id="explore-gitea-console"><a class="anchor" href="#explore-gitea-console"></a>Explore Gitea Console</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Before we continue with the migration of the git repositories of our application open the console and check that your credentials are valid and all looks good. Open <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%" class="bare" target="_blank" rel="noopener">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%</a> and use these credentials:</p>
+<p>Before we continue with the migration of the git repositories of our application open the console and check that your credentials are valid and all looks good. Open <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%</a> and use these credentials:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -549,6 +448,18 @@ echo "GIT_PAT=${GIT_PAT}"</code></pre>
 </div>
 <div class="paragraph">
 <p>After successfully migrating all the repos you should see this in the Gitea console.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Don&#8217;t forget to refresh your browser.
+</td>
+</tr>
+</table>
 </div>
 <div class="imageblock">
 <div class="content">

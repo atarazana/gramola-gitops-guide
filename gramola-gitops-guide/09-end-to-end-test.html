@@ -3,10 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Deploy Gramola With GitOps :: Gramola GitOps Guide</title>
-    <link rel="canonical" href="https://atarazana.github.io/gramola-gitops-guide/gramola-gitops-guide/05-deploy-gramola-with-gitops.html">
-    <link rel="prev" href="04-prepare-argocd.html">
-    <link rel="next" href="06-deploy-cicd-pipelines-with-gitops.html">
+    <title>End To End Test :: Gramola GitOps Guide</title>
+    <link rel="canonical" href="https://atarazana.github.io/gramola-gitops-guide/gramola-gitops-guide/09-end-to-end-test.html">
+    <link rel="prev" href="08-test-cicd-pipelines.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
 <link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
@@ -143,15 +142,15 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="05-deploy-gramola-with-gitops.html">5. Deploy Gramola</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#create-root-app">Create Root App</a>
+    <a class="nav-link" href="05-deploy-gramola-with-gitops.html#create-root-app">Create Root App</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#create-additional-root-app">Create Additional Root App</a>
+    <a class="nav-link" href="05-deploy-gramola-with-gitops.html#create-additional-root-app">Create Additional Root App</a>
   </li>
 </ul>
   </li>
@@ -191,12 +190,12 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="09-end-to-end-test.html">9. End to End Test</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="09-end-to-end-test.html#introduction">Introduction</a>
+    <a class="nav-link" href="#introduction">Introduction</a>
   </li>
 </ul>
   </li>
@@ -231,136 +230,63 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">Gramola GitOps Guide</a></li>
-    <li><a href="05-deploy-gramola-with-gitops.html">5. Deploy Gramola</a></li>
+    <li><a href="09-end-to-end-test.html">9. End to End Test</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/atarazana/gramola-gitops-guide/edit/main/documentation/modules/ROOT/pages/05-deploy-gramola-with-gitops.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/atarazana/gramola-gitops-guide/edit/main/documentation/modules/ROOT/pages/09-end-to-end-test.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Deploy Gramola With GitOps</h1>
+<h1 class="page">End To End Test</h1>
 <div class="sect1">
-<h2 id="create-root-app"><a class="anchor" href="#create-root-app"></a>Create Root App</h2>
+<h2 id="introduction"><a class="anchor" href="#introduction"></a>Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>ArgoCD uses a powerful abstraction of what an application is from the point of view of deployment. In an ArgoCD application we define where to look for the descriptors we want to create (<strong>spec&#8594;source</strong>) and maintain in Kubernetes and also how and where we want them (<strong>spec&#8594;destination</strong>). More over, because we can store Application objects also in git repository we could chain a set of applications with a parent application&#8230;&#8203; hence we can nest application and call "<strong>Root Application</strong>" to the top parent of a set of elements including Applications.</p>
+<p>So far, you have deployed your application and CICD pipelines; additionally you have created webhook and they are, apparently, working properly but we will never know for sure unless we make a change in the code and see if it all works as expected and we see that change being promoted through our environments. It&#8217;s about time for an end to end test.</p>
 </div>
 <div class="paragraph">
-<p>The next command creates a Root Application called <strong>gramola-root-app</strong> that points to our configuration repository <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola" class="bare" target="_blank" rel="noopener">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola</a> and folder <strong>argocd/root-apps</strong>.</p>
+<p>The next diagram summarizes the end to end test you are going to run. As you can see, you will make a change to the code in the <em>Events API</em> (<strong>gramola-events</strong>) which, via a webhook, will trigger the CI pipeline and hence the promotion of code.</p>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Go <a href="https://argoproj.github.io/argo-cd/user-guide/helm/" target="_blank" rel="noopener">here</a> to learn more about the ArgoCD helm plugin.
-</td>
-</tr>
-</table>
-</div>
-<div class="listingblock console-input">
+<div class="imageblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export USERNAME="%USERNAME%"
-cat &lt;&lt;EOF | kubectl apply -n openshift-gitops -f -
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: gramola-root-app-${USERNAME}
-  namespace: openshift-gitops
-  labels:
-    argocd-root-app: "true"
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
-spec:
-  destination:
-    namespace: openshift-gitops
-    name: in-cluster
-  project: default
-  syncPolicy:
-    automated: {}
-  source:
-    helm:
-      parameters:
-        - name: baseRepoUrl
-          value: <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola</a>
-        - name: namespaceSuffix
-          value: "-${USERNAME}"
-        - name: username
-          value: "%USERNAME%"
-    path: argocd/root-apps
-    repoURL: <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola</a>
-    targetRevision: HEAD
-EOF</code></pre>
+<img src="_images/end-to-end-pipeline-1.png" alt="End to End Pipeline Test">
 </div>
 </div>
 <div class="paragraph">
-<p>You should see something like.</p>
+<p>These are the high level sequence of events (only relevant steps are mentioned here more details later on):</p>
 </div>
-<div class="listingblock console-output">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">application.argoproj.io/gramola-root-app-user1 created</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="create-additional-root-app"><a class="anchor" href="#create-additional-root-app"></a>Create Additional Root App TODO!!!</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>If an additional cluster has been set up&#8230;&#8203;</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export USERNAME="%USERNAME%"
-cat &lt;&lt;EOF | kubectl apply -n openshift-gitops -f -
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: gramola-root-app-cloud-${USERNAME}
-  namespace: openshift-gitops
-  labels:
-    argocd-root-app: "true"
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
-spec:
-  destination:
-    namespace: openshift-gitops
-    name: in-cluster
-  project: default
-  syncPolicy:
-    automated: {}
-  source:
-    helm:
-      parameters:
-        - name: baseRepoUrl
-          value: <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola</a>
-        - name: destinationName
-          value: ${CLUSTER_NAME}
-        - name: namespaceSuffix
-          value: "-${USERNAME}"
-        - name: username
-          value: "%USERNAME%"
-    path: argocd/root-apps-cloud
-    repoURL: <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola</a>
-    targetRevision: HEAD
-EOF</code></pre>
-</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Change the code and push those changes to the repository of code (<strong>gramola-events</strong> in this case).</p>
+</li>
+<li>
+<p>The <strong><em>Push Event</em></strong> is sent by the webhook to the <strong>gramola-events CI Pipeline Event Listener</strong> which in its turn triggers the pipeline by creating a <strong><em>PipelineRun</em></strong> object.</p>
+</li>
+<li>
+<p>The <code>build</code> step builds the image for <strong>gramola-events</strong> and pushes it to the registry, the hash of the new image is used to update the <em>kustomization.yaml</em> file in the <em>dev overlay</em>, in a short-lived feature-branch in the configuration repository (<strong>gramola</strong>)</p>
+</li>
+<li>
+<p>A <strong><em>Pull Request</em></strong> is created for <strong>merging</strong> the <code>feature branch</code> with the <code>main branch</code> in the <code>pr-create</code> step.</p>
+</li>
+<li>
+<p>The PR has to be confirmed so that changes are effectively merged into the main branch (this is a manual step)</p>
+</li>
+<li>
+<p>Once the PR is confirmed, the merge is effective and a <strong><em>Pull Request Event</em></strong> is sent by the corresponding webhook to the <strong>gramola-events CD Pipeline Event Listener</strong> which in its turn triggers the pipeline by creating another <strong><em>PipelineRun</em></strong> object. At this point the hash of the new image has replaced the previous one.</p>
+</li>
+<li>
+<p>The <em>CD pipeline fetches configuration not code</em> and <em>in parallel triggers the sync of</em> <strong>events-app-dev</strong> which means the new hash of the image is replaced in the Deployment object and hence a rolling update is rolled out. Once the app is in sync a new PR is created to promo</p>
+</li>
+</ol>
 </div>
 <div class="paragraph">
-<p>Similarly if you created the root app for the additional cluster you should see&#8230;&#8203;</p>
-</div>
-<div class="listingblock console-output">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">application.argoproj.io/gramola-root-app-cloud-user1 created</code></pre>
-</div>
+<p><a href="https://repository-gitea-system.apps.cluster-prhg6.prhg6.sandbox770.opentlc.com/user1" class="bare">https://repository-gitea-system.apps.cluster-prhg6.prhg6.sandbox770.opentlc.com/user1</a></p>
 </div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="04-prepare-argocd.html" class="query-params-link">4. Prepare ArgoCD</a></span>
-  <span class="next"><a href="06-deploy-cicd-pipelines-with-gitops.html" class="query-params-link">6. Deploy CICD Pipelines</a></span>
+  <span class="prev"><a href="08-test-cicd-pipelines.html" class="query-params-link">8. Test CICD Pipelines</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
