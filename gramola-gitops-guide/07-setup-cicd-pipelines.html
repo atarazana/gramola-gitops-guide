@@ -286,13 +286,15 @@ Make sure that on the upper left corner the "Administrator" view is selected and
 <img src="_images/pipelines-check-2.png" alt="Pipelines Check 2">
 </div>
 </div>
+<div class="sect2">
+<h3 id="events-ci-pipeline"><a class="anchor" href="#events-ci-pipeline"></a>Events CI Pipeline</h3>
 <div class="paragraph">
-<p>Le&#8217;s have a look to the <strong>CI pipeline</strong> for the <code>Events</code> microservice <strong>'events-ci-pl'</strong>. As you can see is made of a series of tasks:</p>
+<p>Le&#8217;s have a look to the <strong>CI pipeline</strong> for the <strong>gramola-events</strong> microservice <strong>'events-ci-pl'</strong>. As you can see is made of a series of tasks:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>fetch-repository:</strong> Fetches the <code>Events</code> code fro the Gitea repository you migrated before</p>
+<p><strong>fetch-repository:</strong> Fetches the <strong>gramola-events</strong> code fro the Gitea repository you migrated before</p>
 </li>
 <li>
 <p><strong>package:</strong> Compiles and packages the code in a JAR file</p>
@@ -304,7 +306,7 @@ Make sure that on the upper left corner the "Administrator" view is selected and
 <p><strong>fetch-config-repository:</strong> Fetches the configuration of Gramola (remember git is the source of truth for ArgoCD)</p>
 </li>
 <li>
-<p><strong>update-image:</strong> Updates the hash in the <strong>kustomization file</strong> in the <code>dev</code> overlay of <code>Events</code> but in a short lived feature branch</p>
+<p><strong>update-image:</strong> Updates the hash in the <strong>kustomization file</strong> in the <code>dev</code> overlay of <strong>gramola-events</strong> but in a short lived feature branch</p>
 </li>
 <li>
 <p><strong>gitea-pr-create:</strong> Creates a <strong>Pull Request</strong> with the <strong>feature branch</strong> over the <strong>main branch</strong></p>
@@ -331,8 +333,17 @@ This is just an example covering the bare minimum tasks of a CI pipeline! Of cou
 <img src="_images/pipelines-check-3.png" alt="Pipelines Check 3">
 </div>
 </div>
+<div class="sect3">
+<h4 id="when-expressions-to-the-rescue"><a class="anchor" href="#when-expressions-to-the-rescue"></a>'When Expressions' to the rescue</h4>
 <div class="paragraph">
-<p>Navigate back and open the <strong>CD pipeline</strong>, again for <code>Events</code>, called <strong>'events-cd-pl'</strong>. This time the list of tasks is even shorter&#8230;&#8203;</p>
+<p><a href="https://console-openshift-console.apps.cluster-prhg6.prhg6.sandbox770.opentlc.com/k8s/ns/gramola-cicd-user1/tekton.dev" class="bare">https://console-openshift-console.apps.cluster-prhg6.prhg6.sandbox770.opentlc.com/k8s/ns/gramola-cicd-user1/tekton.dev</a><sub>v1beta1</sub>Pipeline/events-ci-pl</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="events-cd-pipeline"><a class="anchor" href="#events-cd-pipeline"></a>Events CD Pipeline</h3>
+<div class="paragraph">
+<p>Navigate back and open the <strong>CD pipeline</strong>, again for <strong>gramola-events</strong>, called <strong>'events-cd-pl'</strong>. This time the list of tasks is even shorter&#8230;&#8203;</p>
 </div>
 <div class="ulist">
 <ul>
@@ -343,7 +354,7 @@ This is just an example covering the bare minimum tasks of a CI pipeline! Of cou
 <p><strong>fetch-config-repository:</strong> Fetches the configuration of Gramola (remember git is the source of truth for ArgoCD)</p>
 </li>
 <li>
-<p><strong>update-image:</strong> Updates the hash in the <strong>kustomization file</strong> in the <code>dev</code> overlay of <code>Events</code> but in a short lived feature branch</p>
+<p><strong>update-image:</strong> Updates the hash in the <strong>kustomization file</strong> in the <code>dev</code> overlay of <strong>gramola-events</strong> but in a short lived feature branch</p>
 </li>
 <li>
 <p><strong>gitea-pr-create:</strong> Creates a <strong>Pull Request</strong> with the <strong>feature branch</strong> over the <strong>main branch</strong></p>
@@ -368,6 +379,7 @@ This is just an example covering the bare minimum tasks of a CI pipeline! Of cou
 </div>
 <div class="paragraph">
 <p>Well triggers are in place but we need web hooks to feed them!</p>
+</div>
 </div>
 </div>
 </div>
