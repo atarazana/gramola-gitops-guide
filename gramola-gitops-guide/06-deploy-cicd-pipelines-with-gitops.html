@@ -6,7 +6,7 @@
     <title>Deploy CICD Pipelines With GitOps :: Gramola GitOps Guide</title>
     <link rel="canonical" href="https://atarazana.github.io/gramola-gitops-guide/gramola-gitops-guide/06-deploy-cicd-pipelines-with-gitops.html">
     <link rel="prev" href="05-deploy-gramola-with-gitops.html">
-    <link rel="next" href="07-setup-cicd-pipelines.html">
+    <link rel="next" href="07-checking-cicd-pipelines.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
 <link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
@@ -97,9 +97,6 @@
     <a class="nav-link" href="02-prepare-cluster.html#deploying-argocd-and-tekton">Deploying ArgoCD &amp; Tekton</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="02-prepare-cluster.html#adding-project-definitions">Adding Project Definitions</a>
-  </li>
-  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="02-prepare-cluster.html#deploying-gitea">Deploying Gitea</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -172,31 +169,37 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="07-setup-cicd-pipelines.html">7. Setup CICD Pipelines</a>
+    <a class="nav-link" href="07-checking-cicd-pipelines.html">7. Checking CICD Pipelines</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="07-setup-cicd-pipelines.html#checking-cicd-pipelines">Checking CICD Pipelines</a>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="07-setup-cicd-pipelines.html#create-pipelines-web-hooks">Create Pipelines Web Hooks</a>
+    <a class="nav-link" href="07-checking-cicd-pipelines.html#checking-cicd-pipelines">Checking CICD Pipelines</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="08-test-cicd-pipelines.html">8. Test CICD Pipelines</a>
+    <a class="nav-link" href="08-create-pipeline-webhooks.html">8. Create Pipelines Webhooks</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="08-test-cicd-pipelines.html#checking-cicd-pipelines">Checking CICD Pipelines</a>
+    <a class="nav-link" href="08-create-pipeline-webhooks.html#create-pipeline-webhooks">Create Pipelines Webhooks</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="09-end-to-end-test.html">9. End to End Test</a>
+    <a class="nav-link" href="09-test-cicd-pipelines.html">8. Test CICD Pipelines</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="09-end-to-end-test.html#introduction">Introduction</a>
+    <a class="nav-link" href="09-test-cicd-pipelines.html#checking-cicd-pipelines">Checking CICD Pipelines</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="10-end-to-end-test.html">9. End to End Test</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="10-end-to-end-test.html#introduction">Introduction</a>
   </li>
 </ul>
   </li>
@@ -242,7 +245,19 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>In this section you&#8217;re going to deploy CI and CD pipelines that will help automatizing the processes of continuos integration and delivery.</p>
+<p>In this chapter you&#8217;re going to deploy CI and CD pipelines that will help to automate the processes of continuos integration and delivery. It&#8217;s made of three sections, the first one deploys an ArgoCD Application that will create not only the pipelines but all the necessary elements the other two will guide you to generate the secrets necessary to connect to the git repos and the container image registry.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+It&#8217;s a best practice not to store secrets in a git repository even if it&#8217;s private. There are several ways to deal with secrets in this kind of scenarios but in this case we&#8217;re going to manage them manually for the sake of simplicity.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -443,7 +458,7 @@ EOF</code></pre>
 <p>As we have explained before, in this section we will deploy both CI and CD pipelines for the microservices that compose Gramola. If you have just created a secret so that the CI and CD pipelines can create Pull Requests, this time you are going to create a secret with the credentials needed to push images to the container images registry.</p>
 </div>
 <div class="paragraph">
-<p>The next set of commands will ask you for the <strong>usernane</strong> and <strong>password</strong> of the container registry account you already had or created in  <a href="01-setup.html#container-registry-account" class="xref page">this</a> section.</p>
+<p>The next set of commands will ask you for the <strong>username</strong> and <strong>password</strong> of the container registry account you already had or created in  <a href="01-setup.html#container-registry-account" class="xref page">this</a> section.</p>
 </div>
 <div class="paragraph">
 <p><strong>USERNAME</strong></p>
@@ -496,7 +511,7 @@ fi</code></pre>
 </div>
 <nav class="pagination">
   <span class="prev"><a href="05-deploy-gramola-with-gitops.html" class="query-params-link">5. Deploy Gramola</a></span>
-  <span class="next"><a href="07-setup-cicd-pipelines.html" class="query-params-link">7. Setup CICD Pipelines</a></span>
+  <span class="next"><a href="07-checking-cicd-pipelines.html" class="query-params-link">7. Checking CICD Pipelines</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">

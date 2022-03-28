@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Prepare Repositories :: Gramola GitOps Guide</title>
-    <link rel="canonical" href="https://atarazana.github.io/gramola-gitops-guide/gramola-gitops-guide/03-prepare-repositories.html">
-    <link rel="prev" href="02-prepare-cluster.html">
-    <link rel="next" href="04-prepare-argocd.html">
+    <title>Create Pipeline Webhooks :: Gramola GitOps Guide</title>
+    <link rel="canonical" href="https://atarazana.github.io/gramola-gitops-guide/gramola-gitops-guide/08-create-pipeline-webhooks.html">
+    <link rel="prev" href="07-checking-cicd-pipelines.html">
+    <link rel="next" href="09-test-cicd-pipelines.html">
     <meta name="generator" content="Antora 3.0.0">
     <link rel="stylesheet" href="../_/css/site.css">
 <link rel="icon" href="../_/img/favicon.ico" type="image/x-icon">
@@ -104,18 +104,18 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item is-current-page" data-depth="1">
+  <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="03-prepare-repositories.html">3. Prepare Repositories</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#explore-gitea-console">Explore Gitea console</a>
+    <a class="nav-link" href="03-prepare-repositories.html#explore-gitea-console">Explore Gitea console</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#create-git-pat">Create Git PAT</a>
+    <a class="nav-link" href="03-prepare-repositories.html#create-git-pat">Create Git PAT</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#migrate-repositories">Migrate Repositories</a>
+    <a class="nav-link" href="03-prepare-repositories.html#migrate-repositories">Migrate Repositories</a>
   </li>
 </ul>
   </li>
@@ -176,12 +176,12 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="08-create-pipeline-webhooks.html">8. Create Pipelines Webhooks</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="08-create-pipeline-webhooks.html#create-pipeline-webhooks">Create Pipelines Webhooks</a>
+    <a class="nav-link" href="#create-pipeline-webhooks">Create Pipelines Webhooks</a>
   </li>
 </ul>
   </li>
@@ -234,254 +234,154 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">Gramola GitOps Guide</a></li>
-    <li><a href="03-prepare-repositories.html">3. Prepare Repositories</a></li>
+    <li><a href="08-create-pipeline-webhooks.html">8. Create Pipelines Webhooks</a></li>
   </ul>
 </nav>
-  <div class="edit-this-page"><a href="https://github.com/atarazana/gramola-gitops-guide/edit/main/documentation/modules/ROOT/pages/03-prepare-repositories.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/atarazana/gramola-gitops-guide/edit/main/documentation/modules/ROOT/pages/08-create-pipeline-webhooks.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Prepare Repositories</h1>
-<div id="preamble">
+<h1 class="page">Create Pipeline Webhooks</h1>
+<div class="sect1">
+<h2 id="create-pipeline-webhooks"><a class="anchor" href="#create-pipeline-webhooks"></a>Create Pipeline Webhooks</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>Everything we do in this section requires that you have fulfilled the <a href="01-setup.html#prerequisite" class="xref page">prerequisites</a> section and you&#8217;re logged in your OpenShift cluster.</p>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p><strong>EVEN</strong> if you have two clusters and want to run the multicluster section&#8230;&#8203; so&#8230;&#8203; <strong>log in the main one now</strong> <span class="underline">not in the secondary</span>.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>So if not already logged in, please do it now.</p>
-</div>
+<div class="sect2">
+<h3 id="events-ci-webhook"><a class="anchor" href="#events-ci-webhook"></a>Events CI Webhook</h3>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">oc login -u %USERNAME% -p %PASSWORD% --server=https://api.%BASE_SUBDOMAIN%:6443</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="source-of-truth"><a class="anchor" href="#source-of-truth"></a>Source Of Truth</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>As we have already exposed in GitOps Git is the source of truth so we need one to start with&#8230;&#8203; you may have your own but for the sake of homogeneity in this guide we&#8217;re going to use a git server deployed in OpenShift.</p>
-</div>
-<div class="paragraph">
-<p>Why not relying on a preexisting git server somewhere you may ask? This is so, because in order to execute the pipelines section of this guide you have to fork some git repositories.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>This is necessary because:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>webhooks need to be created and obviously you need permissions on them</p>
-</li>
-<li>
-<p>you want to make changes to the code and promote those changes across environments</p>
-</li>
-</ul>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>These are the repositories you need to fork:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Configuration Repo:</strong> <a href="https://github.com/atarazana/gramola.git" class="bare">https://github.com/atarazana/gramola.git</a></p>
-</li>
-<li>
-<p><strong>Events Microservice:</strong> <a href="https://github.com/atarazana/gramola-events.git" class="bare">https://github.com/atarazana/gramola-events.git</a></p>
-</li>
-<li>
-<p><strong>Gateway Microservice:</strong> <a href="https://github.com/atarazana/gramola-gateway.git" class="bare">https://github.com/atarazana/gramola-gateway.git</a></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>You could fork them in your preferred git server, but for the sake of simplicity your&#8217;re going to use a git server (<a href="https://gitea.io" target="_blank" rel="noopener">Gitea</a>) which should&#8217;ve been deployed in section <a href="02-prepare-cluster.html#deploying-gitea" class="xref page">Deploying Gitea</a>.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="explore-gitea-console"><a class="anchor" href="#explore-gitea-console"></a>Explore Gitea Console</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Before we continue with the migration of the git repositories of our application open the console and check that your credentials are valid and all looks good.</p>
-</div>
-<div class="paragraph">
-<p>Copy the next url and open it in a new tab, please use these credentials:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>USERNAME:</strong> %USERNAME%</p>
-</li>
-<li>
-<p><strong>PASSWORD:</strong> %PASSWORD%</p>
-</li>
-</ul>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You should see something like this. Please enter your credentials and hit the green button.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/gitea-login.png" alt="Gitea Login">
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="create-git-pat"><a class="anchor" href="#create-git-pat"></a>Create Git PAT</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Let&#8217;s create a <strong>Personal Access Token</strong> (PAT) in Gitea for user <strong>%USERNAME%</strong>.</p>
-</div>
-<div class="admonitionblock caution">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-caution" title="Caution"></i>
-</td>
-<td class="content">
-You&#8217;ll need this token later so don&#8217;t forget to copy it somewhere just in case you close the terminal window.
-</td>
-</tr>
-</table>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">GIT_PAT=$(curl -k -s -XPOST -H "Content-Type: application/json"  -k -d '{"name":"cicd'"${RANDOM}"'"}' -u %USERNAME%:%PASSWORD% <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/users/opentlc-mgr/tokens" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/users/opentlc-mgr/tokens</a> | jq -r .sha1)
-echo "GIT_PAT=${GIT_PAT}"</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="migrate-repositories"><a class="anchor" href="#migrate-repositories"></a>Migrate Repositories</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Now that user <strong>%USERNAME%</strong> has been created let&#8217;s migrate <code>gramola</code> repositories into Gitea.</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">  curl -k -X 'POST' \
-      "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/repos/migrate" \
-      -H 'accept: application/json' \
-      -H  "Authorization: token ${GIT_PAT}" \
-      -H 'Content-Type: application/json' \
-      -d '{
-      "clone_addr": "https://github.com/atarazana/gramola.git",
-      "description": "gramola configuration",
-      "issues": false,
-      "labels": false,
-      "lfs": false,
-      "milestones": false,
-      "private": false,
-      "pull_requests": false,
-      "releases": false,
-      "repo_name": "gramola",
-      "repo_owner": "%USERNAME%",
-      "service": "git",
-      "wiki": false
-    }'
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">EVENTS_CI_EL_LISTENER_HOST=$(oc get route/el-events-ci-pl-push-gitea-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}')
 
-  curl -k -X 'POST' \
-      "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/repos/migrate" \
-      -H 'accept: application/json' \
-      -H  "Authorization: token ${GIT_PAT}" \
-      -H 'Content-Type: application/json' \
-      -d '{
-      "clone_addr": "https://github.com/atarazana/gramola-events.git",
-      "description": "gramola configuration",
-      "issues": false,
-      "labels": false,
-      "lfs": false,
-      "milestones": false,
-      "private": false,
-      "pull_requests": false,
-      "releases": false,
-      "repo_name": "gramola-events",
-      "repo_owner": "%USERNAME%",
-      "service": "git",
-      "wiki": false
-    }'
-
-  curl -k -X 'POST' \
-      "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/repos/migrate" \
-      -H 'accept: application/json' \
-      -H  "Authorization: token ${GIT_PAT}" \
-      -H 'Content-Type: application/json' \
-      -d '{
-      "clone_addr": "https://github.com/atarazana/gramola-gateway.git",
-      "description": "gramola configuration",
-      "issues": false,
-      "labels": false,
-      "lfs": false,
-      "milestones": false,
-      "private": false,
-      "pull_requests": false,
-      "releases": false,
-      "repo_name": "gramola-gateway",
-      "repo_owner": "%USERNAME%",
-      "service": "git",
-      "wiki": false
-    }'</code></pre>
+curl -k -X 'POST' "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/repos/%USERNAME%/gramola-events/hooks" \
+  -H "accept: application/json" \
+  -H "Authorization: token ${GIT_PAT}" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "active": true,
+  "branch_filter": "*",
+  "config": {
+     "content_type": "json",
+     "url": "http://'"${EVENTS_CI_EL_LISTENER_HOST}"'"
+  },
+  "events": [
+    "push"
+  ],
+  "type": "gitea"
+}'</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>After successfully migrating all the repos you should see this in the Gitea console.</p>
+<p>Expected output:</p>
 </div>
-<div class="admonitionblock caution">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-caution" title="Caution"></i>
-</td>
-<td class="content">
-Don&#8217;t forget to refresh your browser.
-</td>
-</tr>
-</table>
-</div>
-<div class="imageblock">
+<div class="listingblock console-output">
 <div class="content">
-<img src="_images/gitea-migrated-repos.png" alt="Gitea Migrated Repos">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"id":1,"type":"gitea","config":{"content_type":"json","url":"<a href="http://"},"events":">"push"</a>,"active":true,"updated_at":"2021-11-12T10:14:15Z","created_at":"2021-11-12T10:14:15Z"}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="gateway-ci-webhook"><a class="anchor" href="#gateway-ci-webhook"></a>Gateway CI Webhook</h3>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">GATEWAY_CI_EL_LISTENER_HOST=$(oc get route/el-gateway-ci-pl-push-gitea-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}')
+
+curl -k -X 'POST' "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/repos/%USERNAME%/gramola-gateway/hooks" \
+  -H "accept: application/json" \
+  -H "Authorization: token ${GIT_PAT}" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "active": true,
+  "branch_filter": "*",
+  "config": {
+     "content_type": "json",
+     "url": "http://'"${GATEWAY_CI_EL_LISTENER_HOST}"'"
+  },
+  "events": [
+    "push"
+  ],
+  "type": "gitea"
+}'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Expected output:</p>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"id":2,"type":"gitea","config":{"content_type":"json","url":"<a href="http://"},"events":">"push"</a>,"active":true,"updated_at":"2021-11-12T10:15:19Z","created_at":"2021-11-12T10:15:19Z"}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="events-cd-webhook"><a class="anchor" href="#events-cd-webhook"></a>Events CD Webhook</h3>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">EVENTS_CD_EL_LISTENER_HOST=$(oc get route/el-events-cd-pl-pr-gitea-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}')
+
+curl -k -X 'POST' "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/repos/%USERNAME%/gramola/hooks" \
+  -H "accept: application/json" \
+  -H "Authorization: token ${GIT_PAT}" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "active": true,
+  "branch_filter": "*",
+  "config": {
+     "content_type": "json",
+     "url": "http://'"${EVENTS_CD_EL_LISTENER_HOST}"'"
+  },
+  "events": [
+    "pull_request"
+  ],
+  "type": "gitea"
+}'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Expected output:</p>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"id":3,"type":"gitea","config":{"content_type":"json","url":"<a href="http://"},"events":">"pull_request","pull_request_assign","pull_request_label","pull_request_milestone","pull_request_comment","pull_request_review_approved","pull_request_review_rejected","pull_request_review_comment","pull_request_sync"</a>,"active":true,"updated_at":"2021-11-12T10:16:31Z","created_at":"2021-11-12T10:16:31Z"}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="gateway-cd-webhook"><a class="anchor" href="#gateway-cd-webhook"></a>Gateway CD Webhook</h3>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">GATEWAY_CD_EL_LISTENER_HOST=$(oc get route/el-gateway-cd-pl-pr-gitea-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}')
+
+curl -k -X 'POST' "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/repos/%USERNAME%/gramola/hooks" \
+  -H "accept: application/json" \
+  -H "Authorization: token ${GIT_PAT}" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "active": true,
+  "branch_filter": "*",
+  "config": {
+     "content_type": "json",
+     "url": "http://'"${GATEWAY_CD_EL_LISTENER_HOST}"'"
+  },
+  "events": [
+    "pull_request"
+  ],
+  "type": "gitea"
+}'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Expected output:</p>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">{"id":4,"type":"gitea","config":{"content_type":"json","url":"<a href="http://"},"events":">"pull_request","pull_request_assign","pull_request_label","pull_request_milestone","pull_request_comment","pull_request_review_approved","pull_request_review_rejected","pull_request_review_comment","pull_request_sync"</a>,"active":true,"updated_at":"2021-11-12T10:17:15Z","created_at":"2021-11-12T10:17:15Z"}</code></pre>
+</div>
 </div>
 </div>
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="02-prepare-cluster.html" class="query-params-link">2. Prepare Cluster</a></span>
-  <span class="next"><a href="04-prepare-argocd.html" class="query-params-link">4. Prepare ArgoCD</a></span>
+  <span class="prev"><a href="07-checking-cicd-pipelines.html" class="query-params-link">7. Checking CICD Pipelines</a></span>
+  <span class="next"><a href="09-test-cicd-pipelines.html" class="query-params-link">8. Test CICD Pipelines</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
