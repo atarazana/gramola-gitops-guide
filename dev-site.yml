@@ -17,6 +17,8 @@ asciidoc:
   extensions:
     - ./lib/remote-include-processor.js
     - ./lib/tab-block.js
+    - ./lib/dash.js
+    - ./lib/emot-inline-macro-processor.js
 ui:
   bundle:
     #url: https://github.com/redhat-developer-demos/rhd-tutorial-ui/releases/download/v0.1.8/ui-bundle.zip

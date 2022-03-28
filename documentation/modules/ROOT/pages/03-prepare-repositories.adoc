@@ -42,10 +42,18 @@ You could fork them in your preferred git server, but for the sake of simplicity
 [#explore-gitea-console]
 == Explore Gitea Console
 
-Before we continue with the migration of the git repositories of our application open the console and check that your credentials are valid and all looks good. Open https://repository-gitea-system.apps.%BASE_SUBDOMAIN% and use these credentials: 
+Before we continue with the migration of the git repositories of our application open the console and check that your credentials are valid and all looks good. 
+
+Copy the next url and open it in a new tab, please use these credentials:
 
 - *USERNAME:* {username}
 - *PASSWORD:* {password}
+
+[.console-input]
+[source,bash, subs="+attributes"]
+----
+https://repository-gitea-system.apps.%BASE_SUBDOMAIN% 
+----
 
 You should see something like this. Please enter your credentials and hit the green button.
 
@@ -67,6 +75,6 @@ include::partial$gitea-migrate-repos.adoc[]
 
 After successfully migrating all the repos you should see this in the Gitea console.
 
-NOTE: Don't forget to refresh your browser.
+CAUTION: Don't forget to refresh your browser.
 
 image::gitea-migrated-repos.png[Gitea Migrated Repos]

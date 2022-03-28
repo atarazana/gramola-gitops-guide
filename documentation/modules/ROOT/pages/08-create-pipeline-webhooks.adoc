@@ -1,0 +1,7 @@
+= Create Pipeline Webhooks
+include::_attributes.adoc[]
+
+[#create-pipeline-webhooks]
+== Create Pipeline Webhooks
+
+include::partial$gitea-create-webhooks.adoc[]

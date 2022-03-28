@@ -1,15 +1,9 @@
 = Deploy CICD Pipelines With GitOps
 include::_attributes.adoc[]
 
-// // :registry-server: image-registry.openshift-image-registry.svc:5000
-// //:registry-server: default-route-openshift-image-registry.apps.cluster-645f.645f.sandbox664.opentlc.com
-// :registry-server: quay.io
-// // :registry-org: gramola-cicd{namespace-suffix}
-// :registry-org: cvicens
-// :registry-username: {username}
-// :git-provider: github
+In this chapter you're going to deploy CI and CD pipelines that will help to automate the processes of continuos integration and delivery. It's made of three sections, the first one deploys an ArgoCD Application that will create not only the pipelines but all the necessary elements the other two will guide you to generate the secrets necessary to connect to the git repos and the container image registry.
 
-In this section you're going to deploy CI and CD pipelines that will help automatizing the processes of continuos integration and delivery.
+IMPORTANT: It's a best practice not to store secrets in a git repository even if it's private. There are several ways to deal with secrets in this kind of scenarios but in this case we're going to manage them manually for the sake of simplicity.
 
 [#create-pipelines-root-app]
 == Create Pipelines Root App
@@ -161,7 +155,7 @@ kubectl annotate -n ${CICD_NAMESPACE} secret ${GIT_PAT_SECRET_NAME} \
 
 As we have explained before, in this section we will deploy both CI and CD pipelines for the microservices that compose Gramola. If you have just created a secret so that the CI and CD pipelines can create Pull Requests, this time you are going to create a secret with the credentials needed to push images to the container images registry.
 
-The next set of commands will ask you for the *usernane* and *password* of the container registry account you already had or created in  xref:01-setup.adoc#container-registry-account[this] section.
+The next set of commands will ask you for the *username* and *password* of the container registry account you already had or created in  xref:01-setup.adoc#container-registry-account[this] section.
 
 *USERNAME*
 [.console-input]

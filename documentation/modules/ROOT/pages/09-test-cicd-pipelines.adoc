@@ -1,8 +1,12 @@
 = Test CICD Pipelines
 include::_attributes.adoc[]
 
-[#check-ci-web-hook]
-== Check CI Web Hook
+Here we're going to run some basic tests
+
+Web hooks are in place, it's time to check if they are working correctly.
+
+[#check-events-ci-web-hook]
+== Check Events CI Web Hook
 
 Let’s check if the webhook is working:
 
@@ -23,19 +27,25 @@ You should get something like this.
 
 Now if you push a change in the code the CI pipeline for `events` should we kicked off.
 
-For instance you can run this set of commands, in a new terminal.
+You can test this either by opening the next url and changing the value of property `info.name` to something like `gramola-events.{username}`. Then scroll down, enter a commit message and click on *Commit changes*.
+
+[.console-input]
+[source,bash, subs="+attributes"]
+----
+https://{gitea-host}/%USERNAME%/gramola-events/_edit/main/src/main/resources/application.properties
+----
+
+Or by running this set of commands, in a new terminal. 
 
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-export USERNAME={username}
-export GIT_URL={gitea-host}
-git clone https://repository-gitea-system.apps. cluster-prhg6.prhg6.sandbox770.opentlc.com/user1/gramola-events
+git clone https://{username}:{password}@{gitea-host}/%USERNAME%/gramola-events
 cd gramola-events
-sed -i 's/info.name=gramola-events-/info.name=gramola-events-{username}/g' ./src/main/resources/application.properties
-
+sed -i 's/info.name=gramola-events-.*/info.name=gramola-events.{username}/g' ./src/main/resources/application.properties
+git commit ./src/main/resources/application.properties -m "update info.name" && git push
+cd ..
 ----
-
 
 If you haven’t stopped the log output you should see something like:
 
@@ -98,9 +108,20 @@ As we can see the pipeline has been automatically triggered due to the repositor
 
 Go to Gitea and inside 'Gramola' repository there must be a pull request like 'Updating 'gramola-events' image for overlay 'dev' with new image', merge it:
 
+[NOTE]
+====
+Or copy and paste the following url:
+
+[.console-input]
+[source,bash, subs="+attributes"]
+----
+https://repository-gitea-system.apps.cluster-vw6xw.vw6xw.sandbox27.opentlc.com/user1/gramola/pulls
+----
+====
+
 image::gitea-merged-pr.png[Gitea merged PR]
 
-Now the cd pipeline must be automatically triggered by this merged PR. Go to 'pipelines->events-cd-pl' and inside 'pipelineruns' open the run created after the merge, you must see something like this:
+Now the CD pipeline must be automatically triggered by this merged PR. Go to 'pipelines->events-cd-pl' and inside 'pipelineruns' open the run created after the merge, you must see something like this:
 
 image::pipelines-events-cd.png[Pipeline events CD]
 

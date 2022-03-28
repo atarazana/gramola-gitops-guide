@@ -36,7 +36,11 @@ until kubectl apply -k util/bootstrap/; do sleep 2; done
 
 Let's open the OpenShift Web Console and run some validation tests.
 
-Open this link: https://{openshift-console-host}[^]
+[.console-input]
+[source,bash, subs="+attributes"]
+----
+https://{openshift-console-host}
+----
 
 You should see something like.
 
@@ -63,20 +67,6 @@ Finally if all went well you should land in the ArgoCD console and see this.
 
 image::argocd-console.png[ArgoCD Console]
 
-[#adding-project-definitions]
-== Adding Project Definitions
-
-ArgoCD can constrain which repositories and destinations can be linked with the definition of an application, in our case we are not constraining anything but we are still going to create project definitions to be prepared for future needs. 
-
-Execute these commands to create the Gramola project definitions:
-
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-kubectl apply -f argocd/projects/project-dev.yml
-kubectl apply -f argocd/projects/project-test.yml
-----
-
 [#deploying-gitea]
 == Deploying Gitea using the operators
 
@@ -98,6 +88,8 @@ include::partial$gitea-tests.adoc[]
 == Create Git Users
 
 Now that Gitea is installed and up and running, it's time to add some users in the cluster, to do so we're going to create a `Job` that will in it's turn create 20 users.
+
+NOTE: We cannot create an object without a name with kustomize but we cannot create a Job with a name over and over... so, just in case, we delete the dummy name a use generateName instead with the next command.
 
 [.console-input]
 [source,bash, subs="+macros,+attributes"]

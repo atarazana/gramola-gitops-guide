@@ -21,3 +21,6 @@
 :openshift-console-host: console-openshift-console.{cluster-subdomain}
 
 :project_name: {username}%CLUSTER_SUBDOMAIN%
+
+:dash: %2D
+:dash-dash: dummy
