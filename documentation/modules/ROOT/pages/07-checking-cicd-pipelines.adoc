@@ -213,11 +213,11 @@ spec:
             value: $(tt.params.gitRevision)
           - name: GIT_REPO_CONFIG
             value: >-
-              https://repository-gitea-system.apps.cluster-vw6xw.vw6xw.sandbox27.opentlc.com/user1/gramola.git
+              https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/{username}/gramola.git
           - name: GIT_REVISION_CONFIG
             value: main
           - name: IMAGE_NAME
-            value: quay.io/esquife/gramola-events
+            value: quay.io/dummy/gramola-events
           - name: IMAGE_TAG
             value: $(tt.params.gitRevision)
           - name: PATH_CONTEXT

@@ -23,7 +23,8 @@ ui:
   bundle:
     #url: https://github.com/redhat-developer-demos/rhd-tutorial-ui/releases/download/v0.1.8/ui-bundle.zip
     #url: https://github.com/redhat-scholars/course-ui/releases/download/v0.1.12/ui-bundle.zip
-    url: /home/cvicensa/Projects/openshift/atarazana/course-ui/build/ui-bundle.zip
+    url: https://github.com/atarazana/course-ui/releases/download/v0.1.12c/ui-bundle.zip
+    #url: /home/cvicensa/Projects/openshift/atarazana/course-ui/build/ui-bundle.zip
     snapshot: true
   supplemental_files: ./supplemental-ui
 output:
