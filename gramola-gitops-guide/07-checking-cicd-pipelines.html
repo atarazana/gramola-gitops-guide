@@ -172,7 +172,10 @@
     <a class="nav-link" href="07-checking-cicd-pipelines.html">7. Checking CICD Pipelines</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#checking-cicd-pipelines">Checking CICD Pipelines</a>
+    <a class="nav-link" href="#overview">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#tekton-triggers">Tekton Triggers</a>
   </li>
 </ul>
   </li>
@@ -363,7 +366,7 @@ This is just an example covering the bare minimum tasks of a CI pipeline! Of cou
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://console-openshift-console.apps.%BASE_SUBDOMAIN%/k8s/ns/gramola-cicd%2D%USERNAME%/tekton.dev~v1beta1~Pipeline/events-ci-pl</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://console-openshift-console.apps.%BASE_SUBDOMAIN%/k8s/ns/gramola-cicd-%USERNAME%/tekton.dev~v1beta1~Pipeline/events-ci-pl</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -565,7 +568,7 @@ spec:
           pipeline.openshift.io/runtime: quarkus
           pipeline.openshift.io/type: knative
           tekton.dev/pipeline: events-ci-pl
-        namespace: gramola-cicd-user1
+        namespace: gramola-cicd-%USERNAME%
       spec:
         params:
           - name: APP_NAME
