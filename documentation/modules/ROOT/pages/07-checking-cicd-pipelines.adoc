@@ -63,11 +63,10 @@ Please, copy the next link and paste it in a new tab to open our CI pipeline and
 [.console-input]
 [source,bash, subs="+attributes"]
 ----
-https://console-openshift-console.apps.%BASE_SUBDOMAIN%/k8s/ns/gramola-cicd{dash}%USERNAME%/tekton.dev~v1beta1~Pipeline/events-ci-pl
+https://console-openshift-console.apps.%BASE_SUBDOMAIN%/k8s/ns/gramola-cicd-{username}/tekton.dev~v1beta1~Pipeline/events-ci-pl
 ----
 
 You can have a look to the diagram, hover over the tasks or take a look to the yaml.
-
 
 [#events-cd-pipeline]
 === Events CD Pipeline
@@ -199,7 +198,7 @@ spec:
           pipeline.openshift.io/runtime: quarkus
           pipeline.openshift.io/type: knative
           tekton.dev/pipeline: events-ci-pl
-        namespace: gramola-cicd-user1
+        namespace: gramola-cicd-{username}
       spec:
         params:
           - name: APP_NAME

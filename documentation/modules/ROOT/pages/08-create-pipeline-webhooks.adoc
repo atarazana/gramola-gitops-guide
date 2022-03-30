@@ -1,6 +1,8 @@
 = Create Pipeline Webhooks
 include::_attributes.adoc[]
 
+In the previous chapter we learn about *EventListeners*, *TriggerBindings*, etc. but we still have to create the webhooks to feed those *EventListeners*. First of all, webhooks are 
+
 [#create-pipeline-webhooks]
 == Create Pipeline Webhooks
 

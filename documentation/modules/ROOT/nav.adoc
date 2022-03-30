@@ -31,7 +31,8 @@
 ** xref:06-deploy-cicd-pipelines-with-gitops.adoc#create-registry-secret[Create Registry Secret]
 
 * xref:07-checking-cicd-pipelines.adoc[7. Checking CICD Pipelines]
-** xref:07-checking-cicd-pipelines.adoc#checking-cicd-pipelines[Checking CICD Pipelines]
+** xref:07-checking-cicd-pipelines.adoc#overview[Overview]
+** xref:07-checking-cicd-pipelines.adoc#tekton-triggers[Tekton Triggers]
 
 * xref:08-create-pipeline-webhooks.adoc[8. Create Pipelines Webhooks]
 ** xref:08-create-pipeline-webhooks.adoc#create-pipeline-webhooks[Create Pipelines Webhooks]
