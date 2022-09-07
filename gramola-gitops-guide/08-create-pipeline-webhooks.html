@@ -94,7 +94,7 @@
     <a class="nav-link" href="02-prepare-cluster.html">2. Prepare Cluster</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="02-prepare-cluster.html#deploying-argocd-and-tekton">Deploying ArgoCD &amp; Tekton</a>
+    <a class="nav-link" href="02-prepare-cluster.html#deploying-core-components">Deploying core components</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="02-prepare-cluster.html#deploying-gitea">Deploying Gitea</a>
@@ -184,13 +184,19 @@
     <a class="nav-link" href="08-create-pipeline-webhooks.html">8. Create Pipelines Webhooks</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#create-pipeline-webhooks">Create Pipelines Webhooks</a>
+    <a class="nav-link" href="#pipeline-webhooks">Pipelines Webhooks</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#create-ci-webhooks">Create CI Webhooks</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#create-cd-webhooks">Create CD Webhooks</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="09-test-cicd-pipelines.html">8. Test CICD Pipelines</a>
+    <a class="nav-link" href="09-test-cicd-pipelines.html">9. Test CICD Pipelines</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="09-test-cicd-pipelines.html#checking-cicd-pipelines">Checking CICD Pipelines</a>
@@ -199,7 +205,7 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="10-end-to-end-test.html">9. End to End Test</a>
+    <a class="nav-link" href="10-end-to-end-test.html">10. End to End Test</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="10-end-to-end-test.html#introduction">Introduction</a>
@@ -245,15 +251,35 @@
   <div class="content">
 <article class="doc">
 <h1 class="page">Create Pipeline Webhooks</h1>
-<div id="preamble">
+<div class="sect1">
+<h2 id="pipeline-webhooks"><a class="anchor" href="#pipeline-webhooks"></a>Pipeline Webhooks</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In the previous chapter we learn about <strong>EventListeners</strong>, <strong>TriggerBindings</strong>, etc. but we still have to create the webhooks to feed those <strong>EventListeners</strong>. First of all, webhooks are</p>
+<p>In the previous chapter we learn about <strong>EventListeners</strong>, <strong>TriggerBindings</strong>, etc. also the role played by webhooks. Don&#8217;t forget that webhooks are generic but the way you create them and also potentially the payload of events are specific to the git provider.</p>
+</div>
+<div class="paragraph">
+<p>In this guide you&#8217;re going to create the webhooks you need to trigger the CI and CD pipelines for both <strong>Events</strong> and <strong>Gateway</strong> microservices, namely:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Events CI Push:</strong> this webhook will send events only when changes are pushed to the Events source code repository</p>
+</li>
+<li>
+<p><strong>Gateway CI Push:</strong> same as for Events but for the Gateway source code repository</p>
+</li>
+<li>
+<p><strong>Events CD PullRequest:</strong> this webhook will send events only if a PullRequest is merged into the Gramola configuration repository</p>
+</li>
+<li>
+<p><strong>Gateway CD PullRequest:</strong> same as the previous webhook but for the Gateway</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="create-pipeline-webhooks"><a class="anchor" href="#create-pipeline-webhooks"></a>Create Pipeline Webhooks</h2>
+<h2 id="create-ci-webhooks"><a class="anchor" href="#create-ci-webhooks"></a>Create CI Webhooks</h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="events-ci-webhook"><a class="anchor" href="#events-ci-webhook"></a>Events CI Webhook</h3>
@@ -321,6 +347,11 @@ curl -k -X 'POST' "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/
 </div>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="create-cd-webhooks"><a class="anchor" href="#create-cd-webhooks"></a>Create CD Webhooks</h2>
+<div class="sectionbody">
 <div class="sect2">
 <h3 id="events-cd-webhook"><a class="anchor" href="#events-cd-webhook"></a>Events CD Webhook</h3>
 <div class="listingblock console-input">
@@ -391,7 +422,7 @@ curl -k -X 'POST' "https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/
 </div>
 <nav class="pagination">
   <span class="prev"><a href="07-checking-cicd-pipelines.html" class="query-params-link">7. Checking CICD Pipelines</a></span>
-  <span class="next"><a href="09-test-cicd-pipelines.html" class="query-params-link">8. Test CICD Pipelines</a></span>
+  <span class="next"><a href="09-test-cicd-pipelines.html" class="query-params-link">9. Test CICD Pipelines</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">

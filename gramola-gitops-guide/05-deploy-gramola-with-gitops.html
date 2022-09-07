@@ -94,7 +94,7 @@
     <a class="nav-link" href="02-prepare-cluster.html">2. Prepare Cluster</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="02-prepare-cluster.html#deploying-argocd-and-tekton">Deploying ArgoCD &amp; Tekton</a>
+    <a class="nav-link" href="02-prepare-cluster.html#deploying-core-components">Deploying core components</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="02-prepare-cluster.html#deploying-gitea">Deploying Gitea</a>
@@ -184,13 +184,19 @@
     <a class="nav-link" href="08-create-pipeline-webhooks.html">8. Create Pipelines Webhooks</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="08-create-pipeline-webhooks.html#create-pipeline-webhooks">Create Pipelines Webhooks</a>
+    <a class="nav-link" href="08-create-pipeline-webhooks.html#pipeline-webhooks">Pipelines Webhooks</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-create-pipeline-webhooks.html#create-ci-webhooks">Create CI Webhooks</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-create-pipeline-webhooks.html#create-cd-webhooks">Create CD Webhooks</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="09-test-cicd-pipelines.html">8. Test CICD Pipelines</a>
+    <a class="nav-link" href="09-test-cicd-pipelines.html">9. Test CICD Pipelines</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="09-test-cicd-pipelines.html#checking-cicd-pipelines">Checking CICD Pipelines</a>
@@ -199,7 +205,7 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="10-end-to-end-test.html">9. End to End Test</a>
+    <a class="nav-link" href="10-end-to-end-test.html">10. End to End Test</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="10-end-to-end-test.html#introduction">Introduction</a>
@@ -245,11 +251,76 @@
   <div class="content">
 <article class="doc">
 <h1 class="page">Deploy Gramola With GitOps</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>As we have already explained in the introduction the main objective of this guide is introduce you to <strong>GitOps</strong> taking <strong>Gramola</strong> as the example application we want to deploy.</p>
+</div>
+<div class="paragraph">
+<p>In this chapter you&#8217;re going to deploy Gramola using <strong>ArgoCD</strong> hence you&#8217;re not going to create the descriptors yourself. Instead <strong>ArgoCD</strong> will <strong>go</strong> to the <strong>source of truth</strong> (<em>git url, path and revision</em>), and  <strong>apply</strong> those descriptors in the defined <strong>destination</strong> (<em>cluster and namespace</em>).</p>
+</div>
+<div class="paragraph">
+<p>As you can imagine there should be an object <strong>ArgoCD</strong> can rely on to store both <strong>spec&#8594;source</strong> and <strong>spec&#8594;destination</strong>, this object is the <code>Application</code> object. This is an example of an <code>Application</code> object:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: events-app-dev-user1 <i class="conum" data-value="1"></i><b>(1)</b>
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  labels:
+    app.kubernetes.io/instance: gramola-root-app-dev-user1
+spec:
+  project: gramola-project-dev
+  source: <i class="conum" data-value="2"></i><b>(2)</b>
+    repoURL: <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/user1/gramola.git" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/user1/gramola.git</a>
+    targetRevision: HEAD
+    path: events-deployment/overlays/dev
+    plugin:
+      name: kustomized-helm
+      env:
+        - name: DESTINATION_NAME
+          value: in-cluster
+        - name: BASE_REPO_URL
+          value: <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/user1/gramola" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/user1/gramola</a>
+        - name: NAMESPACE_SUFFIX
+          value: '-user1'
+  destination: <i class="conum" data-value="3"></i><b>(3)</b>
+    name: in-cluster
+    namespace: gramola-dev-user1
+  syncPolicy:
+    automated: {}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Name of the application</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Source of truth, git url, path, revision and plugin to use</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Defines the destination of the descriptors found in the source of truth</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>As you usually need to define different</p>
+</div>
+</div>
+</div>
 <div class="sect1">
 <h2 id="create-root-app"><a class="anchor" href="#create-root-app"></a>Create Root App</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>ArgoCD uses a powerful abstraction of what an application is from the point of view of deployment. In an ArgoCD application we define where to look for the descriptors we want to create (<strong>spec&#8594;source</strong>) and maintain in Kubernetes and also how and where we want them (<strong>spec&#8594;destination</strong>). More over, because we can store Application objects also in git repository we could chain a set of applications with a parent application&#8230;&#8203; hence we can nest application and call "<strong>Root Application</strong>" to the top parent of a set of elements including Applications.</p>
+<p>ArgoCD uses a powerful abstraction of what an application is from the point of view of deployment descriptors. In an ArgoCD application we define where to look for the descriptors we want to create (<strong>spec&#8594;source</strong>) and maintain in Kubernetes and also how and where we want them (<strong>spec&#8594;destination</strong>). More over, because we can store Application objects also in git repository we could chain a set of applications with a parent application&#8230;&#8203; hence we can nest application and call "<strong>Root Application</strong>" to the top parent of a set of elements including Applications.</p>
 </div>
 <div class="paragraph">
 <p>The next command creates a Root Application called <strong>gramola-root-app</strong> that points to our configuration repository <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola" class="bare" target="_blank" rel="noopener">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola</a> and folder <strong>argocd/root-apps</strong>.</p>
@@ -271,33 +342,48 @@ Go <a href="https://argoproj.github.io/argo-cd/user-guide/helm/" target="_blank"
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export USERNAME="%USERNAME%"
 cat &lt;&lt;EOF | kubectl apply -n openshift-gitops -f -
 apiVersion: argoproj.io/v1alpha1
-kind: Application
+kind: ApplicationSet
 metadata:
-  name: gramola-root-app-${USERNAME}
+  name: gramola-${USERNAME}
   namespace: openshift-gitops
   labels:
     argocd-root-app: "true"
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
 spec:
-  destination:
-    namespace: openshift-gitops
-    name: in-cluster
-  project: default
-  syncPolicy:
-    automated: {}
-  source:
-    helm:
-      parameters:
-        - name: baseRepoUrl
-          value: <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola</a>
-        - name: namespaceSuffix
-          value: "-${USERNAME}"
-        - name: username
-          value: "%USERNAME%"
-    path: argocd/root-apps
-    repoURL: <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola</a>
-    targetRevision: HEAD
+  generators:
+  - list:
+      elements:
+      - env: dev
+        desc: "Gramola Dev"
+      - env: test
+        desc: "Gramola Test"
+  template:
+    metadata:
+      name: gramola-root-app-{{ env }}-${USERNAME}
+      namespace: openshift-gitops
+      labels:
+        argocd-root-app: "true"
+      finalizers:
+      - resources-finalizer.argocd.argoproj.io
+    spec:
+      destination:
+        namespace: openshift-gitops
+        name: in-cluster
+      project: default
+      syncPolicy:
+        automated:
+          selfHeal: true
+      source:
+        helm:
+          parameters:
+            - name: baseRepoUrl
+              value: <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola</a>
+            - name: namespaceSuffix
+              value: "-${USERNAME}"
+            - name: username
+              value: "%USERNAME%"
+        path: apps/{{ env }}
+        repoURL: <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola.git" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola.git</a>
+        targetRevision: HEAD
 EOF</code></pre>
 </div>
 </div>

@@ -94,7 +94,7 @@
     <a class="nav-link" href="02-prepare-cluster.html">2. Prepare Cluster</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="02-prepare-cluster.html#deploying-argocd-and-tekton">Deploying ArgoCD &amp; Tekton</a>
+    <a class="nav-link" href="02-prepare-cluster.html#deploying-core-components">Deploying core components</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="02-prepare-cluster.html#deploying-gitea">Deploying Gitea</a>
@@ -184,13 +184,19 @@
     <a class="nav-link" href="08-create-pipeline-webhooks.html">8. Create Pipelines Webhooks</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="08-create-pipeline-webhooks.html#create-pipeline-webhooks">Create Pipelines Webhooks</a>
+    <a class="nav-link" href="08-create-pipeline-webhooks.html#pipeline-webhooks">Pipelines Webhooks</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-create-pipeline-webhooks.html#create-ci-webhooks">Create CI Webhooks</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="08-create-pipeline-webhooks.html#create-cd-webhooks">Create CD Webhooks</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="09-test-cicd-pipelines.html">8. Test CICD Pipelines</a>
+    <a class="nav-link" href="09-test-cicd-pipelines.html">9. Test CICD Pipelines</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="09-test-cicd-pipelines.html#checking-cicd-pipelines">Checking CICD Pipelines</a>
@@ -199,7 +205,7 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="10-end-to-end-test.html">9. End to End Test</a>
+    <a class="nav-link" href="10-end-to-end-test.html">10. End to End Test</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="10-end-to-end-test.html#introduction">Introduction</a>
@@ -248,7 +254,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>ArgoCD</strong> is the <strong>GitOps</strong> engine <strong>OpenShift GitOps</strong> rely on it should have been installed previously in <a href="02-prepare-cluster.html#install-operators" class="xref page">Install Operators</a>.</p>
+<p><strong>ArgoCD</strong> is the <strong>GitOps</strong> engine <strong>Red Hat OpenShift GitOps</strong> rely on. It should have been installed previously in <a href="02-prepare-cluster.html#deploying-core-components" class="xref page">Deploying core components</a>.</p>
 </div>
 </div>
 </div>
@@ -319,6 +325,14 @@ cache-control: private</code></pre>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd login openshift-gitops-server-openshift-gitops.apps.%BASE_SUBDOMAIN% --insecure --sso --grpc-web</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You may see this message, if that is the case click on <code>Allow selected permissions</code> and continue.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/argocd-login-permissions.png" alt="ArgoCD Login Permissions">
 </div>
 </div>
 <div class="paragraph">
