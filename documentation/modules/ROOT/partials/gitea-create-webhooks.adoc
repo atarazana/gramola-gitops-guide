@@ -1,4 +1,7 @@
 
+[#create-ci-webhooks]
+== Create CI Webhooks
+
 [#events-ci-webhook]
 === Events CI Webhook
 
@@ -66,6 +69,9 @@ Expected output:
 ----
 {"id":2,"type":"gitea","config":{"content_type":"json","url":"http://"},"events":["push"],"active":true,"updated_at":"2021-11-12T10:15:19Z","created_at":"2021-11-12T10:15:19Z"}
 ----
+
+[#create-cd-webhooks]
+== Create CD Webhooks
 
 [#events-cd-webhook]
 === Events CD Webhook

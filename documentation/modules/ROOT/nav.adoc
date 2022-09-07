@@ -5,7 +5,7 @@
 ** xref:01-setup.adoc#download-tutorial[Get tutorial sources]
 
 * xref:02-prepare-cluster.adoc[2. Prepare Cluster]
-** xref:02-prepare-cluster.adoc#deploying-argocd-and-tekton[Deploying ArgoCD & Tekton]
+** xref:02-prepare-cluster.adoc#deploying-core-components[Deploying core components]
 ** xref:02-prepare-cluster.adoc#deploying-gitea[Deploying Gitea]
 ** xref:02-prepare-cluster.adoc#create-git-users[Create Git Users]
 
@@ -35,10 +35,12 @@
 ** xref:07-checking-cicd-pipelines.adoc#tekton-triggers[Tekton Triggers]
 
 * xref:08-create-pipeline-webhooks.adoc[8. Create Pipelines Webhooks]
-** xref:08-create-pipeline-webhooks.adoc#create-pipeline-webhooks[Create Pipelines Webhooks]
+** xref:08-create-pipeline-webhooks.adoc#pipeline-webhooks[Pipelines Webhooks]
+** xref:08-create-pipeline-webhooks.adoc#create-ci-webhooks[Create CI Webhooks]
+** xref:08-create-pipeline-webhooks.adoc#create-cd-webhooks[Create CD Webhooks]
 
-* xref:09-test-cicd-pipelines.adoc[8. Test CICD Pipelines]
+* xref:09-test-cicd-pipelines.adoc[9. Test CICD Pipelines]
 ** xref:09-test-cicd-pipelines.adoc#checking-cicd-pipelines[Checking CICD Pipelines]
 
-* xref:10-end-to-end-test.adoc[9. End to End Test]
+* xref:10-end-to-end-test.adoc[10. End to End Test]
 ** xref:10-end-to-end-test.adoc#introduction[Introduction]

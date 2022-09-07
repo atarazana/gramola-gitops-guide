@@ -16,10 +16,14 @@ include::partial$prerequisites-optional.adoc[]
 
 include::partial$openshift-setup.adoc[]
 
+
+ifeval::["{use-quay-io}" == "true"]
 [#container-registry-account]
 == Container Registry Account
 
 include::partial$create-quay-account.adoc[]
+
+endif::[]
 
 [#download-tutorial]
 == Get tutorial sources

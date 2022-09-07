@@ -1,10 +1,54 @@
 = Deploy Gramola With GitOps
 include::_attributes.adoc[]
 
+As we have already explained in the introduction the main objective of this guide is introduce you to *GitOps* taking *Gramola* as the example application we want to deploy.
+
+In this chapter you're going to deploy Gramola using *ArgoCD* hence you're not going to create the descriptors yourself. Instead *ArgoCD* will *go* to the *source of truth* (_git url, path and revision_), and  *apply* those descriptors in the defined *destination* (_cluster and namespace_).
+
+As you can imagine there should be an object *ArgoCD* can rely on to store both *spec->source* and *spec->destination*, this object is the `Application` object. This is an example of an `Application` object:
+
+[source,yaml, subs="+macros,+attributes"]
+----
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: events-app-dev-user1 <1>
+  namespace: openshift-gitops
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  labels:
+    app.kubernetes.io/instance: gramola-root-app-dev-user1
+spec:
+  project: gramola-project-dev
+  source: <2>
+    repoURL: https://{gitea-host}/user1/gramola.git
+    targetRevision: HEAD
+    path: events-deployment/overlays/dev
+    plugin:
+      name: kustomized-helm
+      env:
+        - name: DESTINATION_NAME
+          value: in-cluster
+        - name: BASE_REPO_URL
+          value: https://{gitea-host}/user1/gramola
+        - name: NAMESPACE_SUFFIX
+          value: '-user1'
+  destination: <3>
+    name: in-cluster
+    namespace: gramola-dev-user1
+  syncPolicy:
+    automated: {}
+----
+<1> Name of the application
+<2> Source of truth, git url, path, revision and plugin to use
+<3> Defines the destination of the descriptors found in the source of truth
+
+As you usually need to define different
+
 [#create-root-app]
 == Create Root App
 
-ArgoCD uses a powerful abstraction of what an application is from the point of view of deployment. In an ArgoCD application we define where to look for the descriptors we want to create (*spec->source*) and maintain in Kubernetes and also how and where we want them (*spec->destination*). More over, because we can store Application objects also in git repository we could chain a set of applications with a parent application... hence we can nest application and call "*Root Application*" to the top parent of a set of elements including Applications.
+ArgoCD uses a powerful abstraction of what an application is from the point of view of deployment descriptors. In an ArgoCD application we define where to look for the descriptors we want to create (*spec->source*) and maintain in Kubernetes and also how and where we want them (*spec->destination*). More over, because we can store Application objects also in git repository we could chain a set of applications with a parent application... hence we can nest application and call "*Root Application*" to the top parent of a set of elements including Applications.
 
 The next command creates a Root Application called *gramola-root-app* that points to our configuration repository https://{gitea-host}/{username}/gramola[^] and folder *argocd/root-apps*.
 
@@ -16,33 +60,48 @@ NOTE: Go link:https://argoproj.github.io/argo-cd/user-guide/helm/[here^] to lear
 export USERNAME="{namespace-suffix}"
 cat <<EOF | kubectl apply -n {root-apps-namespace} -f -
 apiVersion: argoproj.io/v1alpha1
-kind: Application
+kind: ApplicationSet
 metadata:
-  name: gramola-root-app-$\{USERNAME}
-  namespace: {root-apps-namespace}
+  name: gramola-$\{USERNAME}
+  namespace: openshift-gitops
   labels:
     argocd-root-app: "true"
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
 spec:
-  destination:
-    namespace: {root-apps-namespace}
-    name: in-cluster
-  project: default
-  syncPolicy:
-    automated: {}
-  source:
-    helm:
-      parameters:
-        - name: baseRepoUrl
-          value: https://{gitea-host}/{username}/gramola
-        - name: namespaceSuffix
-          value: "-$\{USERNAME}"
-        - name: username
-          value: "{username}"
-    path: argocd/root-apps
-    repoURL: https://{gitea-host}/{username}/gramola
-    targetRevision: HEAD
+  generators:
+  - list:
+      elements:
+      - env: dev
+        desc: "Gramola Dev"
+      - env: test
+        desc: "Gramola Test"
+  template:
+    metadata:
+      name: gramola-root-app-{{ env }}-$\{USERNAME}
+      namespace: openshift-gitops
+      labels:
+        argocd-root-app: "true"
+      finalizers:
+      - resources-finalizer.argocd.argoproj.io
+    spec:
+      destination:
+        namespace: openshift-gitops
+        name: in-cluster
+      project: default
+      syncPolicy:
+        automated:
+          selfHeal: true
+      source:
+        helm:
+          parameters:
+            - name: baseRepoUrl
+              value: https://{gitea-host}/{username}/gramola
+            - name: namespaceSuffix
+              value: "-$\{USERNAME}"
+            - name: username
+              value: "{username}"
+        path: apps/{{ env }}
+        repoURL: https://{gitea-host}/{username}/gramola.git
+        targetRevision: HEAD
 EOF
 ----
 

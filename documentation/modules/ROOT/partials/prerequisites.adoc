@@ -18,9 +18,9 @@ Please have them installed and configured before you get started with any of the
 | https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-{oc-version}/openshift-client-windows.zip[Download]
 
 | `kubectl {kubernetes-version}`
-| https://storage.googleapis.com/kubernetes-release/release/{kubernetes-version}/bin/darwin/amd64/kubectl[Download]
-| https://storage.googleapis.com/kubernetes-release/release/{kubernetes-version}/bin/linux/amd64/kubectl[Download]
-| https://storage.googleapis.com/kubernetes-release/release/{kubernetes-version}/bin/windows/amd64/kubectl.exe[Download]
+| https://dl.k8s.io/release/{kubernetes-version}/bin/darwin/amd64/kubectl[Download]
+| https://dl.k8s.io/release/{kubernetes-version}/bin/linux/amd64/kubectl[Download]
+| https://dl.k8s.io/release/{kubernetes-version}/bin/windows/amd64/kubectl.exe[Download]
 
 | `argocd {argocd-version}`
 | https://github.com/argoproj/argo-cd/releases/download/{argocd-version}/argocd-darwin-amd64[Download]

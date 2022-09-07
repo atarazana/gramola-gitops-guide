@@ -1,7 +1,7 @@
 = Prepare ArgoCD
 include::_attributes.adoc[]
 
-*ArgoCD* is the *GitOps* engine *OpenShift GitOps* rely on it should have been installed previously in xref:02-prepare-cluster.adoc#install-operators[Install Operators].
+*ArgoCD* is the *GitOps* engine *Red Hat OpenShift GitOps* rely on. It should have been installed previously in xref:02-prepare-cluster.adoc#deploying-core-components[Deploying core components].
 
 
 [#checking-argocd]
@@ -27,6 +27,10 @@ You'll be redirected to OpenShift Web Console to enter your credentials:
 ----
 argocd login {argocd-server} --insecure --sso --grpc-web
 ----
+
+You may see this message, if that is the case click on `Allow selected permissions` and continue.
+
+image::argocd-login-permissions.png[ArgoCD Login Permissions]
 
 After being successfully logged in, you should be redirected to localhost:8085 with a message of successful authentication and in the terminal output you should see something similar to this.
 

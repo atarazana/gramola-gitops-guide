@@ -52,7 +52,7 @@ Copy the next url and open it in a new tab, please use these credentials:
 [.console-input]
 [source,bash, subs="+attributes"]
 ----
-https://repository-gitea-system.apps.%BASE_SUBDOMAIN% 
+https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/user/login
 ----
 
 You should see something like this. Please enter your credentials and hit the green button.
