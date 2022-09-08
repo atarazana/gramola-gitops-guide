@@ -136,7 +136,7 @@
     <a class="nav-link" href="04-prepare-argocd.html#register-additional-clusters">Register Additional Clusters</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="04-prepare-argocd.html#add-project-definitions">Project definitions</a>
+    <a class="nav-link" href="04-prepare-argocd.html#project-definitions">Project definitions</a>
   </li>
 </ul>
   </li>
@@ -263,10 +263,152 @@
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-It&#8217;s a best practice not to store secrets in a git repository even if it&#8217;s private. There are several ways to deal with secrets in this kind of scenarios but in this case we&#8217;re going to manage them manually for the sake of simplicity.
+It&#8217;s a best practice avoid storing secrets in a git repository even if it&#8217;s private. There are several ways to deal with secrets in this kind of scenarios but in this case we&#8217;re going to manage them manually for the sake of simplicity.
 </td>
 </tr>
 </table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="create-root-account-in-quay"><a class="anchor" href="#create-root-account-in-quay"></a>Create a Robot Account in Quay</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Please copy and paste the following link and open it in a browser, then use this credentials and click on <code>Sign in to Red Hat Quay</code>.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Username:</strong> %USERNAME%</p>
+</li>
+<li>
+<p><strong>Password:</strong> %PASSWORD%</p>
+</li>
+</ul>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://myregistry-quay-quay-system.apps.%BASE_SUBDOMAIN%</code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/quay-installed-login-userX.png" alt="Quay Login">
+</div>
+</div>
+<div class="paragraph">
+<p>Now click on <code>UserX</code> as in the next picture to jump to the repositories section.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/quay-installed-repositories-userX.png" alt="Go to Repositories">
+</div>
+</div>
+<div class="paragraph">
+<p>You have to create a repository for <strong>events</strong> and another one for <strong>gateway</strong>. Let&#8217;s start with <code>gramola-events</code>, please click on <code>creating a new repository</code>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/quay-installed-create-repository-1-userX.png" alt="Create Repository">
+</div>
+</div>
+<div class="paragraph">
+<p>Type in <code>gramola-events</code> as the name of the repository and click on <code>Create Private Repository</code>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/quay-installed-create-repository-2-userX.png" alt="Create Repository">
+</div>
+</div>
+<div class="paragraph">
+<p>So, our private repository for <strong>events</strong> has been created, please click on <code>&#8592; Repositories</code> on the upper left corner to create another repository.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/quay-installed-create-repository-3-userX.png" alt="Create Repository">
+</div>
+</div>
+<div class="paragraph">
+<p>To create the next repository click on  <code>+ Create New Repository</code>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/quay-installed-create-repository-4-userX.png" alt="Create Repository">
+</div>
+</div>
+<div class="paragraph">
+<p>Type in <code>gramola-gateway</code> as the name of the repository and click on <code>Create Private Repository</code>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/quay-installed-create-repository-5-userX.png" alt="Create Repository">
+</div>
+</div>
+<div class="paragraph">
+<p>Ok, we&#8217;re done creating repositories let&#8217;s go back to the repositories area, please click on <code>&#8592; Repositories</code> on the upper left corner.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/quay-installed-create-repository-6-userX.png" alt="Create Repository">
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s go to the user details area.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/quay-installed-create-repository-7-userX.png" alt="Repositories">
+</div>
+</div>
+<div class="paragraph">
+<p>Now go to the robot accounts area by clicking on the robot icon as in the next picture.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/quay-installed-go-to-robot-accounts-userX.png" alt="Go to Repositories">
+</div>
+</div>
+<div class="paragraph">
+<p>Now click on the <code>Create Robot Account</code> button.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/quay-installed-create-robot-account-1-userX.png" alt="Go to Repositories">
+</div>
+</div>
+<div class="paragraph">
+<p>Now please use the following date and click on the <code>Create robot Account</code> button:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Name:</strong> cicd</p>
+</li>
+<li>
+<p><strong>Description:</strong> CICD robot account</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/quay-installed-create-robot-account-2-userX.png" alt="Go to Repositories">
+</div>
+</div>
+<div class="paragraph">
+<p>We have our robot account but no permissions have been granted to it, please click on <code>Set Repository Permissions</code>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/quay-installed-create-robot-account-3-userX.png" alt="Go to Repositories">
+</div>
+</div>
+<div class="paragraph">
+<p>Set permissions to <code>Write</code> on both repositories, then click on <code>Update permissions</code>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/quay-installed-create-robot-account-4-userX.png" alt="Go to Repositories">
+</div>
 </div>
 </div>
 </div>
@@ -279,29 +421,13 @@ It&#8217;s a best practice not to store secrets in a git repository even if it&#
 <div class="ulist">
 <ul>
 <li>
-<p><strong>CONTAINER_REGISTRY_SERVER</strong></p>
+<p><strong>CONTAINER_REGISTRY_SERVER:</strong> myregistry-quay-quay-system.apps.%BASE_SUBDOMAIN%</p>
 </li>
 <li>
-<p><strong>CONTAINER_REGISTRY_ORG</strong></p>
+<p><strong>CONTAINER_REGISTRY_ORG:</strong> %USERNAME%</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>Just as a refresh if you followed the instructions to create a quay.io account here is how you get the robot account credentials.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/container-registry-credentials-1.png" alt="Quay Robot Account Credentials 1">
-</div>
-</div>
-<div class="paragraph">
-<p>Then copy <strong>username</strong> and <strong>token</strong> and paste them as required in the next steps.</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/container-registry-credentials-2.png" alt="Quay Robot Account Credentials 2">
-</div>
-</div>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -309,31 +435,27 @@ It&#8217;s a best practice not to store secrets in a git repository even if it&#
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-If you have your container registry account in <strong>quay.io</strong> then that&#8217;s the value you have to type for <strong>CONTAINER_REGISTRY_SERVER</strong>.
+<div class="paragraph">
+<p>If you want to use a different container repository you can, just change the values of the variables accordingly.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If you have your container registry account in <strong>quay.io</strong> then that&#8217;s the value you have to type for <strong>CONTAINER_REGISTRY_SERVER</strong>.</p>
+</li>
+<li>
+<p><strong>CONTAINER_REGISTRY_ORG</strong> should be your user account or organization.</p>
+</li>
+</ul>
+</div>
 </td>
 </tr>
 </table>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">echo "CONTAINER_REGISTRY_SERVER: " &amp;&amp; read CONTAINER_REGISTRY_SERVER</code></pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<strong>CONTAINER_REGISTRY_ORG</strong> should be your user account or organization.
-</td>
-</tr>
-</table>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">echo "CONTAINER_REGISTRY_ORG: " &amp;&amp; read CONTAINER_REGISTRY_ORG</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export CONTAINER_REGISTRY_SERVER=myregistry-quay-quay-system.apps.%BASE_SUBDOMAIN%
+export CONTAINER_REGISTRY_ORG=%USERNAME%</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -384,6 +506,30 @@ EOF
 fi</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>Let&#8217;s go to ArgoCD console and see how it&#8217;s going on. Please copy the next link and open it in a new tab.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://openshift-gitops-server-openshift-gitops.apps.%BASE_SUBDOMAIN%/applications&amp;labels=argocd-cicd-app</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And go deeper by clicking on the <code>Application</code> object or using the next link.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://openshift-gitops-server-openshift-gitops.apps.%BASE_SUBDOMAIN%/applications/gramola-cicd-app-%USERNAME%</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can also have a look to the pipelines created in the OpenShift web console.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://console-openshift-console.apps.%BASE_SUBDOMAIN%/dev-pipelines/ns/gramola-cicd-%USERNAME%</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -404,7 +550,7 @@ fi</code></pre>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd app list | grep gramola-root-app-cicd</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd app list | grep gramola-root-app-cicd-%USERNAME%</code></pre>
 </div>
 </div>
 </td>
@@ -467,18 +613,48 @@ EOF</code></pre>
 <p>As we have explained before, in this section we will deploy both CI and CD pipelines for the microservices that compose Gramola. If you have just created a secret so that the CI and CD pipelines can create Pull Requests, this time you are going to create a secret with the credentials needed to push images to the container images registry.</p>
 </div>
 <div class="paragraph">
-<p>The next set of commands will ask you for the <strong>username</strong> and <strong>password</strong> of the container registry account you already had or created in  <a href="01-setup.html#container-registry-account" class="xref page">this</a> section.</p>
+<p>The next set of commands will ask you for the <strong>username</strong> and <strong>password</strong> of the container registry account you already had or created above in this chapter or in your own registry.</p>
+</div>
+<div class="paragraph">
+<p>If you have followed all the instructions then copy and paste the next command and run it. If you have chosen to use your own registry, change accordingly.</p>
 </div>
 <div class="paragraph">
 <p><strong>USERNAME</strong></p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">echo "CONTAINER_REGISTRY_USERNAME: " &amp;&amp; read CONTAINER_REGISTRY_USERNAME</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export CONTAINER_REGISTRY_USERNAME="%USERNAME%+cicd"</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p><strong>TOKEN</strong></p>
+</div>
+<div class="paragraph">
+<p>Please use the next link to open the details of your robot account.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://myregistry-quay-quay-system.apps.%BASE_SUBDOMAIN%/user/%USERNAME%?tab=robots</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then click on the <code>%USERNAME%-cicd</code> link.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/quay-installed-view-credentials-robot-account-userX.png" alt="Robot Account Credentials">
+</div>
+</div>
+<div class="paragraph">
+<p>Then copy the token as in the next image.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/quay-installed-copy-credentials-robot-account-userX.png" alt="Robot Account Credentials">
+</div>
+</div>
+<div class="paragraph">
+<p>Then pasted when you run the following command.</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -513,6 +689,41 @@ kubectl create -n ${CICD_NAMESPACE} secret docker-registry ${CONTAINER_REGISTRY_
   --docker-password=$CONTAINER_REGISTRY_PASSWORD
 kubectl annotate -n ${CICD_NAMESPACE} secret ${CONTAINER_REGISTRY_SECRET_NAME} \
   "tekton.dev/docker-0=https://${CONTAINER_REGISTRY_SERVER}"
+fi</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Additionally we have to create the same secret in <code>dev</code> and <code>test</code> and link it to the default <code>ServiceAccount</code> for pulling.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+If you don&#8217;t do this the deployment won&#8217;t be able to run because they lack permissions to pull the image from the private repository.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export CONTAINER_REGISTRY_SECRET_NAME=$(yq eval '.containerRegistrySecretName' ./apps/cicd/values.yaml)
+
+if [ -z "${CONTAINER_REGISTRY_USERNAME}" ] &amp;&amp; [ -z "${CONTAINER_REGISTRY_PASSWORD}" ]; then
+    echo "You should provide a value for CONTAINER_REGISTRY_USERNAME and CONTAINER_REGISTRY_PASSWORD"
+else
+oc create -n gramola-dev-%USERNAME% secret docker-registry ${CONTAINER_REGISTRY_SECRET_NAME} \
+  --docker-server=https://$CONTAINER_REGISTRY_SERVER \
+  --docker-username=$CONTAINER_REGISTRY_USERNAME \
+  --docker-password=$CONTAINER_REGISTRY_PASSWORD
+oc secrets link default ${CONTAINER_REGISTRY_SECRET_NAME} --for=pull -n gramola-dev-%USERNAME%
+oc create -n gramola-test-%USERNAME% secret docker-registry ${CONTAINER_REGISTRY_SECRET_NAME} \
+  --docker-server=https://$CONTAINER_REGISTRY_SERVER \
+  --docker-username=$CONTAINER_REGISTRY_USERNAME \
+  --docker-password=$CONTAINER_REGISTRY_PASSWORD
+oc secrets link default ${CONTAINER_REGISTRY_SECRET_NAME} --for=pull -n gramola-test-%USERNAME%
 fi</code></pre>
 </div>
 </div>

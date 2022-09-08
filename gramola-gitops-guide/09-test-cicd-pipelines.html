@@ -136,7 +136,7 @@
     <a class="nav-link" href="04-prepare-argocd.html#register-additional-clusters">Register Additional Clusters</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="04-prepare-argocd.html#add-project-definitions">Project definitions</a>
+    <a class="nav-link" href="04-prepare-argocd.html#project-definitions">Project definitions</a>
   </li>
 </ul>
   </li>
@@ -299,9 +299,10 @@
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone <a href="https://%USERNAME%:%PASSWORD%@repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola-events" class="bare">https://%USERNAME%:%PASSWORD%@repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola-events</a>
 cd gramola-events
-sed -i 's/info.name=gramola-events-.*/info.name=gramola-events.%USERNAME%/g' ./src/main/resources/application.properties
+sed -i 's/info.name=.*/info.name=gramola-events.%USERNAME%-'${RANDOM}'/g' ./src/main/resources/application.properties
 git commit ./src/main/resources/application.properties -m "update info.name" &amp;&amp; git push
-cd ..</code></pre>
+cd ..
+rm -rf gramola-events</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -368,6 +369,14 @@ pipeline is triggered or not.</p>
 </div>
 </div>
 <div class="paragraph">
+<p>Use this link to watch the pipeline running.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://console-openshift-console.apps.%BASE_SUBDOMAIN%/dev-pipelines/ns/gramola-cicd-%USERNAME%</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>As we can see the pipeline has been automatically triggered due to the repository update and a pull request must has been created in Gitea, let&#8217;s check.</p>
 </div>
 <div class="paragraph">
@@ -385,7 +394,7 @@ pipeline is triggered or not.</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://repository-gitea-system.apps.cluster-vw6xw.vw6xw.sandbox27.opentlc.com/user1/gramola/pulls</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola/pulls</code></pre>
 </div>
 </div>
 </td>
