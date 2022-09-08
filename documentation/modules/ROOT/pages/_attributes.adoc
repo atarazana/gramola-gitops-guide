@@ -7,6 +7,8 @@
 :username: %USERNAME%
 :password: %PASSWORD%
 
+:additional-cluster-name: aws-managed1
+
 :namespace-suffix: {username}
 :cicd-namespace: gramola-cicd
 

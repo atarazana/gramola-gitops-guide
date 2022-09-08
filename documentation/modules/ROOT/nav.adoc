@@ -19,7 +19,7 @@
 ** xref:04-prepare-argocd.adoc#log-in-argocd[Log in ArgoCD]
 ** xref:04-prepare-argocd.adoc#register-repositories[Register Repositories]
 ** xref:04-prepare-argocd.adoc#register-additional-clusters[Register Additional Clusters]
-** xref:04-prepare-argocd.adoc#add-project-definitions[Project definitions]
+** xref:04-prepare-argocd.adoc#project-definitions[Project definitions]
 
 * xref:05-deploy-gramola-with-gitops.adoc[5. Deploy Gramola]
 ** xref:05-deploy-gramola-with-gitops.adoc#create-root-app[Create Root App]

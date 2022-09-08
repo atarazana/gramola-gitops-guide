@@ -42,9 +42,10 @@ Or by running this set of commands, in a new terminal.
 ----
 git clone https://{username}:{password}@{gitea-host}/%USERNAME%/gramola-events
 cd gramola-events
-sed -i 's/info.name=gramola-events-.*/info.name=gramola-events.{username}/g' ./src/main/resources/application.properties
+sed -i 's/info.name=.*/info.name=gramola-events.{username}-'${RANDOM}'/g' ./src/main/resources/application.properties
 git commit ./src/main/resources/application.properties -m "update info.name" && git push
 cd ..
+rm -rf gramola-events
 ----
 
 If you haven’t stopped the log output you should see something like:
@@ -104,6 +105,14 @@ Now let's take a look at these pipelines in OpenShift console. Go to 'pipelines-
 
 image::pipeline-ci-run.png[Pipeline CI run]
 
+Use this link to watch the pipeline running.
+
+[.console-input]
+[source,bash, subs="+attributes"]
+----
+https://console-openshift-console.apps.%BASE_SUBDOMAIN%/dev-pipelines/ns/gramola-cicd-{username}
+----
+
 As we can see the pipeline has been automatically triggered due to the repository update and a pull request must has been created in Gitea, let's check.
 
 Go to Gitea and inside 'Gramola' repository there must be a pull request like 'Updating 'gramola-events' image for overlay 'dev' with new image', merge it:
@@ -115,7 +124,7 @@ Or copy and paste the following url:
 [.console-input]
 [source,bash, subs="+attributes"]
 ----
-https://repository-gitea-system.apps.cluster-vw6xw.vw6xw.sandbox27.opentlc.com/user1/gramola/pulls
+https://{gitea-host}/{username}/gramola/pulls
 ----
 ====
 

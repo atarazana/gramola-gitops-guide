@@ -77,20 +77,34 @@ git         https://{gitea-host}/user1/gramola.git          false     false  fal
 
 First make sure there is a context with proper credentials, in order to achieve this please log in the additional cluster.
 
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-export API_SERVER=localhost:8443
-oc login ${API_SERVER} --username=myuser --password=mypass
-----
-
-CAUTION: *CLUSTER_NAME* is a name you choose for your cluster, *API_SERVER* is the *host and port* of the cluster API server *BUT without http(s)*.
+CAUTION: *API_USER* is a user with cluster-admin permissions on the additional cluster, *API_SERVER_MANAGED* is the host and port *without `http(s)`* of the additional cluster.
 
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-export CLUSTER_NAME=aws-managed1
-./util/argocd-register-cluster.sh ${CLUSTER_NAME} ${API_SERVER}
+export ADDITIONAL_API_SERVER_TOKEN=%ADDITIONAL_API_SERVER_TOKEN%
+export ADDITIONAL_API_SERVER_MANAGED=%ADDITIONAL_API_SERVER_MANAGED%
+oc login --token=${ADDITIONAL_API_SERVER_TOKEN} --server=https://${ADDITIONAL_API_SERVER_MANAGED}
+----
+
+Give a name to the additional cluster and add it with the next command.
+
+TIP: *CLUSTER_NAME* is a name you choose for your cluster, *API_SERVER* is the host and port *without `http(s)`*.
+
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+export CLUSTER_NAME={additional-cluster-name}
+CONTEXT_NAME=$(oc config get-contexts -o name | grep ${ADDITIONAL_API_SERVER_MANAGED})
+argocd --insecure cluster add ${CONTEXT_NAME} --name ${CLUSTER_NAME} --grpc-web
+----
+
+CAUTION: You will see the following message warning you that if you proceed you will create a `ServiceAccount` called `argocd-manager` with full cluter lever admin privileges. Don't worry and  please type `y` and press kbd:[Enter].
+
+[.console-output]
+[source,bash, subs="+macros,+attributes"]
+----
+WARNING: This will create a service account `argocd-manager` on the cluster referenced by context `default/api-cluster-...opentlc-com:6443/opentlc-mgr` with full cluster level admin privileges. Do you want to continue [y/N]? y
 ----
 
 Check if your cluster has been added correctly.
@@ -100,6 +114,25 @@ Check if your cluster has been added correctly.
 ----
 argocd --insecure cluster list --grpc-web
 ----
+
+This is the expected output:
+
+[.console-output]
+[source,bash, subs="+macros,+attributes"]
+----
+SERVER                                   NAME          VERSION  STATUS      MESSAGE                                              PROJECT
+https://api.cluster-...opentlc.com:6443  aws-managed1           Unknown     Cluster has no application and not being monitored.  
+https://kubernetes.default.svc           in-cluster    1.23     Successful   
+----
+
+Now, it's time to log back in the main cluster.
+
+[.console-input]
+[source,sh, subs="+macros,+attributes"]
+----
+oc login -u {username} -p {password} --server=https://api.{api-domain}
+----
+
 
 [#project-definitions]
 == Project definitions
