@@ -400,7 +400,7 @@ git         <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/user1
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export ADDITIONAL_API_SERVER_TOKEN=%ADDITIONAL_API_SERVER_TOKEN%
-export ADDITIONAL_API_SERVER_MANAGED=%ADDITIONAL_API_SERVER_MANAGED%
+export ADDITIONAL_API_SERVER_MANAGED=api.%ADDITIONAL_BASE_SUBDOMAIN%:6443
 oc login --token=${ADDITIONAL_API_SERVER_TOKEN} --server=https://${ADDITIONAL_API_SERVER_MANAGED}</code></pre>
 </div>
 </div>

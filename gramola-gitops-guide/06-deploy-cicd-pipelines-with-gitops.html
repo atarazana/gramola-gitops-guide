@@ -511,7 +511,7 @@ fi</code></pre>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://openshift-gitops-server-openshift-gitops.apps.%BASE_SUBDOMAIN%/applications&amp;labels=argocd-cicd-app</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://openshift-gitops-server-openshift-gitops.apps.%BASE_SUBDOMAIN%/applications?proj=&amp;sync=&amp;health=&amp;namespace=&amp;cluster=&amp;labels=argocd-cicd-app</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -572,7 +572,7 @@ gramola-cicd-user1                  Active</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Fine, the namespace is in place, it&#8217;s time to create the git secret our pipelines will use when cloning and also while creating Pull Requests which are the fuel for the CD part of the pipelines to promote from one environment to the next.</p>
+<p>Fine, the namespace is in place, <strong>it&#8217;s time to create the git secret our pipelines will use when cloning and also while creating Pull Requests</strong> which are the fuel for the CD part of the pipelines to promote from one environment to the next.</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">

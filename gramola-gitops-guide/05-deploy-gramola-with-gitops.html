@@ -447,10 +447,53 @@ EOF</code></pre>
 <img src="_images/openshift-console-project-selection.png" alt="Project Selection">
 </div>
 </div>
+<div class="paragraph">
+<p>Let&#8217;s test gramola, in both environments by clicking on the URL icon of <code>gateway</code> as in the next picture.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/gramola-gateway-topology-url.png" alt="Gateway URL">
+</div>
+</div>
+<div class="paragraph">
+<p>You should see this simple user interface.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Please take into account this:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The first green area shows the status of the <code>Gateway</code> and also the service name as stated in <code>src/main/resources/application.properties</code></p>
+</li>
+<li>
+<p>The second green area shows the status of the backend service <code>Events</code> and also the service name as stated in <code>src/main/resources/application.properties</code></p>
+</li>
+<li>
+<p>This interface refreshes itself every 2 seconds, so if you change the name of the service or there is a problem you should be able to see it here</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/gramola-gateway-ui-1.png" alt="Gateway UI">
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="deploying-gramola-cloud"><a class="anchor" href="#deploying-gramola-cloud"></a>Deploying Gramola in other cluster</h2>
+<h2 id="deploying-gramola-cloud"><a class="anchor" href="#deploying-gramola-cloud"></a>Deploying Gramola in another cluster</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>If an additional cluster has been set up in chapter <a href="04-prepare-argocd.html#register-additional-clusters" class="xref page">Register Additional Clusters</a> then you can create another <code>ApplicationSet</code> where the destination cluster is the one you defined previously instead of the default (<code>in-cluster</code>) cluster.</p>
@@ -525,6 +568,24 @@ EOF</code></pre>
 <div class="imageblock">
 <div class="content">
 <img src="_images/argocd-gramola-cloud-deployed.png" alt="ArgoCD Gramola Deployed">
+</div>
+</div>
+<div class="paragraph">
+<p>You can also have a look to the <code>test</code> environment in the additional cluster using the OpenShift console. Please, copy the next link and paste it in a new tab, please use these credentials:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>USERNAME:</strong> %USERNAME%</p>
+</li>
+<li>
+<p><strong>PASSWORD:</strong> %PASSWORD%</p>
+</li>
+</ul>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://console-openshift-console.apps.%ADDITIONAL_BASE_SUBDOMAIN%/topology/ns/gramola-test-%USERNAME%?view=graph</code></pre>
 </div>
 </div>
 </div>

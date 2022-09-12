@@ -254,10 +254,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Here we&#8217;re going to run some basic tests</p>
-</div>
-<div class="paragraph">
-<p>Web hooks are in place, it&#8217;s time to check if they are working correctly.</p>
+<p>Web hooks are in place, it&#8217;s time to check if they are working correctly. Red Hat OpenShift Pipelines Operator generates <code>Deployments</code> and <code>Routes</code> objects starting from the definition of <code>EventListeners</code>. The tests you&#8217;re going to run here are simply testing that those deployments are running properly, the same technique can be used to debug <code>TriggerBinding</code> and <code>TriggerTemplate</code> attribute mapping and <code>EventListener</code> cel<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup> filters.</p>
 </div>
 </div>
 </div>
@@ -265,15 +262,17 @@
 <h2 id="check-events-ci-web-hook"><a class="anchor" href="#check-events-ci-web-hook"></a>Check Events CI Web Hook</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Let’s check if the webhook is working:</p>
+<p>Let’s check if the webhook is working, please open a new terminal and execute the following command.</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc logs -f deployment/el-events-ci-pl-push-gitea-listener -n ${CICD_NAMESPACE}</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export USERNAME="%USERNAME%"
+export CICD_NAMESPACE="gramola-cicd-${USERNAME}"
+oc logs -f deployment/el-events-ci-pl-push-gitea-listener -n ${CICD_NAMESPACE}</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You should get something like this.</p>
+<p>You should get something like this, leave the terminal open and please go back to the other terminal window.</p>
 </div>
 <div class="listingblock console-output">
 <div class="content">
@@ -282,105 +281,7 @@
 </div>
 </div>
 <div class="paragraph">
-<p>Now if you push a change in the code the CI pipeline for <code>events</code> should we kicked off.</p>
-</div>
-<div class="paragraph">
-<p>You can test this either by opening the next url and changing the value of property <code>info.name</code> to something like <code>gramola-events.%USERNAME%</code>. Then scroll down, enter a commit message and click on <strong>Commit changes</strong>.</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola-events/_edit/main/src/main/resources/application.properties</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Or by running this set of commands, in a new terminal.</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone <a href="https://%USERNAME%:%PASSWORD%@repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola-events" class="bare">https://%USERNAME%:%PASSWORD%@repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola-events</a>
-cd gramola-events
-sed -i 's/info.name=.*/info.name=gramola-events.%USERNAME%-'${RANDOM}'/g' ./src/main/resources/application.properties
-git commit ./src/main/resources/application.properties -m "update info.name" &amp;&amp; git push
-cd ..
-rm -rf gramola-events</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>If you haven’t stopped the log output you should see something like:</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">...
-{"level":"info","ts":"2021-08-26T15:37:54.796Z","logger":"eventlistener","caller":"resources/create.go:95","msg":"Generating resource: kind: &amp;APIResource{Name:pipelineruns,Namespaced:true,Kind:PipelineRun,Verbs:[delete deletecollection get list patch create update watch],ShortNames:[pr prs],SingularName:pipelinerun,Categories:[tekton tekton-pipelines],Group:tekton.dev,Version:v1beta1,StorageVersionHash:RcAKAgPYYoo=,}, name: events-ci-pl-push-plr-","knative.dev/controller":"eventlistener"}
-{"level":"info","ts":"2021-08-26T15:37:54.796Z","logger":"eventlistener","caller":"resources/create.go:103","msg":"For event ID \"57d7515c-f954-43ee-b99b-bf53a1578058\" creating resource tekton.dev/v1beta1, Resource=pipelineruns","knative.dev/controller":"eventlistener"}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Stop the log output with <code>Ctrl+C</code>.</p>
-</div>
-<div class="paragraph">
-<p>We have to do the same for the <code>gateway</code> service, you now the drill,
-let’s get the route host got the listener.</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get route/el-gateway-ci-pl-push-listener -n ${CICD_NAMESPACE} -o jsonpath='{.status.ingress[0].host}' &amp;&amp; echo ""</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>This time go to the <code>gramola-gateway</code> repo and create a webhook like we
-did before but using the host you just got.</p>
-</div>
-<div class="paragraph">
-<p>Again as we did for <code>gramola-events</code> let’s have a look to the logs of
-the listener:</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc logs -f deployment/el-gateway-ci-pl-push-listener -n ${CICD_NAMESPACE}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>If it all went well you should see this:</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">...
-{"level":"info","ts":"2021-08-26T15:58:30.986Z","logger":"eventlistener","caller":"sink/sink.go:213","msg":"interceptor stopped trigger processing: rpc error: code = FailedPrecondition desc = event type ping is not allowed","knative.dev/controller":"eventlistener","/triggers-eventid":"bf2144ab-d3ca-471c-a340-9d9ae9e150e4","/trigger":"github-listener"}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Now make a change to the code of <code>gramola-gateway</code> and let’s see if the
-pipeline is triggered or not.</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">...
-{"level":"info","ts":"2021-08-26T16:03:26.383Z","logger":"eventlistener","caller":"resources/create.go:95","msg":"Generating resource: kind: &amp;APIResource{Name:pipelineruns,Namespaced:true,Kind:PipelineRun,Verbs:[delete deletecollection get list patch create update watch],ShortNames:[pr prs],SingularName:pipelinerun,Categories:[tekton tekton-pipelines],Group:tekton.dev,Version:v1beta1,StorageVersionHash:RcAKAgPYYoo=,}, name: gateway-ci-pl-push-plr-","knative.dev/controller":"eventlistener"}
-{"level":"info","ts":"2021-08-26T16:03:26.383Z","logger":"eventlistener","caller":"resources/create.go:103","msg":"For event ID \"de0712e7-9d0e-4896-87a2-1058047fe7ce\" creating resource tekton.dev/v1beta1, Resource=pipelineruns","knative.dev/controller":"eventlistener"}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Now let&#8217;s take a look at these pipelines in OpenShift console. Go to 'pipelines&#8594;events-ci-pl' and inside 'pipelineruns' open the run created by the webhook, you must see something like this:</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/pipeline-ci-run.png" alt="Pipeline CI run">
-</div>
-</div>
-<div class="paragraph">
-<p>Use this link to watch the pipeline running.</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://console-openshift-console.apps.%BASE_SUBDOMAIN%/dev-pipelines/ns/gramola-cicd-%USERNAME%</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>As we can see the pipeline has been automatically triggered due to the repository update and a pull request must has been created in Gitea, let&#8217;s check.</p>
-</div>
-<div class="paragraph">
-<p>Go to Gitea and inside 'Gramola' repository there must be a pull request like 'Updating 'gramola-events' image for overlay 'dev' with new image', merge it:</p>
+<p>Now if you push a change in the code the CI pipeline for <code>events</code> should we kicked off but for now let&#8217;s check that the listener is working properly by running a test delivery against the listener URL itself. Run the following command:</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -389,73 +290,181 @@ pipeline is triggered or not.</p>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<div class="paragraph">
-<p>Or copy and paste the following url:</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola/pulls</code></pre>
-</div>
-</div>
+The <code>EventListener</code> expects a <code>push</code> event, hence because we&#8217;re sending a <code>dummy</code> payload and event of type <code>dummy</code> we should expect and error but the test will be successful because we&#8217;re testing the frontend of the <code>EventListener</code> here.
 </td>
 </tr>
 </table>
 </div>
-<div class="imageblock">
+<div class="listingblock console-input">
 <div class="content">
-<img src="_images/gitea-merged-pr.png" alt="Gitea merged PR">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X POST -k  http://$(oc get route/el-events-ci-pl-push-gitea-listener  -n $CICD_NAMESPACE -o jsonpath='{.spec.host}') \
+ -H 'X-GitHub-Event: dummy' -H 'X-GitHub-Event-Type: dummy' -H 'X-Gitea-Event: dummy' -H 'X-Gitea-Event-Type: dummy' \
+ -H 'Content-Type: application/json' \
+ --data '{ "dummy": "dummy"}'</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Now the CD pipeline must be automatically triggered by this merged PR. Go to 'pipelines&#8594;events-cd-pl' and inside 'pipelineruns' open the run created after the merge, you must see something like this:</p>
+<p>This is the expected output in the terminal where the <code>oc log</code> command is running.</p>
 </div>
-<div class="imageblock">
+<div class="listingblock console-output">
 <div class="content">
-<img src="_images/pipelines-events-cd.png" alt="Pipeline events CD">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">...
+{"level":"info","ts":"2022-09-12T16:30:11.860Z","logger":"eventlistener","caller":"sink/sink.go:234","msg":"interceptor stopped trigger processing: rpc error: code = FailedPrecondition desc = event type dummy is not allowed","commit":"fbb0fd1","knative.dev/controller":"eventlistener","eventlistener":"events-ci-pl-push-gitea-listener","namespace":"gramola-cicd-user1","eventlistenerUID":"2a940da6-e625-4f18-98b2-3bf44f48668a","/triggers-eventid":"507dd6b4-8715-4c6a-a89e-b703a800c230","/trigger":"github-listener"}</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>As we can see, this pipeline has updated the Gramola Events image with latest changes and has also created a new PR for test environment. You can validate these by doing:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>In you terminal execute the following command to view existing replica sets (update the user name):
-[.console-input]
-[source,bash, subs="+macros,+attributes"]
-----
-oc get replicaset -n gramola-dev-<strong>user</strong>
-----</p>
-<div class="literalblock">
-<div class="content">
-<pre>A new replica set has been created for 'gramola-events' in order to update the image version.</pre>
-</div>
-</div>
-</li>
-<li>
-<p>Go to Gitea and inside 'Gramola' repository there must be a pull request like 'Updating 'gramola-events' image for overlay 'test' with new image'. You can merge to continue with the deployment process in test environment.</p>
-</li>
-</ul>
+<p>Stop the log output with <span class="keyseq"><kbd>Ctrl</kbd>+<kbd>C</kbd></span>.</p>
 </div>
 <div class="paragraph">
-<p>TODO Explain the web hook mechanism and add the diagram!!!</p>
+<p>Now you can do the same for the other webhooks, this time with a lot less wording.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_end_to_end_pipeline_test"><a class="anchor" href="#_end_to_end_pipeline_test"></a>End to End Pipeline Test</h2>
+<h2 id="check-events-cd-web-hook"><a class="anchor" href="#check-events-cd-web-hook"></a>Check Events CD Web Hook</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>So, our web hooks are, apparently, working properly but we will never know for sure unless we make a change in the code and see if it all works as expected and we see that change being promoted through our environments.</p>
+<p>Please open a new terminal, or reuse the one where you run the previous tests, and execute the following command.</p>
 </div>
-<div class="imageblock">
+<div class="listingblock console-input">
 <div class="content">
-<img src="_images/end-to-end-pipeline-1.png" alt="End to End Pipeline">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export USERNAME="%USERNAME%"
+export CICD_NAMESPACE="gramola-cicd-${USERNAME}"
+oc logs -f deployment/el-events-cd-pl-pr-gitea-listener -n ${CICD_NAMESPACE}</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p><a href="https://repository-gitea-system.apps.cluster-prhg6.prhg6.sandbox770.opentlc.com/user1" class="bare">https://repository-gitea-system.apps.cluster-prhg6.prhg6.sandbox770.opentlc.com/user1</a></p>
+<p>You should get something like this, leave the terminal open and please go back to the other terminal window.</p>
 </div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">...
+{"level":"info","ts":"2022-09-12T10:04:59.451Z","logger":"eventlistener","caller":"eventlistenersink/main.go:181","msg":"Listen and serve on port 8080","commit":"fbb0fd1","knative.dev/controller":"eventlistener"}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Run the following command that sends a test <code>dummy</code> payload and event to the listener.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X POST -k  http://$(oc get route/el-events-cd-pl-pr-gitea-listener  -n $CICD_NAMESPACE -o jsonpath='{.spec.host}') \
+ -H 'X-GitHub-Event: dummy' -H 'X-GitHub-Event-Type: dummy' -H 'X-Gitea-Event: dummy' -H 'X-Gitea-Event-Type: dummy' \
+ -H 'Content-Type: application/json' \
+ --data '{ "dummy": "dummy"}'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Again this is the expected output in the terminal where the <code>oc log</code> command is running.</p>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">...
+{"level":"info","ts":"2022-09-12T16:43:27.906Z","logger":"eventlistener","caller":"sink/sink.go:234","msg":"interceptor stopped trigger processing: rpc error: code = FailedPrecondition desc = event type dummy is not allowed","commit":"fbb0fd1","knative.dev/controller":"eventlistener","eventlistener":"events-cd-pl-pr-gitea-listener","namespace":"gramola-cicd-user1","eventlistenerUID":"e16440c0-e329-4ba9-bdbc-5af516b56a2a","/triggers-eventid":"29307d50-f977-4ead-bad6-7007bb5b4d64","/trigger":"github-listener"}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Stop the log output with <span class="keyseq"><kbd>Ctrl</kbd>+<kbd>C</kbd></span>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="check-gateway-ci-web-hook"><a class="anchor" href="#check-gateway-ci-web-hook"></a>Check Gateway CI Web Hook</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Please open a new terminal, or reuse the one where you run the previous tests, and execute the following command.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export USERNAME="%USERNAME%"
+export CICD_NAMESPACE="gramola-cicd-${USERNAME}"
+oc logs -f deployment/el-gateway-ci-pl-push-gitea-listener -n ${CICD_NAMESPACE}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You should get something like this, leave the terminal open and please go back to the other terminal window.</p>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">...
+{"level":"info","ts":"2022-09-12T10:04:59.586Z","logger":"eventlistener","caller":"eventlistenersink/main.go:181","msg":"Listen and serve on port 8080","commit":"fbb0fd1","knative.dev/controller":"eventlistener"}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Run the following command that sends a test <code>dummy</code> payload and event to the listener.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X POST -k  http://$(oc get route/el-gateway-ci-pl-push-gitea-listener  -n $CICD_NAMESPACE -o jsonpath='{.spec.host}') \
+ -H 'X-GitHub-Event: dummy' -H 'X-GitHub-Event-Type: dummy' -H 'X-Gitea-Event: dummy' -H 'X-Gitea-Event-Type: dummy' \
+ -H 'Content-Type: application/json' \
+ --data '{ "dummy": "dummy"}'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Again this is the expected output in the terminal where the <code>oc log</code> command is running.</p>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">...
+{"level":"info","ts":"2022-09-12T16:47:55.330Z","logger":"eventlistener","caller":"sink/sink.go:234","msg":"interceptor stopped trigger processing: rpc error: code = FailedPrecondition desc = event type dummy is not allowed","commit":"fbb0fd1","knative.dev/controller":"eventlistener","eventlistener":"gateway-ci-pl-push-gitea-listener","namespace":"gramola-cicd-user1","eventlistenerUID":"f04cb7d2-4fe6-4447-a253-b434a9f8efd0","/triggers-eventid":"4e7af3eb-e15f-432d-8802-2506b3d741e6","/trigger":"github-listener"}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Stop the log output with <span class="keyseq"><kbd>Ctrl</kbd>+<kbd>C</kbd></span>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="check-gateway-cd-web-hook"><a class="anchor" href="#check-gateway-cd-web-hook"></a>Check Gateway CD Web Hook</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Please open a new terminal, or reuse the one where you run the previous tests, and execute the following command.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export USERNAME="%USERNAME%"
+export CICD_NAMESPACE="gramola-cicd-${USERNAME}"
+oc logs -f deployment/el-gateway-cd-pl-pr-gitea-listener -n ${CICD_NAMESPACE}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You should get something like this, leave the terminal open and please go back to the other terminal window.</p>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">...
+{"level":"info","ts":"2022-09-12T10:04:59.991Z","logger":"eventlistener","caller":"eventlistenersink/main.go:181","msg":"Listen and serve on port 8080","commit":"fbb0fd1","knative.dev/controller":"eventlistener"}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Run the following command that sends a test <code>dummy</code> payload and event to the listener.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -X POST -k  http://$(oc get route/el-gateway-cd-pl-pr-gitea-listener  -n $CICD_NAMESPACE -o jsonpath='{.spec.host}') \
+ -H 'X-GitHub-Event: dummy' -H 'X-GitHub-Event-Type: dummy' -H 'X-Gitea-Event: dummy' -H 'X-Gitea-Event-Type: dummy' \
+ -H 'Content-Type: application/json' \
+ --data '{ "dummy": "dummy"}'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Again this is the expected output in the terminal where the <code>oc log</code> command is running.</p>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">...
+{"level":"info","ts":"2022-09-12T16:50:54.425Z","logger":"eventlistener","caller":"sink/sink.go:234","msg":"interceptor stopped trigger processing: rpc error: code = FailedPrecondition desc = event type dummy is not allowed","commit":"fbb0fd1","knative.dev/controller":"eventlistener","eventlistener":"gateway-cd-pl-pr-gitea-listener","namespace":"gramola-cicd-user1","eventlistenerUID":"f09da2a6-b828-4869-9b2c-42afad8cd849","/triggers-eventid":"fc790720-577e-49f6-992a-b893b71b0986","/trigger":"github-listener"}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Stop the log output with <span class="keyseq"><kbd>Ctrl</kbd>+<kbd>C</kbd></span>.</p>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<hr>
+<div class="footnote" id="_footnotedef_1">
+<a href="#_footnoteref_1">1</a>. <a href="https://tekton.dev/docs/triggers/interceptors/#cel-interceptors" class="bare">https://tekton.dev/docs/triggers/interceptors/#cel-interceptors</a>
 </div>
 </div>
 <nav class="pagination">
