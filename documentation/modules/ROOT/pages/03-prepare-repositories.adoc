@@ -5,10 +5,15 @@ Everything we do in this section requires that you have fulfilled the xref:01-se
 
 [WARNING]
 ====
-*EVEN* if you have two clusters and want to run the multicluster section... so... *log in the main one now* [.underline]#not in the secondary#.
+. *EVEN* if you have two clusters and want to run the multicluster section... *log in the main one now* [.underline]#not in the secondary#.
+. *AND* log in *as normal user*, not [.underline]#not as a cluster admin#.
 ====
 
 So if not already logged in, please do it now.
+
+[CAUTION]
+====
+====
 
 [.console-input]
 [source,sh, subs="+macros,+attributes"]

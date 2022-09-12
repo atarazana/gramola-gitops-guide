@@ -83,7 +83,7 @@ CAUTION: *API_USER* is a user with cluster-admin permissions on the additional c
 [source,bash, subs="+macros,+attributes"]
 ----
 export ADDITIONAL_API_SERVER_TOKEN=%ADDITIONAL_API_SERVER_TOKEN%
-export ADDITIONAL_API_SERVER_MANAGED=%ADDITIONAL_API_SERVER_MANAGED%
+export ADDITIONAL_API_SERVER_MANAGED=api.%ADDITIONAL_BASE_SUBDOMAIN%:6443
 oc login --token=${ADDITIONAL_API_SERVER_TOKEN} --server=https://${ADDITIONAL_API_SERVER_MANAGED}
 ----
 
@@ -132,7 +132,6 @@ Now, it's time to log back in the main cluster.
 ----
 oc login -u {username} -p {password} --server=https://api.{api-domain}
 ----
-
 
 [#project-definitions]
 == Project definitions

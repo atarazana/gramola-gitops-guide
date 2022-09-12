@@ -66,7 +66,7 @@ Please, copy the next link and paste it in a new tab to open our CI pipeline and
 https://console-openshift-console.apps.%BASE_SUBDOMAIN%/k8s/ns/gramola-cicd-{username}/tekton.dev~v1beta1~Pipeline/events-ci-pl
 ----
 
-You can have a look to the diagram, hover over the tasks or take a look to the yaml.
+You can have a look to the diagram, hover over the tasks or take a look at the yaml.
 
 [#events-cd-pipeline]
 === Events CD Pipeline

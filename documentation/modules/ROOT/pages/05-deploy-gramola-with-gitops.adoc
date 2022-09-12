@@ -149,8 +149,25 @@ To change to the `test` environment, just select `gramola-test-{username}` as in
 
 image::openshift-console-project-selection.png[Project Selection]
 
+Let's test gramola, in both environments by clicking on the URL icon of `gateway` as in the next picture.
+
+image::gramola-gateway-topology-url.png[Gateway URL]
+
+You should see this simple user interface.
+
+[NOTE]
+====
+Please take into account this:
+
+- The first green area shows the status of the `Gateway` and also the service name as stated in `src/main/resources/application.properties`
+- The second green area shows the status of the backend service `Events` and also the service name as stated in `src/main/resources/application.properties`
+- This interface refreshes itself every 2 seconds, so if you change the name of the service or there is a problem you should be able to see it here
+====
+
+image::gramola-gateway-ui-1.png[Gateway UI]
+
 [#deploying-gramola-cloud]
-== Deploying Gramola in other cluster
+== Deploying Gramola in another cluster
 
 If an additional cluster has been set up in chapter xref:04-prepare-argocd.adoc#register-additional-clusters[Register Additional Clusters] then you can create another `ApplicationSet` where the destination cluster is the one you defined previously instead of the default (`in-cluster`) cluster.
 
@@ -222,3 +239,14 @@ https://{argocd-server}/applications?cluster=aws-managed1
 This is the expected result once all images have been pulled and the services are deployed completely.
 
 image::argocd-gramola-cloud-deployed.png[ArgoCD Gramola Deployed]
+
+You can also have a look to the `test` environment in the additional cluster using the OpenShift console. Please, copy the next link and paste it in a new tab, please use these credentials:
+
+- *USERNAME:* {username}
+- *PASSWORD:* {password}
+
+[.console-input]
+[source,bash, subs="+attributes"]
+----
+https://console-openshift-console.apps.%ADDITIONAL_BASE_SUBDOMAIN%/topology/ns/gramola-test-{username}?view=graph
+----
