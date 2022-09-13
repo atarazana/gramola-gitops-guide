@@ -22,11 +22,12 @@ curl -k -X 'POST' "https://{gitea-host}/api/v1/repos/{username}/gramola-events/h
      "url": "http://'"${EVENTS_CI_EL_LISTENER_HOST}"'"
   },
   "events": [
-    "push"
+    "push" <1>
   ],
   "type": "gitea"
 }'
 ----
+<1> Only `push` events
 
 Expected output:
 
@@ -56,11 +57,12 @@ curl -k -X 'POST' "https://{gitea-host}/api/v1/repos/{username}/gramola-gateway/
      "url": "http://'"${GATEWAY_CI_EL_LISTENER_HOST}"'"
   },
   "events": [
-    "push"
+    "push" <1>
   ],
   "type": "gitea"
 }'
 ----
+<1> Only `push` events
 
 Expected output:
 
@@ -93,11 +95,12 @@ curl -k -X 'POST' "https://{gitea-host}/api/v1/repos/{username}/gramola/hooks" \
      "url": "http://'"${EVENTS_CD_EL_LISTENER_HOST}"'"
   },
   "events": [
-    "pull_request"
+    "pull_request" <1>
   ],
   "type": "gitea"
 }'
 ----
+<1> Only `pull_request` events
 
 Expected output:
 
@@ -127,11 +130,12 @@ curl -k -X 'POST' "https://{gitea-host}/api/v1/repos/{username}/gramola/hooks" \
      "url": "http://'"${GATEWAY_CD_EL_LISTENER_HOST}"'"
   },
   "events": [
-    "pull_request"
+    "pull_request" <1>
   ],
   "type": "gitea"
 }'
 ----
+<1> Only `pull_request` events
 
 Expected output:
 

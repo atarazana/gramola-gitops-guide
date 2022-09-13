@@ -26,6 +26,9 @@
 
 :openshift-console-host: console-openshift-console.{cluster-subdomain}
 
+:gramola-gateway-dev-host: gateway-gramola-dev-{username}.{cluster-subdomain}
+:gramola-gateway-test-host: gateway-gramola-test-{username}.{cluster-subdomain}
+
 :project_name: {username}%CLUSTER_SUBDOMAIN%
 
 :dash: %2D
