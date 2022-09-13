@@ -254,7 +254,7 @@
 <h2 id="introduction"><a class="anchor" href="#introduction"></a>Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>So far, you have deployed your application and CICD pipelines; additionally you have created webhook and they are, apparently, working properly but we will never know for sure unless we make a change in the code and see if it all works as expected and we see that change being promoted through our environments. It&#8217;s about time for an end to end test.</p>
+<p>So far, <strong>you have deployed your application and CICD pipelines</strong>; additionally you <strong>have created webhooks</strong> and they are, apparently, working properly but we will never know for sure unless we make a change in the code and see if it all works as expected and we see that change being promoted through our environments. <strong>It&#8217;s about time for an end to end test!</strong></p>
 </div>
 <div class="paragraph">
 <p>The next diagram summarizes the end to end test you are going to run. As you can see, you will make a change to the code in the <em>Events API</em> (<strong>gramola-events</strong>) which, via a webhook, will trigger the CI pipeline and hence the promotion of code.</p>
@@ -265,7 +265,7 @@
 </div>
 </div>
 <div class="paragraph">
-<p>These are the high level sequence of events (only relevant steps are mentioned here more details later on):</p>
+<p>These are the high level sequence of events (only relevant steps are mentioned, more details later on):</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -296,12 +296,71 @@
 <p>Steps 6 and 7 are repeated for each environment until the code has been promoted to all of them.</p>
 </div>
 <div class="paragraph">
-<p>Ok, done with the introduction, let&#8217;s actually run through the demo.</p>
+<p>Ok, done with the introduction, let&#8217;s get down to work!</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="change-the-code"><a class="anchor" href="#change-the-code"></a>Step 1: Change the code</h2>
+<h2 id="current-status"><a class="anchor" href="#current-status"></a>Ⓐ Current Status</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before kicking off the demo let&#8217;s check the current status of <strong>Gramola</strong>. In order to do it, please open the next to link in both tabs so that you can watch the status of our app all the way through out the demo.</p>
+</div>
+<div class="paragraph">
+<p>Use this link to watch the status of <strong>Gramola</strong> in <code>dev</code>.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://gateway-gramola-dev-%USERNAME%.apps.%BASE_SUBDOMAIN%</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And this link to watch the status of <strong>Gramola</strong> in <code>test</code>.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://gateway-gramola-test-%USERNAME%.apps.%BASE_SUBDOMAIN%</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Both links should look like the next picture.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Remember:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The first green area shows the status of the <code>Gateway</code> and also the service name as stated in <code>src/main/resources/application.properties</code></p>
+</li>
+<li>
+<p>The second green area shows the status of the backend service <code>Events</code> and also the service name as stated in <code>src/main/resources/application.properties</code></p>
+</li>
+<li>
+<p>This interface refreshes itself every 2 seconds, so if you change the name of the service or there is a problem you should be able to see it here</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/gramola-gateway-ui-1.png" alt="Gateway UI">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="change-the-code"><a class="anchor" href="#change-the-code"></a>Ⓑ Change the code</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>In order to make the demonstration easier the <strong>gramola-events</strong> API has and endpoint <code>/info/name</code> that returns the value of a property (<code>info.name</code>) in the <code>application.properties</code> file. Let&#8217;s change the value of that property</p>
@@ -315,7 +374,7 @@
 </div>
 </div>
 <div class="paragraph">
-<p>You should land in the repository main page.</p>
+<p>You should land in the <code>gramola-events</code> repository main page. Sign in by using the <strong>Sign in</strong> link on the upper right corner (red rectangle).</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -323,7 +382,7 @@
 </div>
 </div>
 <div class="paragraph">
-<p>Signed in by using the <strong>Sign in</strong> link on the upper right corner (red rectangle). Credentials:</p>
+<p>Credentials:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -367,7 +426,7 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="triggering-ci-pipeline"><a class="anchor" href="#triggering-ci-pipeline"></a>Step 2: Triggering the CI pipeline</h2>
+<h2 id="run-ci-pipeline"><a class="anchor" href="#run-ci-pipeline"></a>Ⓒ Run the CI pipeline</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The <strong>Push Event</strong> generated by the webhook defined in <strong>gramola-events</strong> repo triggers the pipeline named <strong>events-ci-pl</strong>. Let&#8217;s check that out.</p>
@@ -413,18 +472,6 @@
 <div class="paragraph">
 <p>This is so because there is a <em>when expression</em> in both tasks checking the GIT_PROVIDER parameter against <strong>github</strong> and <strong>gitea</strong> have a look to both tasks below.</p>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Open
-</td>
-</tr>
-</table>
-</div>
 <div class="tabset is-loading">
 <div class="ulist tabs">
 <ul>
@@ -458,7 +505,7 @@ Open
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>This task is run if <strong>GIT_PROVIDER</strong> is <strong>github</strong></td>
+<td>This task is run if <strong>GIT_PROVIDER</strong> is <strong>github</strong><sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup></td>
 </tr>
 </table>
 </div>
@@ -484,13 +531,410 @@ Open
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>This task is run if <strong>GIT_PROVIDER</strong> is <strong>gitea</strong></td>
+<td>This task is run if <strong>GIT_PROVIDER</strong> is <strong>gitea</strong><sup class="footnote">[<a id="_footnoteref_2" class="footnote" href="#_footnotedef_2" title="View footnote.">2</a>]</sup></td>
 </tr>
 </table>
 </div>
 </div>
 </div>
 </div>
+<div class="paragraph">
+<p>So if the pipeline has finished well, the new image should have been pushed to the registry. Additionally the <code>kustomization.yaml</code> file of the <code>dev</code> overlay has been updated with the hash of the new image in a short-lived feature branch and finally a PR should have been created.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s check all that out, let&#8217;s start with the image. Copy the following link and open it in a browser.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://myregistry-quay-quay-system.apps.%BASE_SUBDOMAIN%/repository/%USERNAME%/gramola-events?tab=tags</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You should see an image recently pushed as in the next picture.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If you click on the <code>download</code> icon and then choose <code>Docker Pull (by digest)</code> you can find the SHA256 has at the end of the command.
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/demo-step-2-3.png" alt="New Image">
+</div>
+</div>
+<div class="paragraph">
+<p>Now it&#8217;s time to check it the PR has been created and includes the change of <code>kustomization.yaml</code> as expected.</p>
+</div>
+<div class="paragraph">
+<p>Please copy this link and open it.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola/pulls</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You should see something like this, please click on the open PR.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/demo-step-2-4.png" alt="Pull Requests">
+</div>
+</div>
+<div class="paragraph">
+<p>In the body of the PR there&#8217;s information that helps the person who is to approve the PR that also will be used by the CD pipeline which should be triggered once the PR has been merged.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/demo-step-2-5.png" alt="Open PR">
+</div>
+</div>
+<div class="paragraph">
+<p>Please go ahead and have a look to the <code>±Files changed</code> area. Once you&#8217;re done click on the <code>Conversation</code> link.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+You should see changes made to file <code>./events-deployment/overlays/dev/kustomization.yml</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/demo-step-2-6.png" alt="Files changed">
+</div>
+</div>
+<div class="paragraph">
+<p>Ok, both the image and the PR are where they&#8217;re supposed to be, let&#8217;s move on!</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="running-cd-pipeline-dev"><a class="anchor" href="#running-cd-pipeline-dev"></a>Ⓓ Run the CD pipeline (<code>dev</code>)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>So the CI pipeline has prepared everything to start with the actual deployment of a new version of the Gramola Events service. If you weren&#8217;t using GitOps the CD pipeline would (probably after an Approval Task) start by updating the image in the <code>Deployment</code> object using the Kubernetes API, but that&#8217;s not the case here. The Approval Task you would use in a Jenkins pipeline has been replaced by a PR and changes to the <code>Deployment</code> object in the OpenShift cluster have been replaced by ArgoCD reconciling changes from the source of truth (git repository) to the OpenShift cluster.</p>
+</div>
+<div class="paragraph">
+<p>Well, it&#8217;s time to continue where we left it, so go back to the PR and click on the <code>Create Merge Commit</code> then tick the <code>Delete Branch</code> check-box (we wont need that branch anymore) and click again on <code>Create Merge Commit</code>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/demo-step-2-7.png" alt="Create Merge Commit">
+</div>
+</div>
+<div class="paragraph">
+<p>The <strong>Pull Request</strong> event is sent out by the webhook to the <strong>Events CD Pipeline <code>EventListener</code></strong> where some mapping and filtering will trigger the pipeline with a <code>PipelineRun</code> object populated with the necessary information.</p>
+</div>
+<div class="paragraph">
+<p>Please, open the next link or navigate to <strong>Pipelines</strong> in project <code>gramola-cicd-%USERNAME%</code> you will see the pipeline progressing.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://console-openshift-console.apps.%BASE_SUBDOMAIN%/dev-pipelines/ns/gramola-cicd-%USERNAME%</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+As you have done previously you can click on the <strong>PLR</strong> object to drill down and have a look to the logs.
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/demo-step-2-8.png" alt="CD Pipeline Running">
+</div>
+</div>
+<div class="paragraph">
+<p>Have a look at the pipeline details. As you can see there are several tasks, namely:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>argocd-sync</code> triggers the refresh and sync of descriptors coming from the corresponding overlay<sup class="footnote">[<a id="_footnoteref_3" class="footnote" href="#_footnotedef_3" title="View footnote.">3</a>]</sup>, <code>dev</code> in this case</p>
+</li>
+<li>
+<p><code>fetch-config-repository</code> clones the <code>gramola</code> configuration repository</p>
+</li>
+<li>
+<p><code>update-image</code> creates a short-lived branch and updates the image hash in the <code>kustomization.yaml</code> file for the corresponding overlay</p>
+</li>
+<li>
+<p><code>github-pr-create</code> creates a PR for Github (not run)</p>
+</li>
+<li>
+<p><code>gitea-pr-create</code> creates a PR for Gitea</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/demo-step-2-9.png" alt="CD Pipeline Details">
+</div>
+</div>
+<div class="paragraph">
+<p>So the pipeline triggers the sync of <code>Events</code> using <strong>ArgoCD</strong>, let&#8217;s have a look.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://openshift-gitops-server-openshift-gitops.apps.%BASE_SUBDOMAIN%/applications?proj=&amp;sync=&amp;health=&amp;namespace=&amp;cluster=&amp;labels=app.kubernetes.io%252Finstance%253Dgramola-root-app-dev-%USERNAME%</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If you don&#8217;t hurry you may miss the syncing process&#8230;&#8203; if that is the case don&#8217;t worry you have another chance later when the image is updated for the <code>test</code> environment.
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/demo-step-2-10.png" alt="CD Pipeline Details">
+</div>
+</div>
+<div class="paragraph">
+<p>You can also see the update of the <code>Events</code> deployment taking place from the OpenShift console, use the link below or navigate to project <code>gramola-dev-%USERNAME%</code> then to <code>Topology</code></p>
+</div>
+<div class="paragraph">
+<p>You should see this&#8230;&#8203; if you hurry!</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/demo-step-2-11.png" alt="CD Pipeline Details">
+</div>
+</div>
+<div class="paragraph">
+<p>In any case, the most important test is running the application itself, in our case this means have a look to the status page of <code>Gateway</code>.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">http://gateway-gramola-dev-%USERNAME%.apps.%BASE_SUBDOMAIN%</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you remember you changed the value of <code>info.name</code> in the <code>application.properties</code> file of <code>Events</code> so, if it all went well, you should see a different service name for the backend service <code>Events</code> as in the next picture.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/demo-step-2-12.png" alt="CD Pipeline Details">
+</div>
+</div>
+<div class="paragraph">
+<p>Finally, you have seen the CD pipeline promoting the new version of the code as an image to the <code>dev</code> environment, but our pipeline ends with a task that generates a new PR, this one for the next environment <code>test</code>. Let&#8217;s continue there.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="running-cd-pipeline-test"><a class="anchor" href="#running-cd-pipeline-test"></a>Ⓔ Run the CD pipeline (<code>test</code>)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This time we&#8217;re going to do this a bit faster and with less talking. Let&#8217;s see if there&#8217;s a new PR created, please copy this link and open it.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola/pulls</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Please click on the open PR.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/demo-step-3-1.png" alt="Pull Requests">
+</div>
+</div>
+<div class="paragraph">
+<p>Have a look to the body of the PR, this time the overlay is <code>test</code>, other than the content is the same as before.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/demo-step-3-2.png" alt="Open PR">
+</div>
+</div>
+<div class="paragraph">
+<p>Please go ahead and have a look to the <code>±Files changed</code> area. Once you&#8217;re done click on the <code>Conversation</code> link.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+You should see changes made to file <code>./events-deployment/overlays/test/kustomization.yml</code> and <code>./events-deployment/overlays/test-cloud/kustomization.yml</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/demo-step-2-6.png" alt="Files changed">
+</div>
+</div>
+<div class="paragraph">
+<p>Ok, both the image and the PR are where they&#8217;re supposed to be, let&#8217;s move on!</p>
+</div>
+<div class="paragraph">
+<p>Well, it&#8217;s time to continue where we left it, so go back to the PR and click on the <code>Create Merge Commit</code> then tick the <code>Delete Branch</code> check-box (we wont need that branch anymore) and click again on <code>Create Merge Commit</code>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/demo-step-2-7.png" alt="Create Merge Commit">
+</div>
+</div>
+<div class="paragraph">
+<p>The <strong>Pull Request</strong> event is sent out by the webhook to the <strong>Events CD Pipeline <code>EventListener</code></strong> where some mapping and filtering will trigger the pipeline with a <code>PipelineRun</code> object populated with the necessary information.</p>
+</div>
+<div class="paragraph">
+<p>Please, open the next link or navigate to <strong>Pipelines</strong> in project <code>gramola-cicd-%USERNAME%</code> you will see the pipeline progressing.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://console-openshift-console.apps.%BASE_SUBDOMAIN%/dev-pipelines/ns/gramola-cicd-%USERNAME%</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+As you have done previously you can click on the <strong>PLR</strong> object to drill down and have a look to the logs.
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/demo-step-2-8.png" alt="CD Pipeline Running">
+</div>
+</div>
+<div class="paragraph">
+<p>Have a look at the pipeline details. As you can see there are several tasks, namely:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>argocd-sync</code> triggers the refresh and sync of descriptors coming from the corresponding overlay<sup class="footnote">[<a id="_footnoteref_4" class="footnote" href="#_footnotedef_4" title="View footnote.">4</a>]</sup>, <code>dev</code> in this case</p>
+</li>
+<li>
+<p><code>fetch-config-repository</code> clones the <code>gramola</code> configuration repository</p>
+</li>
+<li>
+<p><code>update-image</code> creates a short-lived branch and updates the image hash in the <code>kustomization.yaml</code> file for the corresponding overlay</p>
+</li>
+<li>
+<p><code>github-pr-create</code> creates a PR for Github (not run)</p>
+</li>
+<li>
+<p><code>gitea-pr-create</code> creates a PR for Gitea</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/demo-step-2-9.png" alt="CD Pipeline Details">
+</div>
+</div>
+<div class="paragraph">
+<p>So the pipeline triggers the sync of <code>Events</code> using <strong>ArgoCD</strong>, let&#8217;s have a look.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://openshift-gitops-server-openshift-gitops.apps.%BASE_SUBDOMAIN%/applications?proj=&amp;sync=&amp;health=&amp;namespace=&amp;cluster=&amp;labels=app.kubernetes.io%252Finstance%253Dgramola-root-app-dev-%USERNAME%</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If you don&#8217;t hurry you may miss the syncing process&#8230;&#8203; if that is the case don&#8217;t worry you have another chance later when the image is updated for the <code>test</code> environment.
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/demo-step-2-10.png" alt="CD Pipeline Details">
+</div>
+</div>
+<div class="paragraph">
+<p>You can also see the update of the <code>Events</code> deployment taking place from the OpenShift console, use the link below or navigate to project <code>gramola-dev-%USERNAME%</code> then to <code>Topology</code></p>
+</div>
+<div class="paragraph">
+<p>You should see this&#8230;&#8203; if you hurry!</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/demo-step-2-11.png" alt="CD Pipeline Details">
+</div>
+</div>
+<div class="paragraph">
+<p>In any case, the most important test is running the application itself, in our case this means have a look to the status page of <code>Gateway</code>.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">http://gateway-gramola-dev-%USERNAME%.apps.%BASE_SUBDOMAIN%</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you remember you changed the value of <code>info.name</code> in the <code>application.properties</code> file of <code>Events</code> so, if it all went well, you should see a different service name for the backend service <code>Events</code> as in the next picture.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/demo-step-2-12.png" alt="CD Pipeline Details">
+</div>
+</div>
+<div class="paragraph">
+<p>Finally, you have seen the CD pipeline promoting the new version of the code as an image to the <code>dev</code> environment, but our pipeline ends with a task that generates a new PR, this one for the next environment <code>test</code>. Let&#8217;s continue there.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>Ⓕ Ⓖ Ⓗ Ⓘ</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<hr>
+<div class="footnote" id="_footnotedef_1">
+<a href="#_footnoteref_1">1</a>. <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola/apps/cicd/templates/03-pipelines/events-ci-pl.yaml#L139" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola/apps/cicd/templates/03-pipelines/events-ci-pl.yaml#L139</a>
+</div>
+<div class="footnote" id="_footnotedef_2">
+<a href="#_footnoteref_2">2</a>. <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola/apps/cicd/templates/03-pipelines/events-ci-pl.yaml#L170" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola/apps/cicd/templates/03-pipelines/events-ci-pl.yaml#L170</a>
+</div>
+<div class="footnote" id="_footnotedef_3">
+<a href="#_footnoteref_3">3</a>. <a href="https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/#bases-and-overlays" class="bare">https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/#bases-and-overlays</a>
+</div>
+<div class="footnote" id="_footnotedef_4">
+<a href="#_footnoteref_4">4</a>. <a href="https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/#bases-and-overlays" class="bare">https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/#bases-and-overlays</a>
 </div>
 </div>
 <nav class="pagination">
