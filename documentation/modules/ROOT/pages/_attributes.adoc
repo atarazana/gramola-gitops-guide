@@ -2,8 +2,10 @@
 :source-highlighter: highlightjs
 
 :base-domain: %BASE_SUBDOMAIN%
+:additional-base-domain: %ADDITIONAL_BASE_SUBDOMAIN%
 :api-domain: {base-domain}:6443
 :cluster-subdomain: apps.{base-domain}
+:additional-cluster-subdomain: apps.{additional-base-domain}
 :username: %USERNAME%
 :password: %PASSWORD%
 
@@ -25,9 +27,11 @@
 :quay-namespace: quay-system
 
 :openshift-console-host: console-openshift-console.{cluster-subdomain}
+:additional-openshift-console-host: console-openshift-console.{additional-cluster-subdomain}
 
 :gramola-gateway-dev-host: gateway-gramola-dev-{username}.{cluster-subdomain}
 :gramola-gateway-test-host: gateway-gramola-test-{username}.{cluster-subdomain}
+:additional-gramola-gateway-test-host: gateway-gramola-test-{username}.{additional-cluster-subdomain}
 
 :project_name: {username}%CLUSTER_SUBDOMAIN%
 

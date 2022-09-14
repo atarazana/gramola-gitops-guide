@@ -73,11 +73,11 @@ git         https://{gitea-host}/user1/gramola.git          false     false  fal
 ----
 
 [#register-additional-clusters]
-== Register Additional Clusters
+== Register Additional Clusters{empty}footnote:[This an optional chapter, run it only if you have an additional cluster]
 
 First make sure there is a context with proper credentials, in order to achieve this please log in the additional cluster.
 
-CAUTION: *API_USER* is a user with cluster-admin permissions on the additional cluster, *API_SERVER_MANAGED* is the host and port *without `http(s)`* of the additional cluster.
+CAUTION: *ADDITIONAL_API_SERVER_TOKEN* is a token of a user with cluster-admin permissions on the additional cluster, *ADDITIONAL_API_SERVER_MANAGED* is the host and port *without http(s)* of the additional cluster.
 
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
@@ -89,7 +89,7 @@ oc login --token=${ADDITIONAL_API_SERVER_TOKEN} --server=https://${ADDITIONAL_AP
 
 Give a name to the additional cluster and add it with the next command.
 
-TIP: *CLUSTER_NAME* is a name you choose for your cluster, *API_SERVER* is the host and port *without `http(s)`*.
+TIP: *CLUSTER_NAME* is a name you choose for your cluster.
 
 [.console-input]
 [source,bash, subs="+macros,+attributes"]

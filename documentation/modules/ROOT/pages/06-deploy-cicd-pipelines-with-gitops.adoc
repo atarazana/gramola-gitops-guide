@@ -53,6 +53,7 @@ metadata:
   namespace: openshift-gitops
   labels:
     argocd-cicd-app: "true"
+    username: $\{USERNAME}
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
@@ -257,4 +258,28 @@ oc create -n gramola-test-{username} secret docker-registry ${CONTAINER_REGISTRY
   --docker-password=$CONTAINER_REGISTRY_PASSWORD
 oc secrets link default ${CONTAINER_REGISTRY_SECRET_NAME} --for=pull -n gramola-test-{username}
 fi
+----
+
+CAUTION: *If you have an additional cluster* you *HAVE* to run the following command too.
+
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+export ADDITIONAL_API_SERVER_TOKEN=%ADDITIONAL_API_SERVER_TOKEN%
+export ADDITIONAL_API_SERVER_MANAGED=api.%ADDITIONAL_BASE_SUBDOMAIN%:6443
+oc login --token=${ADDITIONAL_API_SERVER_TOKEN} --server=https://${ADDITIONAL_API_SERVER_MANAGED}
+
+export CONTAINER_REGISTRY_SECRET_NAME=$(yq eval '.containerRegistrySecretName' ./apps/cicd/values.yaml)
+
+if [ -z "${CONTAINER_REGISTRY_USERNAME}" ] && [ -z "${CONTAINER_REGISTRY_PASSWORD}" ]; then
+    echo "You should provide a value for CONTAINER_REGISTRY_USERNAME and CONTAINER_REGISTRY_PASSWORD"
+else
+oc create -n gramola-test-{username} secret docker-registry ${CONTAINER_REGISTRY_SECRET_NAME} \
+  --docker-server=https://$CONTAINER_REGISTRY_SERVER \
+  --docker-username=$CONTAINER_REGISTRY_USERNAME \
+  --docker-password=$CONTAINER_REGISTRY_PASSWORD
+oc secrets link default ${CONTAINER_REGISTRY_SECRET_NAME} --for=pull -n gramola-test-{username}
+fi
+
+oc login -u {username} -p {password} --server=https://api.{api-domain}
 ----

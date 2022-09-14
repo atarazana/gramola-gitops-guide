@@ -78,6 +78,7 @@ metadata:
   namespace: openshift-gitops
   labels:
     argocd-root-app: "true"
+    username: $\{USERNAME}
 spec:
   generators:
   - list:
@@ -92,6 +93,7 @@ spec:
       namespace: openshift-gitops
       labels:
         argocd-root-app: "true"
+        username: $\{USERNAME}
       finalizers:
       - resources-finalizer.argocd.argoproj.io
     spec:
@@ -183,6 +185,7 @@ metadata:
   namespace: openshift-gitops
   labels:
     argocd-root-app: "true"
+    username: $\{USERNAME}
 spec:
   generators:
   - list:
@@ -195,6 +198,7 @@ spec:
       namespace: openshift-gitops
       labels:
         argocd-root-app: "true"
+        username: $\{USERNAME}
       finalizers:
       - resources-finalizer.argocd.argoproj.io
     spec:
@@ -250,3 +254,24 @@ You can also have a look to the `test` environment in the additional cluster usi
 ----
 https://console-openshift-console.apps.%ADDITIONAL_BASE_SUBDOMAIN%/topology/ns/gramola-test-{username}?view=graph
 ----
+
+[#argocd-ui-filtering]
+== ArgoCD UI Filtering
+
+ArgoCD has a lots of options to filter objects, namely:
+
+- Favorites
+- Sync Status
+- Health Status
+- Labels
+- Projects
+- Clusters
+- Namespaces
+
+image::argocd-ui-filtering-1.png[ArgoCD Filtering Area]
+
+Feel free to play with all of them and have a taste of how they work.
+
+Once you're done please try this one, `Labels` and choose `username={username}` as in the next picture, if you're running this guide along with other users in the same cluster, you'll find it very useful to see only your objects.
+
+image::argocd-ui-filtering-2.png[ArgoCD Filtering Area]
