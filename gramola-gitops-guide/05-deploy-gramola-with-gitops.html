@@ -368,6 +368,7 @@ metadata:
   namespace: openshift-gitops
   labels:
     argocd-root-app: "true"
+    username: ${USERNAME}
 spec:
   generators:
   - list:
@@ -382,6 +383,7 @@ spec:
       namespace: openshift-gitops
       labels:
         argocd-root-app: "true"
+        username: ${USERNAME}
       finalizers:
       - resources-finalizer.argocd.argoproj.io
     spec:
@@ -509,6 +511,7 @@ metadata:
   namespace: openshift-gitops
   labels:
     argocd-root-app: "true"
+    username: ${USERNAME}
 spec:
   generators:
   - list:
@@ -521,6 +524,7 @@ spec:
       namespace: openshift-gitops
       labels:
         argocd-root-app: "true"
+        username: ${USERNAME}
       finalizers:
       - resources-finalizer.argocd.argoproj.io
     spec:
@@ -586,6 +590,55 @@ EOF</code></pre>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://console-openshift-console.apps.%ADDITIONAL_BASE_SUBDOMAIN%/topology/ns/gramola-test-%USERNAME%?view=graph</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="argocd-ui-filtering"><a class="anchor" href="#argocd-ui-filtering"></a>ArgoCD UI Filtering</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ArgoCD has a lots of options to filter objects, namely:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Favorites</p>
+</li>
+<li>
+<p>Sync Status</p>
+</li>
+<li>
+<p>Health Status</p>
+</li>
+<li>
+<p>Labels</p>
+</li>
+<li>
+<p>Projects</p>
+</li>
+<li>
+<p>Clusters</p>
+</li>
+<li>
+<p>Namespaces</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/argocd-ui-filtering-1.png" alt="ArgoCD Filtering Area">
+</div>
+</div>
+<div class="paragraph">
+<p>Feel free to play with all of them and have a taste of how they work.</p>
+</div>
+<div class="paragraph">
+<p>Once you&#8217;re done please try this one, <code>Labels</code> and choose <code>username=%USERNAME%</code> as in the next picture, if you&#8217;re running this guide along with other users in the same cluster, you&#8217;ll find it very useful to see only your objects.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/argocd-ui-filtering-2.png" alt="ArgoCD Filtering Area">
 </div>
 </div>
 </div>

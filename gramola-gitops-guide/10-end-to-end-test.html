@@ -370,7 +370,7 @@
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/user1/gramola-events</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola-events</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -627,6 +627,8 @@ You should see changes made to file <code>./events-deployment/overlays/dev/kusto
 <div class="paragraph">
 <p>So the CI pipeline has prepared everything to start with the actual deployment of a new version of the Gramola Events service. If you weren&#8217;t using GitOps the CD pipeline would (probably after an Approval Task) start by updating the image in the <code>Deployment</code> object using the Kubernetes API, but that&#8217;s not the case here. The Approval Task you would use in a Jenkins pipeline has been replaced by a PR and changes to the <code>Deployment</code> object in the OpenShift cluster have been replaced by ArgoCD reconciling changes from the source of truth (git repository) to the OpenShift cluster.</p>
 </div>
+<div class="sect2">
+<h3 id="approving-pr-dev"><a class="anchor" href="#approving-pr-dev"></a>Approve PR</h3>
 <div class="paragraph">
 <p>Well, it&#8217;s time to continue where we left it, so go back to the PR and click on the <code>Create Merge Commit</code> then tick the <code>Delete Branch</code> check-box (we wont need that branch anymore) and click again on <code>Create Merge Commit</code>.</p>
 </div>
@@ -635,6 +637,9 @@ You should see changes made to file <code>./events-deployment/overlays/dev/kusto
 <img src="_images/demo-step-2-7.png" alt="Create Merge Commit">
 </div>
 </div>
+</div>
+<div class="sect2">
+<h3 id="cd-pipeline-triggered-dev"><a class="anchor" href="#cd-pipeline-triggered-dev"></a>CD Pipeline Triggered</h3>
 <div class="paragraph">
 <p>The <strong>Pull Request</strong> event is sent out by the webhook to the <strong>Events CD Pipeline <code>EventListener</code></strong> where some mapping and filtering will trigger the pipeline with a <code>PipelineRun</code> object populated with the necessary information.</p>
 </div>
@@ -690,6 +695,9 @@ As you have done previously you can click on the <strong>PLR</strong> object to 
 <img src="_images/demo-step-2-9.png" alt="CD Pipeline Details">
 </div>
 </div>
+</div>
+<div class="sect2">
+<h3 id="argocd-app-synced-dev"><a class="anchor" href="#argocd-app-synced-dev"></a>ArgoCD App Synced</h3>
 <div class="paragraph">
 <p>So the pipeline triggers the sync of <code>Events</code> using <strong>ArgoCD</strong>, let&#8217;s have a look.</p>
 </div>
@@ -715,6 +723,9 @@ If you don&#8217;t hurry you may miss the syncing process&#8230;&#8203; if that 
 <img src="_images/demo-step-2-10.png" alt="CD Pipeline Details">
 </div>
 </div>
+</div>
+<div class="sect2">
+<h3 id="checking-openshift-console-dev"><a class="anchor" href="#checking-openshift-console-dev"></a>Checking OpenShift Console</h3>
 <div class="paragraph">
 <p>You can also see the update of the <code>Events</code> deployment taking place from the OpenShift console, use the link below or navigate to project <code>gramola-dev-%USERNAME%</code> then to <code>Topology</code></p>
 </div>
@@ -726,6 +737,9 @@ If you don&#8217;t hurry you may miss the syncing process&#8230;&#8203; if that 
 <img src="_images/demo-step-2-11.png" alt="CD Pipeline Details">
 </div>
 </div>
+</div>
+<div class="sect2">
+<h3 id="checking-gramola-status-dev"><a class="anchor" href="#checking-gramola-status-dev"></a>Checking Gramola Status</h3>
 <div class="paragraph">
 <p>In any case, the most important test is running the application itself, in our case this means have a look to the status page of <code>Gateway</code>.</p>
 </div>
@@ -747,11 +761,17 @@ If you don&#8217;t hurry you may miss the syncing process&#8230;&#8203; if that 
 </div>
 </div>
 </div>
+</div>
 <div class="sect1">
 <h2 id="running-cd-pipeline-test"><a class="anchor" href="#running-cd-pipeline-test"></a>Ⓔ Run the CD pipeline (<code>test</code>)</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This time we&#8217;re going to do this a bit faster and with less talking. Let&#8217;s see if there&#8217;s a new PR created, please copy this link and open it.</p>
+<p>This time we&#8217;re going to do this a bit faster and with less talking. This chapter is essentially the same as the previous one, but if you have access to an additional cluster and you have run section <a href="04-prepare-argocd.html#register-additional-clusters" class="xref page">Register Additional Clusters</a>, then you will see how <strong>Gramola</strong> is also updated in the additional cluster.</p>
+</div>
+<div class="sect2">
+<h3 id="approving-pr-test"><a class="anchor" href="#approving-pr-test"></a>Approve PR</h3>
+<div class="paragraph">
+<p>Well, first of all let&#8217;s see if there&#8217;s a new PR created, please copy this link and open it.</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -791,25 +811,25 @@ You should see changes made to file <code>./events-deployment/overlays/test/kust
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="_images/demo-step-2-6.png" alt="Files changed">
+<img src="_images/demo-step-3-3.png" alt="Files changed">
 </div>
 </div>
 <div class="paragraph">
 <p>Ok, both the image and the PR are where they&#8217;re supposed to be, let&#8217;s move on!</p>
 </div>
 <div class="paragraph">
-<p>Well, it&#8217;s time to continue where we left it, so go back to the PR and click on the <code>Create Merge Commit</code> then tick the <code>Delete Branch</code> check-box (we wont need that branch anymore) and click again on <code>Create Merge Commit</code>.</p>
+<p>Go back to the PR and click on the <code>Create Merge Commit</code> then tick the <code>Delete Branch</code> check-box (we wont need that branch anymore) and click again on <code>Create Merge Commit</code>.</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="_images/demo-step-2-7.png" alt="Create Merge Commit">
+<img src="_images/demo-step-3-4.png" alt="Create Merge Commit">
 </div>
 </div>
+</div>
+<div class="sect2">
+<h3 id="cd-pipeline-triggered-test"><a class="anchor" href="#cd-pipeline-triggered-test"></a>CD Pipeline Triggered</h3>
 <div class="paragraph">
-<p>The <strong>Pull Request</strong> event is sent out by the webhook to the <strong>Events CD Pipeline <code>EventListener</code></strong> where some mapping and filtering will trigger the pipeline with a <code>PipelineRun</code> object populated with the necessary information.</p>
-</div>
-<div class="paragraph">
-<p>Please, open the next link or navigate to <strong>Pipelines</strong> in project <code>gramola-cicd-%USERNAME%</code> you will see the pipeline progressing.</p>
+<p>The <strong>Pull Request</strong> event is sent out as before&#8230;&#8203; so hurry to open the next link or navigate to <strong>Pipelines</strong> in project <code>gramola-cicd-%USERNAME%</code> you will see the pipeline progressing.</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -830,42 +850,80 @@ As you have done previously you can click on the <strong>PLR</strong> object to 
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="_images/demo-step-2-8.png" alt="CD Pipeline Running">
+<img src="_images/demo-step-3-5.png" alt="CD Pipeline Running">
 </div>
 </div>
 <div class="paragraph">
-<p>Have a look at the pipeline details. As you can see there are several tasks, namely:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>argocd-sync</code> triggers the refresh and sync of descriptors coming from the corresponding overlay<sup class="footnote">[<a id="_footnoteref_4" class="footnote" href="#_footnotedef_4" title="View footnote.">4</a>]</sup>, <code>dev</code> in this case</p>
-</li>
-<li>
-<p><code>fetch-config-repository</code> clones the <code>gramola</code> configuration repository</p>
-</li>
-<li>
-<p><code>update-image</code> creates a short-lived branch and updates the image hash in the <code>kustomization.yaml</code> file for the corresponding overlay</p>
-</li>
-<li>
-<p><code>github-pr-create</code> creates a PR for Github (not run)</p>
-</li>
-<li>
-<p><code>gitea-pr-create</code> creates a PR for Gitea</p>
-</li>
-</ul>
+<p>Have a look at the pipeline details.</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="_images/demo-step-2-9.png" alt="CD Pipeline Details">
+<img src="_images/demo-step-3-6.png" alt="CD Pipeline Details">
 </div>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
 <div class="paragraph">
-<p>So the pipeline triggers the sync of <code>Events</code> using <strong>ArgoCD</strong>, let&#8217;s have a look.</p>
+<p>As you can see, this time task <code>update-image</code> has been skipped (grayed), the reason is that in this setup we&#8217;ve decided to make the CD pipeline generic and extensible and in order to do that we defined a value in the helm chart we use to deploy the CICD pipelines that contains the names of the environments/overlays we support. You can have a look to the value <code>overlays</code> here:</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://openshift-gitops-server-openshift-gitops.apps.%BASE_SUBDOMAIN%/applications?proj=&amp;sync=&amp;health=&amp;namespace=&amp;cluster=&amp;labels=app.kubernetes.io%252Finstance%253Dgramola-root-app-dev-%USERNAME%</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola/src/apps/cicd/values.yaml#L27</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This means the CD pipeline should update the image of the next environment <strong>only if there is a next environment</strong>, right?</p>
+</div>
+<div class="paragraph">
+<p>If you go to the pipeline descriptor using the next command you will see that the <code>update-image</code> task will run only if <code>NEXT_OVERLAY</code> parameter value is in the list of <code>overlays</code>, basically if it is <code>dev</code> or <code>test</code> in this case.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">- name: update-image
+  when:
+    - input: "$(params.NEXT_OVERLAY)"
+      operator: in
+      values: [{{ .Values.overlays }}]</code></pre>
+</div>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola/src/apps/cicd/templates/03-pipelines/events-cd-pl.yaml#L54</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>One more tip, if you want to know why a task has been skipped, open the yaml of the pipeline run and look for <code>status&#8594;skippedTasks</code> find below an example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml"> skippedTasks:
+    - name: update-image
+      whenExpressions:
+        - input: ''
+          operator: in
+          values:
+            - dev
+            - test</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="argocd-app-synced-test"><a class="anchor" href="#argocd-app-synced-test"></a>ArgoCD App Synced</h3>
+<div class="paragraph">
+<p>You already know that the pipeline triggers the sync of <code>Events</code> using <strong>ArgoCD</strong>, you can use the next link to see the status of the apps in the <code>test</code> namespaces.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">https://openshift-gitops-server-openshift-gitops.apps.%BASE_SUBDOMAIN%/applications?proj=gramola-project-test&amp;sync=&amp;health=&amp;namespace=&amp;cluster=&amp;labels=</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -875,33 +933,71 @@ As you have done previously you can click on the <strong>PLR</strong> object to 
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-If you don&#8217;t hurry you may miss the syncing process&#8230;&#8203; if that is the case don&#8217;t worry you have another chance later when the image is updated for the <code>test</code> environment.
+Remember! You will see the <code>test-cloud</code> version only if you have setup an additional cluster
 </td>
 </tr>
 </table>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="_images/demo-step-2-10.png" alt="CD Pipeline Details">
+<img src="_images/demo-step-3-7.png" alt="CD Pipeline Details">
 </div>
 </div>
+</div>
+<div class="sect2">
+<h3 id="checking-openshift-console-test"><a class="anchor" href="#checking-openshift-console-test"></a>Checking OpenShift Console</h3>
 <div class="paragraph">
-<p>You can also see the update of the <code>Events</code> deployment taking place from the OpenShift console, use the link below or navigate to project <code>gramola-dev-%USERNAME%</code> then to <code>Topology</code></p>
+<p>You can also see the update of the <code>Events</code> deployment taking place from the OpenShift console in both the main and also in the additional clusters:</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
 <div class="paragraph">
-<p>You should see this&#8230;&#8203; if you hurry!</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="_images/demo-step-2-11.png" alt="CD Pipeline Details">
-</div>
-</div>
-<div class="paragraph">
-<p>In any case, the most important test is running the application itself, in our case this means have a look to the status page of <code>Gateway</code>.</p>
+<p>Use the link below or navigate to project <code>gramola-test-%USERNAME%</code> then to <code>Topology</code> to see <code>Events</code> being updated in the main cluster:</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">http://gateway-gramola-dev-%USERNAME%.apps.%BASE_SUBDOMAIN%</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">http://console-openshift-console.apps.%BASE_SUBDOMAIN%/topology/ns/gramola-test-%USERNAME%?view=graph</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use the other link to see <code>Events</code> being updated in the additional cluster:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">http://console-openshift-console.apps.%ADDITIONAL_BASE_SUBDOMAIN%/topology/ns/gramola-test-%USERNAME%?view=graph</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="_images/demo-step-3-8.png" alt="Gramola in test">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="checking-gramola-status-test"><a class="anchor" href="#checking-gramola-status-test"></a>Checking Gramola Status</h3>
+<div class="paragraph">
+<p>Time to have a look to the status page of <code>Gateway</code> in the main cluster:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">http://gateway-gramola-test-%USERNAME%.apps.%BASE_SUBDOMAIN%</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And in the additional cluster:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">http://gateway-gramola-test-%USERNAME%.apps.%ADDITIONAL_BASE_SUBDOMAIN%</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -909,15 +1005,8 @@ If you don&#8217;t hurry you may miss the syncing process&#8230;&#8203; if that 
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="_images/demo-step-2-12.png" alt="CD Pipeline Details">
+<img src="_images/demo-step-3-9.png" alt="CD Pipeline Details">
 </div>
-</div>
-<div class="paragraph">
-<p>Finally, you have seen the CD pipeline promoting the new version of the code as an image to the <code>dev</code> environment, but our pipeline ends with a task that generates a new PR, this one for the next environment <code>test</code>. Let&#8217;s continue there.</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>Ⓕ Ⓖ Ⓗ Ⓘ</pre>
 </div>
 </div>
 </div>
@@ -932,9 +1021,6 @@ If you don&#8217;t hurry you may miss the syncing process&#8230;&#8203; if that 
 </div>
 <div class="footnote" id="_footnotedef_3">
 <a href="#_footnoteref_3">3</a>. <a href="https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/#bases-and-overlays" class="bare">https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/#bases-and-overlays</a>
-</div>
-<div class="footnote" id="_footnotedef_4">
-<a href="#_footnoteref_4">4</a>. <a href="https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/#bases-and-overlays" class="bare">https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/#bases-and-overlays</a>
 </div>
 </div>
 <nav class="pagination">

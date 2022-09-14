@@ -380,7 +380,7 @@ git         <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/user1
 </div>
 </div>
 <div class="sect1">
-<h2 id="register-additional-clusters"><a class="anchor" href="#register-additional-clusters"></a>Register Additional Clusters</h2>
+<h2 id="register-additional-clusters"><a class="anchor" href="#register-additional-clusters"></a>Register Additional Clusters<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>First make sure there is a context with proper credentials, in order to achieve this please log in the additional cluster.</p>
@@ -392,7 +392,7 @@ git         <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/user1
 <i class="fa icon-caution" title="Caution"></i>
 </td>
 <td class="content">
-<strong>API_USER</strong> is a user with cluster-admin permissions on the additional cluster, <strong>API_SERVER_MANAGED</strong> is the host and port <strong>without <code>http(s)</code></strong> of the additional cluster.
+<strong>ADDITIONAL_API_SERVER_TOKEN</strong> is a token of a user with cluster-admin permissions on the additional cluster, <strong>ADDITIONAL_API_SERVER_MANAGED</strong> is the host and port <strong>without http(s)</strong> of the additional cluster.
 </td>
 </tr>
 </table>
@@ -414,7 +414,7 @@ oc login --token=${ADDITIONAL_API_SERVER_TOKEN} --server=https://${ADDITIONAL_AP
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-<strong>CLUSTER_NAME</strong> is a name you choose for your cluster, <strong>API_SERVER</strong> is the host and port <strong>without <code>http(s)</code></strong>.
+<strong>CLUSTER_NAME</strong> is a name you choose for your cluster.
 </td>
 </tr>
 </table>
@@ -496,6 +496,12 @@ gramola-project-dev   Gramola Project Dev   *,*           *        */*          
 gramola-project-test  Gramola Project Test  *,*           *        */*                         &lt;none&gt;                        &lt;none&gt;          disabled</code></pre>
 </div>
 </div>
+</div>
+</div>
+<div id="footnotes">
+<hr>
+<div class="footnote" id="_footnotedef_1">
+<a href="#_footnoteref_1">1</a>. This an optional chapter, run it only if you have an additional cluster
 </div>
 </div>
 <nav class="pagination">
