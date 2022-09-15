@@ -1,7 +1,7 @@
-= Test CICD Pipelines
+= Checking Pipelines Webhooks
 include::_attributes.adoc[]
 
-Web hooks are in place, it's time to check if they are working correctly. Red Hat OpenShift Pipelines Operator generates `Deployments` and `Routes` objects starting from the definition of `EventListeners`. The tests you're going to run here are simply testing that those deployments are running properly, the same technique can be used to debug `TriggerBinding` and `TriggerTemplate` attribute mapping and `EventListener` cel{empty}footnote:[https://tekton.dev/docs/triggers/interceptors/#cel-interceptors] filters.
+Webhooks are in place, it's time to check if they are working correctly. Red Hat OpenShift Pipelines Operator generates `Deployments` and `Routes` objects starting from the definition of `EventListeners`. The tests you're going to run here are simply testing that those deployments are running properly, the same technique can be used to debug `TriggerBinding` and `TriggerTemplate` attribute mapping and `EventListener` cel{empty}footnote:[https://tekton.dev/docs/triggers/interceptors/#cel-interceptors] filters.
 
 [#check-events-ci-web-hook]
 == Check Events CI Web Hook

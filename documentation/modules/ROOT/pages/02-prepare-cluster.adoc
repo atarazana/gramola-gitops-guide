@@ -123,7 +123,7 @@ image::argocd-console.png[ArgoCD Console]
 
 ifeval::["{use-quay-io}" != "true"]
 [#checking-quay]
-== Checking if Quay Enterprise has been correctly installed
+== Checking Quay
 
 First of, open the OpenShift console and go to the topology view of namespace `{quay-namespace}`, use the following link. 
 
@@ -152,7 +152,7 @@ image::quay-installed-login.png[Quay Login]
 endif::[]
 
 [#deploying-gitea]
-== Deploying Gitea using an operator
+== Deploying Gitea
 
 Run this command to deploy the Gitea operator and Gitea itself in your OpenShift cluster.
 

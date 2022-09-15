@@ -11,8 +11,8 @@ IMPORTANT: It's a best practice avoid storing secrets in a git repository even i
 include::partial$create-robot-account-in-quay.adoc[]
 
 
-[#create-pipelines-root-app]
-== Create Pipelines Root App
+[#deploying-cicd-pipelines]
+== Deploying CICD Pipelines
 
 We are going to deploy another ArgoCD application, this time to deploy pipelines. But before we do we need to store some information in environment variables, namely:
 
@@ -235,7 +235,10 @@ kubectl annotate -n ${CICD_NAMESPACE} secret ${CONTAINER_REGISTRY_SECRET_NAME} \
 fi
 ----
 
-Additionally we have to create the same secret in `dev` and `test` and link it to the default `ServiceAccount` for pulling.
+[#grant-pull-permissions]
+== Granting Pull Permissions
+
+Additionally we have to create the same secret in `dev` and `test` and link it to the default `ServiceAccount` for pulling images from a private registry.
 
 IMPORTANT: If you don't do this the deployment won't be able to run because they lack permissions to pull the image from the private repository.
 

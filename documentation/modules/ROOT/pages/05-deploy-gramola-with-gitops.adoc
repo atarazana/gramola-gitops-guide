@@ -5,6 +5,9 @@ As we have already explained in the introduction the main objective of this guid
 
 In this chapter you're going to deploy Gramola using *ArgoCD* hence you're not going to create the descriptors yourself. Instead *ArgoCD* will *go* to the *source of truth* (_git url, path and revision_), and  *apply* those descriptors in the defined *destination* (_cluster and namespace_).
 
+[#concepts]
+== Concepts
+
 As you can imagine there should be an object *ArgoCD* can rely on to store both *spec->source* and *spec->destination*, this object is the `Application` object. This is an example of an `Application` object:
 
 [source,yaml, subs="+macros,+attributes"]
@@ -168,8 +171,8 @@ Please take into account this:
 
 image::gramola-gateway-ui-1.png[Gateway UI]
 
-[#deploying-gramola-cloud]
-== Deploying Gramola in another cluster
+[#deploying-gramola-additional]
+== Deploying Gramola++
 
 If an additional cluster has been set up in chapter xref:04-prepare-argocd.adoc#register-additional-clusters[Register Additional Clusters] then you can create another `ApplicationSet` where the destination cluster is the one you defined previously instead of the default (`in-cluster`) cluster.
 
