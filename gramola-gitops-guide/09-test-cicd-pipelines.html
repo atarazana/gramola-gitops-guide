@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Test CICD Pipelines :: Gramola GitOps Guide</title>
+    <title>Checking Pipelines Webhooks :: Gramola GitOps Guide</title>
     <link rel="canonical" href="https://atarazana.github.io/gramola-gitops-guide/gramola-gitops-guide/09-test-cicd-pipelines.html">
     <link rel="prev" href="08-create-pipeline-webhooks.html">
     <link rel="next" href="10-end-to-end-test.html">
@@ -82,9 +82,6 @@
     <a class="nav-link" href="01-setup.html#openshift">Setup OpenShift 4</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="01-setup.html#container-registry-account">Container Registry Account</a>
-  </li>
-  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="01-setup.html#download-tutorial">Get tutorial sources</a>
   </li>
 </ul>
@@ -97,10 +94,13 @@
     <a class="nav-link" href="02-prepare-cluster.html#deploying-core-components">Deploying core components</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="02-prepare-cluster.html#deploying-gitea">Deploying Gitea</a>
+    <a class="nav-link" href="02-prepare-cluster.html#high-level-tests">High Level Tests</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="02-prepare-cluster.html#create-git-users">Create Git Users</a>
+    <a class="nav-link" href="02-prepare-cluster.html#checking-quay">Checking Quay</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-prepare-cluster.html#deploying-gitea">Deploying Gitea</a>
   </li>
 </ul>
   </li>
@@ -108,6 +108,9 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="03-prepare-repositories.html">3. Prepare Repositories</a>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="03-prepare-repositories.html#source-of-truth">Source Of Truth</a>
+  </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="03-prepare-repositories.html#explore-gitea-console">Explore Gitea console</a>
   </li>
@@ -145,10 +148,16 @@
     <a class="nav-link" href="05-deploy-gramola-with-gitops.html">5. Deploy Gramola</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="05-deploy-gramola-with-gitops.html#create-root-app">Create Root App</a>
+    <a class="nav-link" href="05-deploy-gramola-with-gitops.html#concepts">Concepts</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="05-deploy-gramola-with-gitops.html#create-additional-root-app">Create Additional Root App</a>
+    <a class="nav-link" href="05-deploy-gramola-with-gitops.html#deploying-gramola">Deploying Gramola</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-deploy-gramola-with-gitops.html#deploying-gramola-additional">Deploying Gramola++</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-deploy-gramola-with-gitops.html#argocd-ui-filtering">ArgoCD UI Filtering</a>
   </li>
 </ul>
   </li>
@@ -157,13 +166,19 @@
     <a class="nav-link" href="06-deploy-cicd-pipelines-with-gitops.html">6. Deploy CICD Pipelines</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="06-deploy-cicd-pipelines-with-gitops.html#create-pipelines-root-app">Create Pipelines Root App</a>
+    <a class="nav-link" href="06-deploy-cicd-pipelines-with-gitops.html#create-root-account-in-quay">Create Quay Robot Acc.</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="06-deploy-cicd-pipelines-with-gitops.html#deploying-cicd-pipelines">Deploying CICD Pipelines</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="06-deploy-cicd-pipelines-with-gitops.html#create-git-secret">Create Git Secret</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="06-deploy-cicd-pipelines-with-gitops.html#create-registry-secret">Create Registry Secret</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="06-deploy-cicd-pipelines-with-gitops.html#grant-pull-permissions">Granting Pull Permissions</a>
   </li>
 </ul>
   </li>
@@ -196,10 +211,19 @@
   </li>
   <li class="nav-item is-current-page" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="09-test-cicd-pipelines.html">9. Test CICD Pipelines</a>
+    <a class="nav-link" href="09-test-cicd-pipelines.html">9. Check Pipeline Webhooks</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="#checking-cicd-pipelines">Checking CICD Pipelines</a>
+    <a class="nav-link" href="#check-events-ci-web-hook">Check Events CI Web Hook</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#check-events-cd-web-hook">Check Events CD Web Hook</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#check-gateway-ci-web-hook">Check Gateway CI Web Hook</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#check-gateway-cd-web-hook">Check Gateway CD Web Hook</a>
   </li>
 </ul>
   </li>
@@ -209,6 +233,21 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="10-end-to-end-test.html#introduction">Introduction</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="10-end-to-end-test.html#current-status">Ⓐ Current Status</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="10-end-to-end-test.html#change-the-code">Ⓑ Change the code</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="10-end-to-end-test.html#run-ci-pipeline">Ⓒ Run CI pipeline</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="10-end-to-end-test.html#running-cd-pipeline-dev">Ⓓ Run CD pipeline (<code>dev</code>)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="10-end-to-end-test.html#running-cd-pipeline-test">Ⓔ Run CD pipeline (<code>test</code>)</a>
   </li>
 </ul>
   </li>
@@ -243,18 +282,18 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">Gramola GitOps Guide</a></li>
-    <li><a href="09-test-cicd-pipelines.html">9. Test CICD Pipelines</a></li>
+    <li><a href="09-test-cicd-pipelines.html">9. Check Pipeline Webhooks</a></li>
   </ul>
 </nav>
   <div class="edit-this-page"><a href="https://github.com/atarazana/gramola-gitops-guide/edit/main/documentation/modules/ROOT/pages/09-test-cicd-pipelines.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Test CICD Pipelines</h1>
+<h1 class="page">Checking Pipelines Webhooks</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Web hooks are in place, it&#8217;s time to check if they are working correctly. Red Hat OpenShift Pipelines Operator generates <code>Deployments</code> and <code>Routes</code> objects starting from the definition of <code>EventListeners</code>. The tests you&#8217;re going to run here are simply testing that those deployments are running properly, the same technique can be used to debug <code>TriggerBinding</code> and <code>TriggerTemplate</code> attribute mapping and <code>EventListener</code> cel<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup> filters.</p>
+<p>Webhooks are in place, it&#8217;s time to check if they are working correctly. Red Hat OpenShift Pipelines Operator generates <code>Deployments</code> and <code>Routes</code> objects starting from the definition of <code>EventListeners</code>. The tests you&#8217;re going to run here are simply testing that those deployments are running properly, the same technique can be used to debug <code>TriggerBinding</code> and <code>TriggerTemplate</code> attribute mapping and <code>EventListener</code> cel<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup> filters.</p>
 </div>
 </div>
 </div>

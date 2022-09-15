@@ -81,9 +81,6 @@
     <a class="nav-link" href="01-setup.html#openshift">Setup OpenShift 4</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="01-setup.html#container-registry-account">Container Registry Account</a>
-  </li>
-  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="01-setup.html#download-tutorial">Get tutorial sources</a>
   </li>
 </ul>
@@ -96,10 +93,13 @@
     <a class="nav-link" href="02-prepare-cluster.html#deploying-core-components">Deploying core components</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="02-prepare-cluster.html#deploying-gitea">Deploying Gitea</a>
+    <a class="nav-link" href="02-prepare-cluster.html#high-level-tests">High Level Tests</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="02-prepare-cluster.html#create-git-users">Create Git Users</a>
+    <a class="nav-link" href="02-prepare-cluster.html#checking-quay">Checking Quay</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="02-prepare-cluster.html#deploying-gitea">Deploying Gitea</a>
   </li>
 </ul>
   </li>
@@ -107,6 +107,9 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="03-prepare-repositories.html">3. Prepare Repositories</a>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="03-prepare-repositories.html#source-of-truth">Source Of Truth</a>
+  </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="03-prepare-repositories.html#explore-gitea-console">Explore Gitea console</a>
   </li>
@@ -144,10 +147,16 @@
     <a class="nav-link" href="05-deploy-gramola-with-gitops.html">5. Deploy Gramola</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="05-deploy-gramola-with-gitops.html#create-root-app">Create Root App</a>
+    <a class="nav-link" href="05-deploy-gramola-with-gitops.html#concepts">Concepts</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="05-deploy-gramola-with-gitops.html#create-additional-root-app">Create Additional Root App</a>
+    <a class="nav-link" href="05-deploy-gramola-with-gitops.html#deploying-gramola">Deploying Gramola</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-deploy-gramola-with-gitops.html#deploying-gramola-additional">Deploying Gramola++</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="05-deploy-gramola-with-gitops.html#argocd-ui-filtering">ArgoCD UI Filtering</a>
   </li>
 </ul>
   </li>
@@ -156,13 +165,19 @@
     <a class="nav-link" href="06-deploy-cicd-pipelines-with-gitops.html">6. Deploy CICD Pipelines</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="06-deploy-cicd-pipelines-with-gitops.html#create-pipelines-root-app">Create Pipelines Root App</a>
+    <a class="nav-link" href="06-deploy-cicd-pipelines-with-gitops.html#create-root-account-in-quay">Create Quay Robot Acc.</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="06-deploy-cicd-pipelines-with-gitops.html#deploying-cicd-pipelines">Deploying CICD Pipelines</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="06-deploy-cicd-pipelines-with-gitops.html#create-git-secret">Create Git Secret</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="06-deploy-cicd-pipelines-with-gitops.html#create-registry-secret">Create Registry Secret</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="06-deploy-cicd-pipelines-with-gitops.html#grant-pull-permissions">Granting Pull Permissions</a>
   </li>
 </ul>
   </li>
@@ -195,10 +210,19 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="09-test-cicd-pipelines.html">9. Test CICD Pipelines</a>
+    <a class="nav-link" href="09-test-cicd-pipelines.html">9. Check Pipeline Webhooks</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="09-test-cicd-pipelines.html#checking-cicd-pipelines">Checking CICD Pipelines</a>
+    <a class="nav-link" href="09-test-cicd-pipelines.html#check-events-ci-web-hook">Check Events CI Web Hook</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="09-test-cicd-pipelines.html#check-events-cd-web-hook">Check Events CD Web Hook</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="09-test-cicd-pipelines.html#check-gateway-ci-web-hook">Check Gateway CI Web Hook</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="09-test-cicd-pipelines.html#check-gateway-cd-web-hook">Check Gateway CD Web Hook</a>
   </li>
 </ul>
   </li>
@@ -208,6 +232,21 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="#introduction">Introduction</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#current-status">Ⓐ Current Status</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#change-the-code">Ⓑ Change the code</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#run-ci-pipeline">Ⓒ Run CI pipeline</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#running-cd-pipeline-dev">Ⓓ Run CD pipeline (<code>dev</code>)</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="#running-cd-pipeline-test">Ⓔ Run CD pipeline (<code>test</code>)</a>
   </li>
 </ul>
   </li>
@@ -1024,7 +1063,7 @@ Remember! You will see the <code>test-cloud</code> version only if you have setu
 </div>
 </div>
 <nav class="pagination">
-  <span class="prev"><a href="09-test-cicd-pipelines.html" class="query-params-link">9. Test CICD Pipelines</a></span>
+  <span class="prev"><a href="09-test-cicd-pipelines.html" class="query-params-link">9. Check Pipeline Webhooks</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
