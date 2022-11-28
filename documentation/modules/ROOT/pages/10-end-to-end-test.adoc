@@ -350,7 +350,7 @@ As you can see, this time task `update-image` has been skipped (grayed), the rea
 [.console-input]
 [source,bash, subs="+attributes"]
 ----
-https://{gitea-host}/{username}/gramola/src/apps/cicd/values.yaml#L27
+https://{gitea-host}/{username}/gramola/src/apps/cicd/values.yaml#L31
 ----
 
 This means the CD pipeline should update the image of the next environment *only if there is a next environment*, right?
@@ -369,7 +369,7 @@ If you go to the pipeline descriptor using the next command you will see that th
 [.console-input]
 [source,bash, subs="+attributes"]
 ----
-https://{gitea-host}/{username}/gramola/src/apps/cicd/templates/03-pipelines/events-cd-pl.yaml#L54
+https://{gitea-host}/{username}/gramola/src/apps/cicd/templates/03-pipelines/events-cd-pl.yaml#L64
 ----
 
 One more tip, if you want to know why a task has been skipped, open the yaml of the pipeline run and look for `status->skippedTasks` find below an example:
