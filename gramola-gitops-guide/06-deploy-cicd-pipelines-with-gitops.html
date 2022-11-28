@@ -508,7 +508,7 @@ export CICD_NAMESPACE="gramola-cicd-${USERNAME}"
 if [ -z "${CONTAINER_REGISTRY_SERVER}" ] &amp;&amp; [ -z "${CONTAINER_REGISTRY_ORG}" ]; then
     echo "You should provide a value for CONTAINER_REGISTRY_SERVER and CONTAINER_REGISTRY_ORG"
 else
-cat &lt;&lt;EOF | kubectl apply -n openshift-gitops -f -
+cat &lt;&lt;EOF | oc apply -n openshift-gitops -f -
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -620,7 +620,7 @@ gramola-cicd-user1                  Active</code></pre>
 export GIT_USERNAME=%USERNAME%
 export GIT_PAT_SECRET_NAME=$(yq eval '.gitPatSecretName' ./apps/cicd/values.yaml)
 
-cat &lt;&lt;EOF | kubectl apply -f -
+cat &lt;&lt;EOF | oc apply -f -
 apiVersion: v1
 kind: Secret
 metadata:
@@ -640,7 +640,7 @@ EOF</code></pre>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl annotate -n ${CICD_NAMESPACE} secret ${GIT_PAT_SECRET_NAME} \
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc annotate -n ${CICD_NAMESPACE} secret ${GIT_PAT_SECRET_NAME} \
   "tekton.dev/git-0=https://repository-gitea-system.apps.%BASE_SUBDOMAIN%"</code></pre>
 </div>
 </div>
@@ -723,11 +723,11 @@ As we did with the git secret we have to annotate it so that Tekton know it has 
 if [ -z "${CONTAINER_REGISTRY_USERNAME}" ] &amp;&amp; [ -z "${CONTAINER_REGISTRY_PASSWORD}" ]; then
     echo "You should provide a value for CONTAINER_REGISTRY_USERNAME and CONTAINER_REGISTRY_PASSWORD"
 else
-kubectl create -n ${CICD_NAMESPACE} secret docker-registry ${CONTAINER_REGISTRY_SECRET_NAME} \
+oc create -n ${CICD_NAMESPACE} secret docker-registry ${CONTAINER_REGISTRY_SECRET_NAME} \
   --docker-server=https://$CONTAINER_REGISTRY_SERVER \
   --docker-username=$CONTAINER_REGISTRY_USERNAME \
   --docker-password=$CONTAINER_REGISTRY_PASSWORD
-kubectl annotate -n ${CICD_NAMESPACE} secret ${CONTAINER_REGISTRY_SECRET_NAME} \
+oc annotate -n ${CICD_NAMESPACE} secret ${CONTAINER_REGISTRY_SECRET_NAME} \
   "tekton.dev/docker-0=https://${CONTAINER_REGISTRY_SERVER}"
 fi</code></pre>
 </div>

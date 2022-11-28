@@ -381,7 +381,7 @@ Use insecure connections? (y/n):</code></pre>
 </div>
 <div class="listingblock console-output">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ until kubectl apply -k util/bootstrap/; do sleep 2; done
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ until oc apply -k util/bootstrap/; do sleep 2; done
 namespace/openshift-storage created
 namespace/quay-system created
 serviceaccount/occli created
@@ -550,7 +550,7 @@ Gitea will be installed in <code>gitea-system</code> namespace
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">until kubectl apply -k util/gitea/; do sleep 2; done</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">until oc apply -k util/gitea/; do sleep 2; done</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -580,7 +580,7 @@ Gitea will be installed in <code>gitea-system</code> namespace
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl rollout status deploy/repository -n gitea-system</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc rollout status deploy/repository -n gitea-system</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -669,7 +669,10 @@ Ignore error "Internal Server Error" user %USERNAME% should have been created.
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">GITEA_INSTALL_TOKEN=$(curl -k -s -XPOST -H "Content-Type: application/json"  -k -d '{"name":"install"}' -u %USERNAME%:%PASSWORD% <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/users/opentlc-mgr/tokens" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/users/opentlc-mgr/tokens</a> | jq -r .sha1)
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">GITEA_INSTALL_TOKEN=$(curl -k -s -XPOST -H "Content-Type: application/json" \
+  -d '{"name":"install"}' \
+  -u %USERNAME%:%PASSWORD% \
+  <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/users/%USERNAME%/tokens" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/users/%USERNAME%/tokens</a> | jq -r .sha1)
 echo "GITEA_INSTALL_TOKEN=${GITEA_INSTALL_TOKEN}"
 
 curl -k -X 'POST' \
