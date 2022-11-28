@@ -8,7 +8,7 @@ interested have a look at section `configManagementPlugins` in
 
 [source,sh]
 ----
-kubectl apply -f util/argocd-service-account-permissions.yaml
+oc apply -f util/argocd-service-account-permissions.yaml
 ----
 
 

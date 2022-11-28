@@ -3,7 +3,10 @@ CAUTION: You'll need this token later so don't forget to copy it somewhere just 
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-GIT_PAT=$(curl -k -s -XPOST -H "Content-Type: application/json"  -k -d '{"name":"cicd'"${RANDOM}"'"}' -u {username}:{password} https://{gitea-host}/api/v1/users/opentlc-mgr/tokens | jq -r .sha1)
+GIT_PAT=$(curl -k -s -XPOST -H "Content-Type: application/json" \
+  -d '{"name":"cicd'"${RANDOM}"'"}' \
+  -u {username}:{password} \
+  https://{gitea-host}/api/v1/users/{username}/tokens | jq -r .sha1)
 echo "GIT_PAT=${GIT_PAT}"
 ----
 

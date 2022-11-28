@@ -4,7 +4,7 @@ Check that the pod is up and running:
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-kubectl get pods
+oc get pods
 ----
 
 [.console-output]
@@ -19,7 +19,7 @@ Then let's go into the running pod to execute some commands:
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-kubectl exec -ti {podname} /bin/bash
+oc exec -ti {podname} /bin/bash
 ----
 
 NOTE: Change the pod name with your pod name.

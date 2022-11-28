@@ -57,7 +57,7 @@ This command execute `oc apply -k ...` until it's done every 2 seconds... this i
 [.console-output]
 [source,bash,subs="attributes+,+macros"]	
 ----	
-$ until kubectl apply -k util/bootstrap/; do sleep 2; done
+$ until oc apply -k util/bootstrap/; do sleep 2; done
 namespace/openshift-storage created
 namespace/quay-system created
 serviceaccount/occli created
@@ -161,7 +161,7 @@ NOTE: Gitea will be installed in `gitea-system` namespace
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-until kubectl apply -k util/gitea/; do sleep 2; done
+until oc apply -k util/gitea/; do sleep 2; done
 ----
 
 The previous command will retry until it's all installed but *we still need to check if it all works properly*.

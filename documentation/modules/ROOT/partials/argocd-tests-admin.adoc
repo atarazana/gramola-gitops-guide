@@ -15,7 +15,7 @@ Because the message is less counterintuitive  let's check that instead. Please r
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-echo $(kubectl get subs/openshift-gitops-operator -n openshift-operators -o jsonpath='{.status.conditions[0].message}')
+echo $(oc get subs/openshift-gitops-operator -n openshift-operators -o jsonpath='{.status.conditions[0].message}')
 ----
 
 If the operator is fine you should get this response.

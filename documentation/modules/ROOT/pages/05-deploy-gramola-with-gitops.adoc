@@ -73,7 +73,7 @@ You can use the value of any of the properties defined in the elements listed in
 [source,bash, subs="+macros,+attributes"]
 ----
 export USERNAME="{username}"
-cat <<EOF | kubectl apply -n {root-apps-namespace} -f -
+cat <<EOF | oc apply -n {root-apps-namespace} -f -
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
@@ -180,7 +180,7 @@ If an additional cluster has been set up in chapter xref:04-prepare-argocd.adoc#
 [source,bash, subs="+macros,+attributes"]
 ----
 export USERNAME="{username}"
-cat <<EOF | kubectl apply -n {root-apps-namespace} -f -
+cat <<EOF | oc apply -n {root-apps-namespace} -f -
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:

@@ -17,11 +17,6 @@ Please have them installed and configured before you get started with any of the
 | https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-{oc-version}/openshift-client-linux.tar.gz[Download]
 | https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable-{oc-version}/openshift-client-windows.zip[Download]
 
-| `kubectl {kubernetes-version}`
-| https://dl.k8s.io/release/{kubernetes-version}/bin/darwin/amd64/kubectl[Download]
-| https://dl.k8s.io/release/{kubernetes-version}/bin/linux/amd64/kubectl[Download]
-| https://dl.k8s.io/release/{kubernetes-version}/bin/windows/amd64/kubectl.exe[Download]
-
 | `argocd {argocd-version}`
 | https://github.com/argoproj/argo-cd/releases/download/{argocd-version}/argocd-darwin-amd64[Download]
 | https://github.com/argoproj/argo-cd/releases/download/{argocd-version}/argocd-linux-amd64[Download]
@@ -31,5 +26,10 @@ Please have them installed and configured before you get started with any of the
 | https://github.com/mikefarah/yq/releases/download/v{yq-version}/yq_darwin_amd64[Download]
 | https://github.com/mikefarah/yq/releases/download/v{yq-version}/yq_linux_amd64[Download]
 | https://github.com/mikefarah/yq/releases/download/v{yq-version}/yq_windows_amd64.exe[Download]
+
+| https://github.com/stedolan/jq[jq v1.6.0]
+| https://github.com/stedolan/jq/releases/download/jq-1.6/jq-osx-amd64[Download]
+| https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64[Download]
+| https://github.com/stedolan/jq/releases/download/jq-1.6/jq-win64.exe[Download]
 
 |===
