@@ -22,11 +22,32 @@ You'll be redirected to OpenShift Web Console to enter your credentials:
 - PASSWORD: {password}
 ====
 
+[tabs]
+====
+laptop::
++
+--
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
 argocd login {argocd-server} --insecure --sso --grpc-web
 ----
+--
+web-terminal::
++
+--
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+export ARGOCD_HOST=$(oc get route/openshift-gitops-server -o jsonpath='{.status.ingress[0].host}' -n openshift-gitops)
+
+export ARGOCD_USERNAME=admin
+export ARGOCD_PASSWORD=$(oc get secret openshift-gitops-cluster -o jsonpath='{.data.admin\.password}' -n openshift-gitops | base64 -d)
+
+argocd login $ARGOCD_HOST --insecure --grpc-web --username $ARGOCD_USERNAME --password $ARGOCD_PASSWORD
+----
+--
+====
 
 You may see this message, if that is the case click on `Allow selected permissions` and continue.
 
