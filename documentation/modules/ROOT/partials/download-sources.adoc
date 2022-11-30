@@ -1,5 +1,10 @@
 Before we start setting up the environment, let’s clone the tutorial sources and set the `TUTORIAL_HOME` environment variable to point to the root directory of the tutorial:
 
+[tabs]
+====
+laptop::
++
+--
 [.console-input]
 [source,bash,subs="attributes+,+macros"]
 ----
@@ -17,3 +22,27 @@ export TUTORIAL_HOME="$(pwd)/{folder}"
 ----
 cd $TUTORIAL_HOME
 ----
+--
+web-terminal::
++
+--
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+cd ~/scratch && git clone {tutorial-url} {folder}
+----
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+export TUTORIAL_HOME="$(pwd)/{folder}"
+----
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+cd $TUTORIAL_HOME
+----
+--
+====
+
