@@ -1,6 +1,6 @@
 name: gramola-gitops-guide
 title: Gramola GitOps Guide
-version: master
+version: main
 nav:
   - modules/ROOT/nav.adoc
 
