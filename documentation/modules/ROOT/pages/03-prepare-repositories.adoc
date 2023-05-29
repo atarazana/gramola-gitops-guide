@@ -52,7 +52,7 @@ Before we continue with the migration of the git repositories of our application
 Copy the next url and open it in a new tab, please use these credentials:
 
 - *USERNAME:* {username}
-- *PASSWORD:* {password}
+- *PASSWORD:* {static-password}
 
 [.console-input]
 [source,bash, subs="+attributes"]

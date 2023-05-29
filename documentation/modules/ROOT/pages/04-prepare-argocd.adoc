@@ -19,7 +19,7 @@ Well *ArgoCD* is healthy now let's see if the *CLI* works correctly by trying to
 You'll be redirected to OpenShift Web Console to enter your credentials:
 
 - USERNAME: {username}
-- PASSWORD: {password}
+- PASSWORD: {static-password}
 ====
 
 [tabs]

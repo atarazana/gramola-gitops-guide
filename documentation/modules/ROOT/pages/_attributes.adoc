@@ -8,6 +8,7 @@
 :additional-cluster-subdomain: apps.{additional-base-domain}
 :username: %USERNAME%
 :password: %PASSWORD%
+:static-password: openshift
 
 :additional-cluster-name: aws-managed1
 

@@ -5,7 +5,7 @@ CAUTION: You'll need this token later so don't forget to copy it somewhere just 
 ----
 GIT_PAT=$(curl -k -s -XPOST -H "Content-Type: application/json" \
   -d '{"name":"cicd'"${RANDOM}"'"}' \
-  -u {username}:{password} \
+  -u {username}:{static-password} \
   https://{gitea-host}/api/v1/users/{username}/tokens | jq -r .sha1)
 echo "GIT_PAT=${GIT_PAT}"
 ----

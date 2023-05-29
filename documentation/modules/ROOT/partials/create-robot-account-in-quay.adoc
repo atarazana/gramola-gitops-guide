@@ -1,7 +1,7 @@
 Please copy and paste the following link and open it in a browser, then use this credentials and click on `Sign in to Red Hat Quay`.
 
 - *Username:* {username}
-- *Password:* {password}
+- *Password:* {static-password}
 
 [.console-input]
 [source,bash, subs="+attributes"]
