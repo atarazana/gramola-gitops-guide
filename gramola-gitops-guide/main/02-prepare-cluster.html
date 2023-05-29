@@ -681,7 +681,7 @@ Ignore error "Internal Server Error" user %USERNAME% should have been created.
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">GITEA_INSTALL_TOKEN=$(curl -k -s -XPOST -H "Content-Type: application/json" \
   -d '{"name":"install"}' \
-  -u %USERNAME%:%PASSWORD% \
+  -u %USERNAME%:openshift \
   <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/users/%USERNAME%/tokens" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/users/%USERNAME%/tokens</a> | jq -r .sha1)
 echo "GITEA_INSTALL_TOKEN=${GITEA_INSTALL_TOKEN}"
 
@@ -694,7 +694,7 @@ curl -k -X 'POST' \
           "full_name": "User %USERNAME%",
           "login_name": "%USERNAME%",
           "must_change_password": false,
-          "password": "%PASSWORD%",
+          "password": "openshift",
           "send_notify": true,
           "source_id": 0,
           "username": "%USERNAME%",
