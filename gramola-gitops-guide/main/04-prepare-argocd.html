@@ -347,30 +347,6 @@ cache-control: private</code></pre>
 <div class="paragraph">
 <p>Well <strong>ArgoCD</strong> is healthy now let&#8217;s see if the <strong>CLI</strong> works correctly by trying to log in with it (you should have installed as stated in <a href="01-setup.html#prerequisite" class="xref page">Prerequisites</a> section).</p>
 </div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>You&#8217;ll be redirected to OpenShift Web Console to enter your credentials:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>USERNAME: %USERNAME%</p>
-</li>
-<li>
-<p>PASSWORD: openshift</p>
-</li>
-</ul>
-</div>
-</td>
-</tr>
-</table>
-</div>
 <div class="tabset is-loading">
 <div class="ulist tabs">
 <ul>
@@ -384,6 +360,18 @@ cache-control: private</code></pre>
 </div>
 <div class="content">
 <div class="tab-pane" aria-labelledby="tabset1_laptop">
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+You&#8217;ll be redirected to OpenShift, use your credentials: <strong>%USERNAME%/%PASSWORD%</strong>
+</td>
+</tr>
+</table>
+</div>
 <div class="listingblock console-input">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">argocd login openshift-gitops-server-openshift-gitops.apps.%BASE_SUBDOMAIN% --insecure --sso --grpc-web</code></pre>
