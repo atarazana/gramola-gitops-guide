@@ -14,19 +14,14 @@ include::partial$argocd-tests.adoc[]
 
 Well *ArgoCD* is healthy now let's see if the *CLI* works correctly by trying to log in with it (you should have installed as stated in xref:01-setup.adoc#prerequisite[Prerequisites] section).
 
-[IMPORTANT]
-====
-You'll be redirected to OpenShift Web Console to enter your credentials:
-
-- USERNAME: {username}
-- PASSWORD: {static-password}
-====
-
 [tabs]
 ====
 laptop::
 +
 --
+
+IMPORTANT: You'll be redirected to OpenShift, use your credentials: *{username}/{password}*
+
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----

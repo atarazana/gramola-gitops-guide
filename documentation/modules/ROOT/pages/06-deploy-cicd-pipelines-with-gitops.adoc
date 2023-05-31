@@ -270,7 +270,7 @@ CAUTION: *If you have an additional cluster* you *HAVE* to run the following com
 ----
 export ADDITIONAL_API_SERVER_TOKEN=%ADDITIONAL_API_SERVER_TOKEN%
 export ADDITIONAL_API_SERVER_MANAGED=api.%ADDITIONAL_BASE_SUBDOMAIN%:6443
-oc login --token=${ADDITIONAL_API_SERVER_TOKEN} --server=https://${ADDITIONAL_API_SERVER_MANAGED}
+oc login --token=${ADDITIONAL_API_SERVER_TOKEN} --server=https://${ADDITIONAL_API_SERVER_MANAGED} --insecure-skip-tls-verify=true
 
 export CONTAINER_REGISTRY_SECRET_NAME=$(yq eval '.containerRegistrySecretName' ./apps/cicd/values.yaml)
 
@@ -284,5 +284,5 @@ oc create -n gramola-test-{username} secret docker-registry ${CONTAINER_REGISTRY
 oc secrets link default ${CONTAINER_REGISTRY_SECRET_NAME} --for=pull -n gramola-test-{username}
 fi
 
-oc login -u {username} -p {password} --server=https://api.{api-domain}
+oc login -u {username} -p {password} --server=https://api.{api-domain} --insecure-skip-tls-verify=true
 ----
