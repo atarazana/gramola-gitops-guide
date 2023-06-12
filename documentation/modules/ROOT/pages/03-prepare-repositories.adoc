@@ -13,6 +13,7 @@ So if not already logged in, please do it now.
 
 [CAUTION]
 ====
+If you're using the web-terminal, you don't need to log in, you're already logged in, try this command `oc whoami` and check that the response is: {username}.
 ====
 
 [.console-input]
