@@ -311,26 +311,7 @@
 <h2 id="check-events-ci-web-hook"><a class="anchor" href="#check-events-ci-web-hook"></a>Check Events CI Web Hook</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Let’s check if the webhook is working, please open a new terminal and execute the following command.</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export USERNAME="%USERNAME%"
-export CICD_NAMESPACE="gramola-cicd-${USERNAME}"
-oc logs -f deployment/el-events-ci-pl-push-gitea-listener -n ${CICD_NAMESPACE}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You should get something like this, leave the terminal open and please go back to the other terminal window.</p>
-</div>
-<div class="listingblock console-output">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">...
-{"level":"info","ts":"2022-02-14T17:33:55.087Z","logger":"eventlistener","caller":"eventlistenersink/main.go:181","msg":"Listen and serve on port 8080","commit":"fbb0fd1","knative.dev/controller":"eventlistener"}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Now if you push a change in the code the CI pipeline for <code>events</code> should we kicked off but for now let&#8217;s check that the listener is working properly by running a test delivery against the listener URL itself. Run the following command:</p>
+<p>Let’s check if the webhook is working, please open a new terminal and execute the following command which will send a <code>dummy</code> event. Run the following command:</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -353,16 +334,30 @@ The <code>EventListener</code> expects a <code>push</code> event, hence because 
 </div>
 </div>
 <div class="paragraph">
-<p>This is the expected output in the terminal where the <code>oc log</code> command is running.</p>
+<p>You should get something like this.</p>
 </div>
 <div class="listingblock console-output">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">...
-{"level":"info","ts":"2022-09-12T16:30:11.860Z","logger":"eventlistener","caller":"sink/sink.go:234","msg":"interceptor stopped trigger processing: rpc error: code = FailedPrecondition desc = event type dummy is not allowed","commit":"fbb0fd1","knative.dev/controller":"eventlistener","eventlistener":"events-ci-pl-push-gitea-listener","namespace":"gramola-cicd-user1","eventlistenerUID":"2a940da6-e625-4f18-98b2-3bf44f48668a","/triggers-eventid":"507dd6b4-8715-4c6a-a89e-b703a800c230","/trigger":"github-listener"}</code></pre>
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{"eventListener":"events-ci-pl-push-gitea-listener","namespace":"gramola-cicd-user1","eventListenerUID":"6faba931-1949-4e8c-94be-e3c85608f13d","eventID":"a4f352e1-0088-4339-b671-4287d770e8b5"}</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Stop the log output with <span class="keyseq"><kbd>Ctrl</kbd>+<kbd>C</kbd></span>.</p>
+<p>Now run this command to see what happened on the other end, the event listener:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export USERNAME="%USERNAME%"
+export CICD_NAMESPACE="gramola-cicd-${USERNAME}"
+oc logs deployment/el-events-ci-pl-push-gitea-listener -n ${CICD_NAMESPACE} | grep dummy</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is the expected output, as you can see <code>event type dummy is not allowed</code>.</p>
+</div>
+<div class="listingblock console-output">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{"level":"info","ts":"2022-09-12T16:30:11.860Z","logger":"eventlistener","caller":"sink/sink.go:234","msg":"interceptor stopped trigger processing: rpc error: code = FailedPrecondition desc = event type dummy is not allowed","commit":"fbb0fd1","knative.dev/controller":"eventlistener","eventlistener":"events-ci-pl-push-gitea-listener","namespace":"gramola-cicd-user1","eventlistenerUID":"2a940da6-e625-4f18-98b2-3bf44f48668a","/triggers-eventid":"507dd6b4-8715-4c6a-a89e-b703a800c230","/trigger":"github-listener"}</code></pre>
+</div>
 </div>
 <div class="paragraph">
 <p>Now you can do the same for the other webhooks, this time with a lot less wording.</p>
@@ -373,26 +368,7 @@ The <code>EventListener</code> expects a <code>push</code> event, hence because 
 <h2 id="check-events-cd-web-hook"><a class="anchor" href="#check-events-cd-web-hook"></a>Check Events CD Web Hook</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Please open a new terminal, or reuse the one where you run the previous tests, and execute the following command.</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export USERNAME="%USERNAME%"
-export CICD_NAMESPACE="gramola-cicd-${USERNAME}"
-oc logs -f deployment/el-events-cd-pl-pr-gitea-listener -n ${CICD_NAMESPACE}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You should get something like this, leave the terminal open and please go back to the other terminal window.</p>
-</div>
-<div class="listingblock console-output">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">...
-{"level":"info","ts":"2022-09-12T10:04:59.451Z","logger":"eventlistener","caller":"eventlistenersink/main.go:181","msg":"Listen and serve on port 8080","commit":"fbb0fd1","knative.dev/controller":"eventlistener"}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Run the following command that sends a test <code>dummy</code> payload and event to the listener.</p>
+<p>Send the <code>dummy</code> event to the Events CD web hook:</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -403,16 +379,14 @@ oc logs -f deployment/el-events-cd-pl-pr-gitea-listener -n ${CICD_NAMESPACE}</co
 </div>
 </div>
 <div class="paragraph">
-<p>Again this is the expected output in the terminal where the <code>oc log</code> command is running.</p>
+<p>Now run this command to see what happened on the other end, the event listener:</p>
 </div>
-<div class="listingblock console-output">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">...
-{"level":"info","ts":"2022-09-12T16:43:27.906Z","logger":"eventlistener","caller":"sink/sink.go:234","msg":"interceptor stopped trigger processing: rpc error: code = FailedPrecondition desc = event type dummy is not allowed","commit":"fbb0fd1","knative.dev/controller":"eventlistener","eventlistener":"events-cd-pl-pr-gitea-listener","namespace":"gramola-cicd-user1","eventlistenerUID":"e16440c0-e329-4ba9-bdbc-5af516b56a2a","/triggers-eventid":"29307d50-f977-4ead-bad6-7007bb5b4d64","/trigger":"github-listener"}</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export USERNAME="%USERNAME%"
+export CICD_NAMESPACE="gramola-cicd-${USERNAME}"
+oc logs deployment/el-events-cd-pl-pr-gitea-listener -n ${CICD_NAMESPACE} | grep dummy</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>Stop the log output with <span class="keyseq"><kbd>Ctrl</kbd>+<kbd>C</kbd></span>.</p>
 </div>
 </div>
 </div>
@@ -420,26 +394,7 @@ oc logs -f deployment/el-events-cd-pl-pr-gitea-listener -n ${CICD_NAMESPACE}</co
 <h2 id="check-gateway-ci-web-hook"><a class="anchor" href="#check-gateway-ci-web-hook"></a>Check Gateway CI Web Hook</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Please open a new terminal, or reuse the one where you run the previous tests, and execute the following command.</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export USERNAME="%USERNAME%"
-export CICD_NAMESPACE="gramola-cicd-${USERNAME}"
-oc logs -f deployment/el-gateway-ci-pl-push-gitea-listener -n ${CICD_NAMESPACE}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You should get something like this, leave the terminal open and please go back to the other terminal window.</p>
-</div>
-<div class="listingblock console-output">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">...
-{"level":"info","ts":"2022-09-12T10:04:59.586Z","logger":"eventlistener","caller":"eventlistenersink/main.go:181","msg":"Listen and serve on port 8080","commit":"fbb0fd1","knative.dev/controller":"eventlistener"}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Run the following command that sends a test <code>dummy</code> payload and event to the listener.</p>
+<p>Send the <code>dummy</code> event to the Events CD web hook:</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -450,16 +405,14 @@ oc logs -f deployment/el-gateway-ci-pl-push-gitea-listener -n ${CICD_NAMESPACE}<
 </div>
 </div>
 <div class="paragraph">
-<p>Again this is the expected output in the terminal where the <code>oc log</code> command is running.</p>
+<p>Now run this command to see what happened on the other end, the event listener:</p>
 </div>
-<div class="listingblock console-output">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">...
-{"level":"info","ts":"2022-09-12T16:47:55.330Z","logger":"eventlistener","caller":"sink/sink.go:234","msg":"interceptor stopped trigger processing: rpc error: code = FailedPrecondition desc = event type dummy is not allowed","commit":"fbb0fd1","knative.dev/controller":"eventlistener","eventlistener":"gateway-ci-pl-push-gitea-listener","namespace":"gramola-cicd-user1","eventlistenerUID":"f04cb7d2-4fe6-4447-a253-b434a9f8efd0","/triggers-eventid":"4e7af3eb-e15f-432d-8802-2506b3d741e6","/trigger":"github-listener"}</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export USERNAME="%USERNAME%"
+export CICD_NAMESPACE="gramola-cicd-${USERNAME}"
+oc logs deployment/el-gateway-ci-pl-push-gitea-listener -n ${CICD_NAMESPACE} | grep dummy</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>Stop the log output with <span class="keyseq"><kbd>Ctrl</kbd>+<kbd>C</kbd></span>.</p>
 </div>
 </div>
 </div>
@@ -467,26 +420,7 @@ oc logs -f deployment/el-gateway-ci-pl-push-gitea-listener -n ${CICD_NAMESPACE}<
 <h2 id="check-gateway-cd-web-hook"><a class="anchor" href="#check-gateway-cd-web-hook"></a>Check Gateway CD Web Hook</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Please open a new terminal, or reuse the one where you run the previous tests, and execute the following command.</p>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export USERNAME="%USERNAME%"
-export CICD_NAMESPACE="gramola-cicd-${USERNAME}"
-oc logs -f deployment/el-gateway-cd-pl-pr-gitea-listener -n ${CICD_NAMESPACE}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You should get something like this, leave the terminal open and please go back to the other terminal window.</p>
-</div>
-<div class="listingblock console-output">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">...
-{"level":"info","ts":"2022-09-12T10:04:59.991Z","logger":"eventlistener","caller":"eventlistenersink/main.go:181","msg":"Listen and serve on port 8080","commit":"fbb0fd1","knative.dev/controller":"eventlistener"}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Run the following command that sends a test <code>dummy</code> payload and event to the listener.</p>
+<p>Send the <code>dummy</code> event to the Events CD web hook:</p>
 </div>
 <div class="listingblock console-input">
 <div class="content">
@@ -497,16 +431,14 @@ oc logs -f deployment/el-gateway-cd-pl-pr-gitea-listener -n ${CICD_NAMESPACE}</c
 </div>
 </div>
 <div class="paragraph">
-<p>Again this is the expected output in the terminal where the <code>oc log</code> command is running.</p>
+<p>Now run this command to see what happened on the other end, the event listener:</p>
 </div>
-<div class="listingblock console-output">
+<div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">...
-{"level":"info","ts":"2022-09-12T16:50:54.425Z","logger":"eventlistener","caller":"sink/sink.go:234","msg":"interceptor stopped trigger processing: rpc error: code = FailedPrecondition desc = event type dummy is not allowed","commit":"fbb0fd1","knative.dev/controller":"eventlistener","eventlistener":"gateway-cd-pl-pr-gitea-listener","namespace":"gramola-cicd-user1","eventlistenerUID":"f09da2a6-b828-4869-9b2c-42afad8cd849","/triggers-eventid":"fc790720-577e-49f6-992a-b893b71b0986","/trigger":"github-listener"}</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export USERNAME="%USERNAME%"
+export CICD_NAMESPACE="gramola-cicd-${USERNAME}"
+oc logs deployment/el-gateway-cd-pl-pr-gitea-listener -n ${CICD_NAMESPACE} | grep dummy</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>Stop the log output with <span class="keyseq"><kbd>Ctrl</kbd>+<kbd>C</kbd></span>.</p>
 </div>
 </div>
 </div>
