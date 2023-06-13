@@ -19,7 +19,7 @@ If you're using the web-terminal, you don't need to log in, you're already logge
 [.console-input]
 [source,sh, subs="+macros,+attributes"]
 ----
-oc login -u {username} -p {password} --server=https://api.{api-domain}
+oc login -u {username} -p {password} --server=https://api.{api-domain} --insecure-skip-tls-verify
 ----
 
 [#source-of-truth]

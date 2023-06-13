@@ -138,6 +138,8 @@ Let's go to ArgoCD console and see how it's going on. Please copy the next link 
 https://{argocd-server}/applications
 ----
 
+image::argocd-login.png[ArgoCD Log In]
+
 This is the expected result once all images have been pulled and the services are deployed completely.
 
 image::argocd-gramola-deployed.png[ArgoCD Gramola Deployed]

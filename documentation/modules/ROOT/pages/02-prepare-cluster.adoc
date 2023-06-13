@@ -16,7 +16,7 @@ So if you are not already logged in, please do it now.
 
 [source,sh, subs="+macros,+attributes"]
 ----
-oc login -u {username} -p {password} --server=https://api.{api-domain}
+oc login -u {username} -p {password} --server=https://api.{api-domain} --insecure-skip-tls-verify
 ----
 
 [WARNING]

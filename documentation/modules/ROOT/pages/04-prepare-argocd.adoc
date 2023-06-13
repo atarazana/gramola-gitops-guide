@@ -100,7 +100,7 @@ CAUTION: *ADDITIONAL_API_SERVER_TOKEN* is a token of a user with cluster-admin p
 ----
 export ADDITIONAL_API_SERVER_TOKEN=%ADDITIONAL_API_SERVER_TOKEN%
 export ADDITIONAL_API_SERVER_MANAGED=api.%ADDITIONAL_BASE_SUBDOMAIN%:6443
-oc login --token=${ADDITIONAL_API_SERVER_TOKEN} --server=https://${ADDITIONAL_API_SERVER_MANAGED}
+oc login --token=${ADDITIONAL_API_SERVER_TOKEN} --server=https://${ADDITIONAL_API_SERVER_MANAGED} --insecure-skip-tls-verify
 ----
 
 Give a name to the additional cluster and add it with the next command.
@@ -146,7 +146,7 @@ Now, it's time to log back in the main cluster.
 [.console-input]
 [source,sh, subs="+macros,+attributes"]
 ----
-oc login -u {username} -p {password} --server=https://api.{api-domain}
+oc login -u {username} -p {password} --server=https://api.{api-domain} --insecure-skip-tls-verify
 ----
 
 [#project-definitions]
