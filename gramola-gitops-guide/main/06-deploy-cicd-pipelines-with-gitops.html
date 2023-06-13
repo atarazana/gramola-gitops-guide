@@ -798,7 +798,7 @@ fi</code></pre>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export ADDITIONAL_API_SERVER_TOKEN=%ADDITIONAL_API_SERVER_TOKEN%
 export ADDITIONAL_API_SERVER_MANAGED=api.%ADDITIONAL_BASE_SUBDOMAIN%:6443
-oc login --token=${ADDITIONAL_API_SERVER_TOKEN} --server=https://${ADDITIONAL_API_SERVER_MANAGED} --insecure-skip-tls-verify=true
+oc login --token=${ADDITIONAL_API_SERVER_TOKEN} --server=https://${ADDITIONAL_API_SERVER_MANAGED} --insecure-skip-tls-verify
 
 export CONTAINER_REGISTRY_SECRET_NAME=$(yq eval '.containerRegistrySecretName' ./apps/cicd/values.yaml)
 
@@ -812,7 +812,7 @@ oc create -n gramola-test-%USERNAME% secret docker-registry ${CONTAINER_REGISTRY
 oc secrets link default ${CONTAINER_REGISTRY_SECRET_NAME} --for=pull -n gramola-test-%USERNAME%
 fi
 
-oc login -u %USERNAME% -p %PASSWORD% --server=https://api.%BASE_SUBDOMAIN%:6443 --insecure-skip-tls-verify=true</code></pre>
+oc login -u %USERNAME% -p %PASSWORD% --server=https://api.%BASE_SUBDOMAIN%:6443 --insecure-skip-tls-verify</code></pre>
 </div>
 </div>
 </div>
