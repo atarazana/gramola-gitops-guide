@@ -72,15 +72,15 @@ Let's create a *Personal Access Token* (PAT) in Gitea for user *{username}*.
 
 include::partial$gitea-create-pat.adoc[]
 
-[#migrate-repositories]
-== Migrate Repositories
+// [#migrate-repositories]
+// == Migrate Repositories
 
-Now that user *{username}* has been created let's migrate `gramola` repositories into Gitea.
+// Now that user *{username}* has been created let's migrate `gramola` repositories into Gitea.
 
-include::partial$gitea-migrate-repos.adoc[]
+// include::partial$gitea-migrate-repos.adoc[]
 
-After successfully migrating all the repos you should see this in the Gitea console.
+// After successfully migrating all the repos you should see this in the Gitea console.
 
-CAUTION: Don't forget to refresh your browser.
+// CAUTION: Don't forget to refresh your browser.
 
-image::gitea-migrated-repos.png[Gitea Migrated Repos]
+// image::gitea-migrated-repos.png[Gitea Migrated Repos]
