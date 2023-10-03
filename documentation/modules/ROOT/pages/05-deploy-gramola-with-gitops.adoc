@@ -72,16 +72,15 @@ You can use the value of any of the properties defined in the elements listed in
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-export USERNAME="{username}"
 cat <<EOF | oc apply -n {root-apps-namespace} -f -
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: gramola-$\{USERNAME}
+  name: gramola-{username}
   namespace: openshift-gitops
   labels:
     argocd-root-app: "true"
-    username: $\{USERNAME}
+    username: {username}
 spec:
   generators:
   - list:
@@ -92,11 +91,11 @@ spec:
         desc: "Gramola Test"
   template:
     metadata:
-      name: gramola-root-app-{{ env }}-$\{USERNAME}
+      name: gramola-root-app-{{ env }}-{username}
       namespace: openshift-gitops
       labels:
         argocd-root-app: "true"
-        username: $\{USERNAME}
+        username: {username}
       finalizers:
       - resources-finalizer.argocd.argoproj.io
     spec:
@@ -113,7 +112,7 @@ spec:
             - name: baseRepoUrl
               value: https://{gitea-host}/{username}/gramola
             - name: namespaceSuffix
-              value: "-$\{USERNAME}"
+              value: "-{username}"
             - name: username
               value: "{username}"
         path: apps/{{ env }}
@@ -181,16 +180,15 @@ If an additional cluster has been set up in chapter xref:04-prepare-argocd.adoc#
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
 ----
-export USERNAME="{username}"
 cat <<EOF | oc apply -n {root-apps-namespace} -f -
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: gramola-cloud-$\{USERNAME}
+  name: gramola-cloud-{username}
   namespace: openshift-gitops
   labels:
     argocd-root-app: "true"
-    username: $\{USERNAME}
+    username: {username}
 spec:
   generators:
   - list:
@@ -199,11 +197,11 @@ spec:
         desc: "Gramola Test"
   template:
     metadata:
-      name: gramola-root-app-{{ env }}-$\{USERNAME}
+      name: gramola-root-app-{{ env }}-{username}
       namespace: openshift-gitops
       labels:
         argocd-root-app: "true"
-        username: $\{USERNAME}
+        username: {username}
       finalizers:
       - resources-finalizer.argocd.argoproj.io
     spec:
@@ -220,7 +218,7 @@ spec:
             - name: baseRepoUrl
               value: https://{gitea-host}/{username}/gramola
             - name: namespaceSuffix
-              value: "-$\{USERNAME}"
+              value: "-{username}"
             - name: username
               value: "{username}"
         path: apps/{{ env }}

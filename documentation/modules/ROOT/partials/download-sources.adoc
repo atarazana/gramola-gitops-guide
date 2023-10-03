@@ -18,6 +18,34 @@ https://{openshift-console-host}/terminal
 
 [tabs]
 ====
+web-terminal::
++
+--
+First of all set a timeout for the terminal so that it's not stopped during tht workshop, although the web browser can timeout itself.
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+wtoctl set timeout 240m
+----
+
+Clone repository:
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+cd ~/scratch && git clone {tutorial-url} {folder}
+----
+
+Change to the repository folder:
+
+[.console-input]
+[source,bash,subs="attributes+,+macros"]
+----
+export TUTORIAL_HOME="$(pwd)/{folder}"
+cd $TUTORIAL_HOME
+----
+--
 laptop::
 +
 --
@@ -31,32 +59,6 @@ git clone {tutorial-url} {folder}
 [source,bash,subs="attributes+,+macros"]
 ----
 export TUTORIAL_HOME="$(pwd)/{folder}"
-----
-
-[.console-input]
-[source,bash,subs="attributes+,+macros"]
-----
-cd $TUTORIAL_HOME
-----
---
-web-terminal::
-+
---
-[.console-input]
-[source,bash,subs="attributes+,+macros"]
-----
-cd ~/scratch && git clone {tutorial-url} {folder}
-----
-
-[.console-input]
-[source,bash,subs="attributes+,+macros"]
-----
-export TUTORIAL_HOME="$(pwd)/{folder}"
-----
-
-[.console-input]
-[source,bash,subs="attributes+,+macros"]
-----
 cd $TUTORIAL_HOME
 ----
 --
