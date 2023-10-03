@@ -430,14 +430,41 @@ Please have them installed and configured before you get started with any of the
 <div class="ulist tabs">
 <ul>
 <li>
-<p><a id="tabset1_laptop"></a>laptop</p>
+<p><a id="tabset1_web-terminal"></a>web-terminal</p>
 </li>
 <li>
-<p><a id="tabset1_web-terminal"></a>web-terminal</p>
+<p><a id="tabset1_laptop"></a>laptop</p>
 </li>
 </ul>
 </div>
 <div class="content">
+<div class="tab-pane" aria-labelledby="tabset1_web-terminal">
+<div class="paragraph">
+<p>First of all set a timeout for the terminal so that it&#8217;s not stopped during tht workshop, although the web browser can timeout itself.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">wtoctl set timeout 240m</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Clone repository:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd ~/scratch &amp;&amp; git clone <a href="https://github.com/atarazana/gramola.git" class="bare">https://github.com/atarazana/gramola.git</a> gitops-guides</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Change to the repository folder:</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export TUTORIAL_HOME="$(pwd)/gitops-guides"
+cd $TUTORIAL_HOME</code></pre>
+</div>
+</div>
+</div>
 <div class="tab-pane" aria-labelledby="tabset1_laptop">
 <div class="listingblock console-input">
 <div class="content">
@@ -446,29 +473,8 @@ Please have them installed and configured before you get started with any of the
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export TUTORIAL_HOME="$(pwd)/gitops-guides"</code></pre>
-</div>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd $TUTORIAL_HOME</code></pre>
-</div>
-</div>
-</div>
-<div class="tab-pane" aria-labelledby="tabset1_web-terminal">
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd ~/scratch &amp;&amp; git clone <a href="https://github.com/atarazana/gramola.git" class="bare">https://github.com/atarazana/gramola.git</a> gitops-guides</code></pre>
-</div>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export TUTORIAL_HOME="$(pwd)/gitops-guides"</code></pre>
-</div>
-</div>
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd $TUTORIAL_HOME</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export TUTORIAL_HOME="$(pwd)/gitops-guides"
+cd $TUTORIAL_HOME</code></pre>
 </div>
 </div>
 </div>

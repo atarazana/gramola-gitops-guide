@@ -351,14 +351,26 @@ cache-control: private</code></pre>
 <div class="ulist tabs">
 <ul>
 <li>
-<p><a id="tabset1_laptop"></a>laptop</p>
+<p><a id="tabset1_web-terminal"></a>web-terminal</p>
 </li>
 <li>
-<p><a id="tabset1_web-terminal"></a>web-terminal</p>
+<p><a id="tabset1_laptop"></a>laptop</p>
 </li>
 </ul>
 </div>
 <div class="content">
+<div class="tab-pane" aria-labelledby="tabset1_web-terminal">
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export ARGOCD_HOST=$(oc get route/openshift-gitops-server -o jsonpath='{.status.ingress[0].host}' -n openshift-gitops)
+
+export ARGOCD_USERNAME=admin
+export ARGOCD_PASSWORD=$(oc get secret openshift-gitops-cluster -o jsonpath='{.data.admin\.password}' -n openshift-gitops | base64 -d)
+
+argocd login $ARGOCD_HOST --insecure --grpc-web --username $ARGOCD_USERNAME --password $ARGOCD_PASSWORD</code></pre>
+</div>
+</div>
+</div>
 <div class="tab-pane" aria-labelledby="tabset1_laptop">
 <div class="admonitionblock important">
 <table>
@@ -395,18 +407,6 @@ Performing authorization_code flow login: <a href="https://openshift-gitops-serv
 Authentication successful
 '%USERNAME%' logged in successfully
 Context 'openshift-gitops-server-openshift-gitops.apps.%BASE_SUBDOMAIN%' updated</code></pre>
-</div>
-</div>
-</div>
-<div class="tab-pane" aria-labelledby="tabset1_web-terminal">
-<div class="listingblock console-input">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export ARGOCD_HOST=$(oc get route/openshift-gitops-server -o jsonpath='{.status.ingress[0].host}' -n openshift-gitops)
-
-export ARGOCD_USERNAME=admin
-export ARGOCD_PASSWORD=$(oc get secret openshift-gitops-cluster -o jsonpath='{.data.admin\.password}' -n openshift-gitops | base64 -d)
-
-argocd login $ARGOCD_HOST --insecure --grpc-web --username $ARGOCD_USERNAME --password $ARGOCD_PASSWORD</code></pre>
 </div>
 </div>
 </div>

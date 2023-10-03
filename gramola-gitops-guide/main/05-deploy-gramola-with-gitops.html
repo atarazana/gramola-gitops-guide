@@ -413,16 +413,15 @@ spec:
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export USERNAME="%USERNAME%"
-cat &lt;&lt;EOF | oc apply -n openshift-gitops -f -
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &lt;&lt;EOF | oc apply -n openshift-gitops -f -
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: gramola-${USERNAME}
+  name: gramola-%USERNAME%
   namespace: openshift-gitops
   labels:
     argocd-root-app: "true"
-    username: ${USERNAME}
+    username: %USERNAME%
 spec:
   generators:
   - list:
@@ -433,11 +432,11 @@ spec:
         desc: "Gramola Test"
   template:
     metadata:
-      name: gramola-root-app-{{ env }}-${USERNAME}
+      name: gramola-root-app-{{ env }}-%USERNAME%
       namespace: openshift-gitops
       labels:
         argocd-root-app: "true"
-        username: ${USERNAME}
+        username: %USERNAME%
       finalizers:
       - resources-finalizer.argocd.argoproj.io
     spec:
@@ -454,7 +453,7 @@ spec:
             - name: baseRepoUrl
               value: <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola</a>
             - name: namespaceSuffix
-              value: "-${USERNAME}"
+              value: "-%USERNAME%"
             - name: username
               value: "%USERNAME%"
         path: apps/{{ env }}
@@ -561,16 +560,15 @@ EOF</code></pre>
 </div>
 <div class="listingblock console-input">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export USERNAME="%USERNAME%"
-cat &lt;&lt;EOF | oc apply -n openshift-gitops -f -
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &lt;&lt;EOF | oc apply -n openshift-gitops -f -
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: gramola-cloud-${USERNAME}
+  name: gramola-cloud-%USERNAME%
   namespace: openshift-gitops
   labels:
     argocd-root-app: "true"
-    username: ${USERNAME}
+    username: %USERNAME%
 spec:
   generators:
   - list:
@@ -579,11 +577,11 @@ spec:
         desc: "Gramola Test"
   template:
     metadata:
-      name: gramola-root-app-{{ env }}-${USERNAME}
+      name: gramola-root-app-{{ env }}-%USERNAME%
       namespace: openshift-gitops
       labels:
         argocd-root-app: "true"
-        username: ${USERNAME}
+        username: %USERNAME%
       finalizers:
       - resources-finalizer.argocd.argoproj.io
     spec:
@@ -600,7 +598,7 @@ spec:
             - name: baseRepoUrl
               value: <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/%USERNAME%/gramola</a>
             - name: namespaceSuffix
-              value: "-${USERNAME}"
+              value: "-%USERNAME%"
             - name: username
               value: "%USERNAME%"
         path: apps/{{ env }}
