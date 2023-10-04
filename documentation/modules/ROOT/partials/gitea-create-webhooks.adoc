@@ -1,3 +1,17 @@
+[TIP]
+====
+Again, you need a *Personal Access Token* (PAT) to create webhooks. Don't worry if you lost it, you can create another one.
+
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+GIT_PAT=$(curl -k -s -XPOST -H "Content-Type: application/json" \
+  -d '{"name":"cicd'"${RANDOM}"'","scopes": ["repo"]}' \
+  -u {username}:{static-password} \
+  https://{gitea-host}/api/v1/users/{username}/tokens | jq -r .sha1)
+echo "GIT_PAT=${GIT_PAT}"
+----
+====
 
 [#create-ci-webhooks]
 == Create CI Webhooks

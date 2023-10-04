@@ -110,7 +110,7 @@ https://{openshift-console-host}/dev-pipelines/ns/gramola-cicd-{username}
 [#create-git-secret]
 == Create Git Secret
 
-We are going to create secrets instead of storing them in the git repo, but before we do that let’s check that ArgoCD has created the namespace for us.
+We are going to create secrets instead of storing them in the git repo, but before we do that let's check that ArgoCD has created the namespace for us.
 
 [NOTE]
 ====
@@ -140,6 +140,21 @@ gramola-cicd-user1                  Active
 ----
 
 Fine, the namespace is in place, *it's time to create the git secret our pipelines will use when cloning and also while creating Pull Requests* which are the fuel for the CD part of the pipelines to promote from one environment to the next.
+
+[TIP]
+====
+You need a *Personal Access Token* (PAT) if you lost it, never mind create another one.
+
+[.console-input]
+[source,bash, subs="+macros,+attributes"]
+----
+GIT_PAT=$(curl -k -s -XPOST -H "Content-Type: application/json" \
+  -d '{"name":"cicd'"${RANDOM}"'","scopes": ["repo"]}' \
+  -u {username}:{static-password} \
+  https://{gitea-host}/api/v1/users/{username}/tokens | jq -r .sha1)
+echo "GIT_PAT=${GIT_PAT}"
+----
+====
 
 [.console-input]
 [source,bash, subs="+macros,+attributes"]
