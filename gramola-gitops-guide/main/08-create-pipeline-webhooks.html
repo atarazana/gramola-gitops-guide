@@ -325,6 +325,29 @@
 </li>
 </ul>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Again, you need a <strong>Personal Access Token</strong> (PAT) to create webhooks. Don&#8217;t worry if you lost it, you can create another one.</p>
+</div>
+<div class="listingblock console-input">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">GIT_PAT=$(curl -k -s -XPOST -H "Content-Type: application/json" \
+  -d '{"name":"cicd'"${RANDOM}"'","scopes": ["repo"]}' \
+  -u %USERNAME%:openshift \
+  <a href="https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/users/%USERNAME%/tokens" class="bare">https://repository-gitea-system.apps.%BASE_SUBDOMAIN%/api/v1/users/%USERNAME%/tokens</a> | jq -r .sha1)
+echo "GIT_PAT=${GIT_PAT}"</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">
